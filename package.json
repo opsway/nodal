@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --disable-host-check",
     "build": "ng build",
-    "test": "ng test",
+    "watch": "ng test --watch",
+    "test": "npm run lint && ng test --watch=false --browsers=ChromeHeadless --code-coverage",
+    "test-watch": "ng test --watch",
     "lint": "ng lint",
+    "fmt": "ng lint --fix",
     "e2e": "ng e2e"
   },
   "private": true,

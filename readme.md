@@ -1,6 +1,8 @@
-# Nodal
+# Nodal Account
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.1.
+<p align="center">
+    <img src="https://github.com/opsway/nodal/raw/master/docs/Nodal.png"/>
+</p>
 
 ## Development server
 

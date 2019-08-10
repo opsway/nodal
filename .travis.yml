@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+  - node
+dist: trusty
+sudo: required
+branches:
+  only:
+    - master
+before_script:
+  - npm install -g @angular/cli
+  - pip install --user codecov
+script:
+  - npm test
+  - ng build --prod --base-href https://opsway.github.io/nodal/
+after_success:
+  - codecov --token $CODECOV_TOKEN
+deploy:
+  provider: pages
+  target_branch: release
+  keep_history: true
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: dist/nodal
+  on:
+    branch: master
