@@ -14,6 +14,8 @@ import {PaymentService} from './payment.service';
 })
 export class AppComponent implements OnInit {
   title = 'modeling nodal workflow';
+  item: ItemService;
+  payment: PaymentService;
   merchants: Merchant[] = [];
   order: Order;
   catalog: Array<{item: Item, merchant: Merchant}> = [];
@@ -26,9 +28,11 @@ export class AppComponent implements OnInit {
   };
 
   constructor(
-    private item: ItemService,
-    private payment: PaymentService,
+    item: ItemService,
+    payment: PaymentService,
   ) {
+    this.item = item;
+    this.payment = payment;
   }
 
   ngOnInit(): void {
