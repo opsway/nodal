@@ -16,7 +16,7 @@ after_success:
   - codecov --token $CODECOV_TOKEN
 deploy:
   provider: pages
-  target_branch: release
+  target_branch: gh-pages
   keep_history: true
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
