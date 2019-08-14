@@ -1,4 +1,4 @@
-import {Item} from '../catalog/item';
+import {Item} from '../item/item';
 import {Merchant} from '../member/merchant';
 import {OrderItem} from './order-item';
 import {Order} from './order';

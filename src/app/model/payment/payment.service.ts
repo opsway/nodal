@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Payment} from './payment';
-import {Order} from './order/order';
-import {Total} from './total';
-import {NodalBalance} from './nodal-balance';
-import {TransferService} from './transfer.service';
-import {Transfer} from './transfer';
-import {Merchant} from './member/merchant';
-import {OrderItem} from './order/order-item';
+import {Order} from '../order/order';
+import {Total} from '../transaction/total';
+import {NodalBalance} from '../transaction/nodal-balance';
+import {TransferService} from '../transaction/transfer.service';
+import {Transfer} from '../transaction/transfer';
+import {Merchant} from '../member/merchant';
+import {OrderItem} from '../order/order-item';
 
 @Injectable({
   providedIn: 'root'

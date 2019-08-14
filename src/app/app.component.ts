@@ -1,13 +1,13 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Item} from './catalog/item';
-import {OrderItem} from './order/order-item';
-import {Merchant} from './member/merchant';
-import {Order} from './order/order';
+import {Item} from './model/item/item';
+import {OrderItem} from './model/order/order-item';
+import {Merchant} from './model/member/merchant';
+import {Order} from './model/order/order';
 
-import {ItemService} from './catalog/item.service';
-import {PaymentService} from './payment.service';
+import {ItemService} from './model/item/item.service';
+import {PaymentService} from './model/payment/payment.service';
 import {MatTable} from '@angular/material';
-import {OrderComponent} from './order/order.component';
+import {OrderComponent} from './ui/order/order.component';
 
 @Component({
   selector: 'app-root',
