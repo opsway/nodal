@@ -1,4 +1,4 @@
-import * as Util from './util';
+import * as Util from '../../util/util';
 
 export class Transfer {
   id: string;

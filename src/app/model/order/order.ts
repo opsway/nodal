@@ -1,6 +1,6 @@
-import * as Util from '../util';
+import * as Util from '../../util/util';
 import {OrderItem} from './order-item';
-import {Item} from '../catalog/item';
+import {Item} from '../item/item';
 import {Merchant} from '../member/merchant';
 import {Customer} from '../member/customer';
 

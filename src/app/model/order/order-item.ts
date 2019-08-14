@@ -1,6 +1,6 @@
-import {Item} from '../catalog/item';
+import {Item} from '../item/item';
 import {Merchant} from '../member/merchant';
-import {Payment} from '../payment';
+import {Payment} from '../payment/payment';
 import {Order} from './order';
 
 const feeMarketPercent = 7;

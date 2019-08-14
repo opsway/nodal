@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Order} from './order';
 import {Customer} from '../member/customer';
 import {Merchant} from '../member/merchant';
-import {Item} from '../catalog/item';
+import {Item} from '../item/item';
 
 @Injectable({
   providedIn: 'root'

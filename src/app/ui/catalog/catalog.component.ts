@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {ItemService} from './item.service';
-import {Item} from './item';
-import {OrderService} from '../order/order.service';
-import {CustomerService} from '../member/customer.service';
-import {Merchant} from '../member/merchant';
-import {MerchantService} from '../member/merchant.service';
-import {Customer} from '../member/customer';
-import {Order} from '../order/order';
+import {ItemService} from '../../model/item/item.service';
+import {Item} from '../../model/item/item';
+import {OrderService} from '../../model/order/order.service';
+import {CustomerService} from '../../model/member/customer.service';
+import {Merchant} from '../../model/member/merchant';
+import {MerchantService} from '../../model/member/merchant.service';
+import {Customer} from '../../model/member/customer';
+import {Order} from '../../model/order/order';
 
 @Component({
   selector: 'app-catalog',

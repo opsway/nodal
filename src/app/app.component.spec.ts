@@ -1,11 +1,11 @@
 import {TestBed, async} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {AppComponent} from './app.component';
-import {ConvertPipe} from './convert.pipe';
+import {ConvertPipe} from './util/convert.pipe';
 
-import {ItemService} from './catalog/item.service';
-import {PaymentService} from './payment.service';
-import {TransferService} from './transfer.service';
+import {ItemService} from './model/item/item.service';
+import {PaymentService} from './model/payment/payment.service';
+import {TransferService} from './model/transaction/transfer.service';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {

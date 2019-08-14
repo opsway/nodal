@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ConvertPipe } from './convert.pipe';
+import { ConvertPipe } from './util/convert.pipe';
 
 import {
   MatToolbarModule,
@@ -13,8 +13,8 @@ import {
   MatButtonToggleModule,
   MatGridListModule,
 } from '@angular/material';
-import { OrderComponent } from './order/order.component';
-import { CatalogComponent } from './catalog/catalog.component';
+import { OrderComponent } from './ui/order/order.component';
+import { CatalogComponent } from './ui/catalog/catalog.component';
 import {FormsModule} from '@angular/forms';
 
 @NgModule({
