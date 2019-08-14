@@ -15,7 +15,7 @@ export class OrderItemComponent implements OnInit {
     'orderId',
     'customerId',
     'sellerName',
-    'itemId',
+    'SKU',
     'price',
     'shipping',
     'qty',
