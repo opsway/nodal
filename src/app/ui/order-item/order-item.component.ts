@@ -11,6 +11,7 @@ import {OrderService} from '../../model/order/order.service';
 export class OrderItemComponent implements OnInit {
   orderService: OrderService;
   displayedColumns: string[] = [
+    'id',
     'orderId',
     'customerId',
     'sellerName',
