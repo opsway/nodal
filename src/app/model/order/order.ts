@@ -71,7 +71,7 @@ export class Order {
     merchant: Merchant,
     qty: number = 1,
   ): OrderItem {
-    let entity : OrderItem;
+    let entity: OrderItem;
     const id = OrderItem.genId(
       this,
       merchant,

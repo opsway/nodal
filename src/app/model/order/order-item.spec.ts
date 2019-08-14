@@ -3,7 +3,7 @@ import {Merchant} from '../member/merchant';
 import {OrderItem} from './order-item';
 import {Order} from './order';
 import {Customer} from '../member/customer';
-import * as Util from "../../util/util";
+import * as Util from '../../util/util';
 
 describe('OrderItem', () => {
   beforeEach(() => {
