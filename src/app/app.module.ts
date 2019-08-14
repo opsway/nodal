@@ -16,13 +16,15 @@ import {
 import { OrderComponent } from './ui/order/order.component';
 import { CatalogComponent } from './ui/catalog/catalog.component';
 import {FormsModule} from '@angular/forms';
+import { OrderItemComponent } from './ui/order-item/order-item.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ConvertPipe,
     OrderComponent,
-    CatalogComponent
+    CatalogComponent,
+    OrderItemComponent,
   ],
   imports: [
     MatButtonToggleModule,
@@ -33,9 +35,11 @@ import {FormsModule} from '@angular/forms';
     MatGridListModule,
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent,
+  ]
 })
 export class AppModule { }

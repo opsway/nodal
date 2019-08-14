@@ -50,7 +50,7 @@ export class Order {
   }
 
   get total(): number {
-    return this.amount + this.amountShipping;
+    return this.items.reduce((amount, item) => amount + item.total, 0);
   }
 
   get feeMarket(): number {

@@ -1,6 +1,5 @@
 import {Item} from '../item/item';
 import {Merchant} from '../member/merchant';
-import {Payment} from '../payment/payment';
 import {Order} from './order';
 
 const feeMarketPercent = 7;
@@ -47,6 +46,10 @@ export class OrderItem {
 
   get amountMerchant(): number {
     return this.amount - this.feeMarket;
+  }
+
+  get total(): number {
+    return this.amount + this.amountShipping;
   }
 
   refund(): number {

@@ -3,6 +3,7 @@ import {Order} from './order';
 import {Customer} from '../member/customer';
 import {Merchant} from '../member/merchant';
 import {Item} from '../item/item';
+import {OrderItem} from './order-item';
 
 @Injectable({
   providedIn: 'root'
@@ -81,6 +82,15 @@ export class OrderService {
   }
 
   get amount(): number {
-    return this.all().reduce((acc, it: Order) => acc + it.amountShipping, 0);
+    return this.all().reduce((acc, it: Order) => acc + it.amount, 0);
+  }
+
+  get items(): OrderItem[] {
+    const result: OrderItem[] = [];
+    this.all().forEach((it: Order) => {
+       result.push(...it.items);
+     });
+
+    return result;
   }
 }

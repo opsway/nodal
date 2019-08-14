@@ -1,0 +1,72 @@
+<h2>Order items</h2>
+<table mat-table [dataSource]="orderService.items" class="mat-elevation-z8">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>id</th>
+    <td mat-cell *matCellDef="let element">{{element.id}}</td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+  <ng-container matColumnDef="orderId">
+    <th mat-header-cell *matHeaderCellDef>order id</th>
+    <td mat-cell *matCellDef="let element">{{element.order.id}}</td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+  <ng-container matColumnDef="customerId">
+    <th mat-header-cell *matHeaderCellDef>customer id</th>
+    <td mat-cell *matCellDef="let element">{{element.order.customer.id}}</td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+  <ng-container matColumnDef="sellerId">
+    <th mat-header-cell *matHeaderCellDef>seller id</th>
+    <td mat-cell *matCellDef="let element">{{element.merchant.id}}</td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+  <ng-container matColumnDef="sellerName">
+    <th mat-header-cell *matHeaderCellDef>seller name</th>
+    <td mat-cell *matCellDef="let element">{{element.merchant.name}}</td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+  <ng-container matColumnDef="itemId">
+    <th mat-header-cell *matHeaderCellDef>item id</th>
+    <td mat-cell *matCellDef="let element">{{element.item.id}}</td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+  <ng-container matColumnDef="price">
+    <th mat-header-cell *matHeaderCellDef>price</th>
+    <td mat-cell *matCellDef="let element">{{element.item.price | convert}}</td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+  <ng-container matColumnDef="shipping">
+    <th mat-header-cell *matHeaderCellDef>shipping</th>
+    <td mat-cell *matCellDef="let element">{{element.shippingPrice | convert}}</td>
+    <td mat-footer-cell *matFooterCellDef>{{orderService.amountShipping | convert}}</td>
+  </ng-container>
+  <ng-container matColumnDef="qty">
+    <th mat-header-cell *matHeaderCellDef>qty</th>
+    <td mat-cell *matCellDef="let element">{{element.qty}}</td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+  <ng-container matColumnDef="amount">
+    <th mat-header-cell *matHeaderCellDef>amount</th>
+    <td mat-cell *matCellDef="let element">{{element.amount | convert}}</td>
+    <td mat-footer-cell *matFooterCellDef>{{orderService.amount | convert}}</td>
+  </ng-container>
+  <ng-container matColumnDef="amountShipping">
+    <th mat-header-cell *matHeaderCellDef>amountShipping</th>
+    <td mat-cell *matCellDef="let element">{{element.amountShipping | convert}}</td>
+    <td mat-footer-cell *matFooterCellDef>{{orderService.amountShipping | convert}}</td>
+  </ng-container>
+  <ng-container matColumnDef="total">
+    <th mat-header-cell *matHeaderCellDef>total</th>
+    <td mat-cell *matCellDef="let element">{{element.total | convert}}</td>
+    <td mat-footer-cell *matFooterCellDef>{{orderService.total | convert}}</td>
+  </ng-container>
+  <ng-container matColumnDef="feeMarket">
+    <th mat-header-cell *matHeaderCellDef>feeMarket</th>
+    <td mat-cell *matCellDef="let element">{{element.feeMarket | convert}}</td>
+    <td mat-footer-cell *matFooterCellDef>{{orderService.feeMarket | convert}}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+</table>
