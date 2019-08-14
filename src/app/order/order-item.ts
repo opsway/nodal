@@ -19,7 +19,7 @@ export class OrderItem {
   constructor(
     item: Item,
     merchant: Merchant,
-    order: Order,
+    order: Order = null,
   ) {
     this.id = OrderItem.genId(item, merchant);
     this.item = item;

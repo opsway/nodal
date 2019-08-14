@@ -1,9 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {
+  Component,
+  OnInit,
+} from '@angular/core';
 import {OrderService} from './order.service';
-import {Order} from './order';
-import {MatTable} from '@angular/material';
-import {Item} from '../catalog/item';
-import {Merchant} from '../member/merchant';
 
 @Component({
   selector: 'app-order',
@@ -13,7 +12,6 @@ import {Merchant} from '../member/merchant';
   ]
 })
 export class OrderComponent implements OnInit {
-  // @ViewChild(MatTable, {static: false}) table: MatTable<Element>;
   order: OrderService;
   displayedColumns: string[] = [
     'id',
@@ -24,6 +22,7 @@ export class OrderComponent implements OnInit {
     'total',
     'status',
   ];
+
   constructor(
     order: OrderService,
   ) {
