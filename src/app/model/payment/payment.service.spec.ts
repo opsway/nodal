@@ -1,14 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 
 import { PaymentService } from './payment.service';
+import {TransferService} from '../transaction/transfer.service';
 import {Order} from '../order/order';
-import {OrderItem} from '../order/order-item';
 import {Item} from '../item/item';
 import {Merchant} from '../member/merchant';
 import {Customer} from '../member/customer';
+import * as Util from '../../util/util';
 
 describe('PaymentService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(() => {
+    Util.sequenceClear();
+    TestBed.configureTestingModule({});
+  });
 
   it('should be created', () => {
     const service: PaymentService = TestBed.get(PaymentService);
@@ -16,7 +20,7 @@ describe('PaymentService', () => {
   });
 
   it('total', () => {
-    const service: PaymentService = TestBed.get(PaymentService);
+    const service: PaymentService = new PaymentService(new TransferService());
     const order = new Order(new Customer('bob', 100));
     order.add(
       new Item(
@@ -24,7 +28,7 @@ describe('PaymentService', () => {
       ),
       new Merchant('bar'),
     );
-    service.checkout(order);
+    service.toPay(order, 'foo');
     let actual = service.total();
     expect(actual.amount).toEqual(10000);
     expect(actual.feeMarket).toEqual(826);

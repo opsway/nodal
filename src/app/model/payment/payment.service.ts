@@ -36,8 +36,8 @@ export class PaymentService {
     this.nodalBalance.total -= refund;
   }
 
-  checkout(order: Order): void {
-    const payment = new Payment(order);
+  toPay(order: Order, gateway: string): void {
+    const payment = new Payment(order, gateway);
     this.collection.set(payment.id, payment);
   }
 

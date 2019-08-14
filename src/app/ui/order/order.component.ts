@@ -3,6 +3,7 @@ import {
   OnInit,
 } from '@angular/core';
 import {OrderService} from '../../model/order/order.service';
+import {PaymentService} from '../../model/payment/payment.service';
 
 @Component({
   selector: 'app-order',
@@ -13,20 +14,21 @@ import {OrderService} from '../../model/order/order.service';
 })
 export class OrderComponent implements OnInit {
   order: OrderService;
+  payment: PaymentService;
   displayedColumns: string[] = [
     'id',
-    'customer',
-    'amount',
-    'amountShipping',
-    'feeMarket',
-    'total',
+    'createdAt',
+    'customerId',
     'status',
+    'action',
   ];
 
   constructor(
     order: OrderService,
+    payment: PaymentService,
   ) {
     this.order = order;
+    this.payment = payment;
   }
 
   ngOnInit() {

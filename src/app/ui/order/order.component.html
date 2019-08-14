@@ -3,11 +3,21 @@
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef>id</th>
     <td mat-cell *matCellDef="let element">{{element.id}}</td>
-    <td mat-footer-cell *matFooterCellDef><strong>Total</strong></td>
+    <td mat-footer-cell *matFooterCellDef></td>
   </ng-container>
-  <ng-container matColumnDef="customer">
-    <th mat-header-cell *matHeaderCellDef>customer</th>
+  <ng-container matColumnDef="createdAt">
+    <th mat-header-cell *matHeaderCellDef>created at</th>
+    <td mat-cell *matCellDef="let element">{{element.createdAt | date : 'M/d h:mm:ss'}}</td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+  <ng-container matColumnDef="customerName">
+    <th mat-header-cell *matHeaderCellDef>customer name</th>
     <td mat-cell *matCellDef="let element">{{element.customer.name}}</td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+  <ng-container matColumnDef="customerId">
+    <th mat-header-cell *matHeaderCellDef>customer id</th>
+    <td mat-cell *matCellDef="let element">{{element.customer.id}}</td>
     <td mat-footer-cell *matFooterCellDef></td>
   </ng-container>
   <ng-container matColumnDef="amount">
@@ -37,7 +47,20 @@
   </ng-container>
   <ng-container matColumnDef="action">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element">{{element.status}}</td>
+    <td mat-cell *matCellDef="let element">
+      <div *ngIf="!element.isPaid">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="payment.toPay(element, 'paytm')"
+        >PAYTM</button>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="payment.toPay(element, 'razorpay')"
+        >RAZORPAY</button>
+      </div>
+    </td>
     <td mat-footer-cell *matFooterCellDef></td>
   </ng-container>
 

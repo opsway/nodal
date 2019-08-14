@@ -1,0 +1,17 @@
+@startuml
+
+title <b>Model</b>
+left to right direction
+skinparam shadowing false
+
+class Item
+class Order
+class OrderItem
+class Customer
+class Seller
+
+Order "0..N" -- "1" Customer
+Order "1" -- "N..1" OrderItem
+OrderItem "1..N" -- "1" Item
+OrderItem "0..N" -- "1" Seller
+@enduml

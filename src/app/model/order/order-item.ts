@@ -13,7 +13,6 @@ export class OrderItem {
   shippingPrice: number;
   merchant: Merchant;
   refunded: boolean;
-  payment: Payment;
   order: Order;
 
   constructor(
@@ -52,7 +51,7 @@ export class OrderItem {
 
   refund(): number {
     let refund = 0;
-    if (!this.refunded && this.payment && this.payment.captured) {
+    if (!this.refunded && this.order.payment && this.order.payment.captured) {
       this.merchant.balance -= refund = this.amountMerchant;
     }
     this.refunded = true;

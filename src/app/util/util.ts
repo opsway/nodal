@@ -2,6 +2,8 @@
 
 const sequence: Map<string, number> = new Map();
 
+const sequenceClear = (): void => sequence.clear();
+
 const uuid = (namespace: string = ''): string => {
   const counter = (sequence.get(namespace) || 0) + 1;
   sequence.set(namespace, counter);
@@ -11,4 +13,5 @@ const uuid = (namespace: string = ''): string => {
 
 export {
   uuid,
+  sequenceClear,
 };

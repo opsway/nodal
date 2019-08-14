@@ -20,12 +20,19 @@ export class ItemService {
     });
   }
 
+  create(price: number): Item {
+    const item = new Item(price);
+    this.collection.set(item.id, item);
+
+    return item;
+  }
+
   all(): Item[] {
     return Array.from(this.collection.values());
   }
 
-  find(id: string): Item | undefined {
-    return this.collection.get(id);
+  find(id: string): Item | null {
+    return this.collection.get(id) || null;
   }
 
   count(): number {
