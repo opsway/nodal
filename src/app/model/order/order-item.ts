@@ -19,17 +19,25 @@ export class OrderItem {
     merchant: Merchant,
     order: Order = null,
   ) {
-    this.id = OrderItem.genId(item, merchant);
+    this.id = OrderItem.genId(
+      order,
+      merchant,
+      item,
+    );
     this.item = item;
     this.merchant = merchant;
     this.order = order;
-    this.qty = 1;
+    this.qty = 0;
     this.shippingPrice = order.customer.shippingPrice;
     this.refunded = false;
   }
 
-  static genId(item: Item, merchant: Merchant): string {
-    return `${item.id}-${merchant.id}`;
+  static genId(
+    order: Order,
+    merchant: Merchant,
+    item: Item,
+  ): string {
+    return `${order.id}-${merchant.id}-${item.id}`;
   }
 
   get amount(): number {

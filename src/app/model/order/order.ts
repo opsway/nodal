@@ -66,12 +66,27 @@ export class Order {
     this.status = Order.STATUS_ORDERED;
   }
 
-  add(item: Item, merchant: Merchant): void {
-    const id = OrderItem.genId(item, merchant);
+  add(
+    item: Item,
+    merchant: Merchant,
+    qty: number = 1,
+  ): OrderItem {
+    let entity : OrderItem;
+    const id = OrderItem.genId(
+      this,
+      merchant,
+      item,
+    );
+
     if (this.collection.has(id)) {
-      this.collection.get(id).qty++;
+      entity = this.collection.get(id);
     } else {
-      this.collection.set(id, new OrderItem(item, merchant, this));
+      entity = new OrderItem(item, merchant, this);
+      this.collection.set(entity.id, entity);
     }
+
+    entity.qty += qty;
+
+    return entity;
   }
 }
