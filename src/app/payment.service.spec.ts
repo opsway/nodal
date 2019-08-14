@@ -5,6 +5,7 @@ import {Order} from './order/order';
 import {OrderItem} from './order/order-item';
 import {Item} from './catalog/item';
 import {Merchant} from './member/merchant';
+import {Customer} from './member/customer';
 
 describe('PaymentService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -16,17 +17,17 @@ describe('PaymentService', () => {
 
   it('total', () => {
     const service: PaymentService = TestBed.get(PaymentService);
-    service.checkout(new Order([
-      new OrderItem(
-        new Item(
-          100,
-        ),
-        new Merchant('bar'),
+    const order = new Order(new Customer('bob', 100));
+    order.add(
+      new Item(
+        100,
       ),
-    ]));
+      new Merchant('bar'),
+    );
+    service.checkout(order);
     let actual = service.total();
     expect(actual.amount).toEqual(10000);
-    expect(actual.feeMarket).toEqual(700);
+    expect(actual.feeMarket).toEqual(826);
     expect(actual.feeGateway).toEqual(0);
     service.gatewaySettlement();
     actual = service.total();
@@ -35,7 +36,7 @@ describe('PaymentService', () => {
     expect(actual.feeGateway).toEqual(0);
     actual = service.totalCaptured();
     expect(actual.amount).toEqual(10000);
-    expect(actual.feeMarket).toEqual(700);
+    expect(actual.feeMarket).toEqual(826);
     expect(actual.feeGateway).toEqual(210);
   });
 });

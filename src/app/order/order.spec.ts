@@ -1,22 +1,12 @@
 import { Order } from './order';
-import {OrderItem} from './order-item';
-import {Item} from '../catalog/item';
-import {Merchant} from '../member/merchant';
+import {Customer} from '../member/customer';
 
 describe('Order', () => {
   it('should create an instance', () => {
-    expect(new Order([])).toBeTruthy();
+    expect(new Order(new Customer('bob', 100))).toBeTruthy();
   });
 
   it('should increment  qyt if added duplicate', () => {
-    const order = new Order([
-      new OrderItem(
-        new Item(
-          100
-        ),
-        new Merchant('bar'),
-      )
-    ]);
-    expect(new Order([])).toBeTruthy();
+    expect(new Order(new Customer('bob', 100))).toBeTruthy();
   });
 });
