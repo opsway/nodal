@@ -1,11 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {Item} from './item';
-import {OrderItem} from './order-item';
-import {Merchant} from './merchant';
-import {Order} from './order';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {Item} from './catalog/item';
+import {OrderItem} from './order/order-item';
+import {Merchant} from './member/merchant';
+import {Order} from './order/order';
 
-import {ItemService} from './item.service';
+import {ItemService} from './catalog/item.service';
 import {PaymentService} from './payment.service';
+import {MatTable} from '@angular/material';
+import {OrderComponent} from './order/order.component';
 
 @Component({
   selector: 'app-root',
@@ -13,13 +15,13 @@ import {PaymentService} from './payment.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  @ViewChild(OrderComponent, {static: false}) orders: OrderComponent;
   title = 'modeling nodal workflow';
   item: ItemService;
   payment: PaymentService;
   merchants: Merchant[] = [];
   order: Order;
   catalog: Array<{item: Item, merchant: Merchant}> = [];
-  workflow: Array<CallableFunction> = [];
   total = {
     gateway: {
       amount: 0,
@@ -36,7 +38,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.order = new Order([]);
 
     const merchantTA = new Merchant('TA');
     this.merchants.push(merchantTA);
@@ -59,56 +60,11 @@ export class AppComponent implements OnInit {
       item: this.item.find('SKU4'),
       merchant: merchantTA,
     });
-
-    this.workflow.push(() => {
-      this.addToCart(this.item.find('SKU1'), merchantTA);
-      this.addToCart(this.item.find('SKU2'), merchantTA);
-      this.checkout();
-    });
-    this.workflow.push(() => {
-      this.addToCart(this.item.find('SKU3'), merchantSAAN);
-      this.checkout();
-    });
-    this.workflow.push(() => {
-      this.addToCart(this.item.find('SKU4'), merchantTA);
-      this.checkout();
-    });
-    this.workflow.push(() => {
-      this.emitGatewaySettlementEvent();
-    });
-    this.workflow.push(() => {
-      this.emitNodalSettlementEvent();
-    });
-  }
-
-  workflowStepAuto(): void {
-    setInterval(() => {
-      this.workflowStep();
-    }, 2500);
-  }
-
-  workflowStep(): void {
-    const next = this.workflow.shift();
-    if (next) {
-      next();
-    }
   }
 
   refund(item: OrderItem): void {
     this.payment.refund(item);
     this.updateTotal();
-  }
-
-  addToCart(item: Item, merchant: Merchant): void {
-    this.order.add(item, merchant);
-  }
-
-  checkout(): void {
-    if (this.order.amount > 0) {
-      this.payment.checkout(this.order);
-      this.order = new Order([]);
-      this.updateTotal();
-    }
   }
 
   emitGatewaySettlementEvent(): void {

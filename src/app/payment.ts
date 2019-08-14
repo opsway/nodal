@@ -1,6 +1,6 @@
 import * as Util from './util';
-import {Order} from './order';
-import {OrderItem} from './order-item';
+import {Order} from './order/order';
+import {OrderItem} from './order/order-item';
 
 const feeGatewayPercent = 2.1;
 

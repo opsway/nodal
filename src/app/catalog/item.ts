@@ -1,4 +1,5 @@
-import * as Util from './util';
+import * as Util from '../util';
+
 
 export class Item {
   id: string;
