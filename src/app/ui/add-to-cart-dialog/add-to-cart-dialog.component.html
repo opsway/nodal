@@ -1,0 +1,55 @@
+<h1 mat-dialog-title>Fill Cart</h1>
+<div mat-dialog-content>
+
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-label>Customer</mat-label>
+      <mat-select formControlName="customer" required>
+        <mat-option *ngFor="let it of customerList" [value]="it">
+          {{it.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Seller</mat-label>
+      <mat-select formControlName="seller" required>
+        <mat-option *ngFor="let it of sellerList" [value]="it">
+          {{it.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Price</mat-label>
+      <input matInput placeholder="12.00" formControlName="price" type="number" min="0" step="0.01" required>
+      <mat-hint>Hint</mat-hint>
+    </mat-form-field>
+
+    <mat-error>
+      <span *ngIf="!form.get(['price']).valid">Please enter a value greater than 0</span>
+    </mat-error>
+
+    <mat-form-field>
+      <mat-label>Shipping</mat-label>
+      <input matInput placeholder="12.00" formControlName="shipping" type="number" min="0" step="0.01" required>
+      <mat-hint>Hint</mat-hint>
+    </mat-form-field>
+
+    <mat-error>
+      <span *ngIf="!form.get(['shipping']).valid">Please enter a value greater than 0</span>
+    </mat-error>
+
+    <mat-form-field>
+      <mat-label>SKU</mat-label>
+      <input matInput placeholder="SKU1" formControlName="sku" required>
+      <mat-hint>Hint</mat-hint>
+    </mat-form-field>
+
+  </form>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="close()">No Thanks</button>
+  <button mat-button (click)="save()" cdkFocusInitial>Add to Cart</button>
+</div>

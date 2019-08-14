@@ -12,11 +12,16 @@ import {
   MatTableModule,
   MatButtonToggleModule,
   MatGridListModule,
+  MatSelectModule,
+  MatInputModule,
+  MatDialogModule
 } from '@angular/material';
 import { OrderComponent } from './ui/order/order.component';
 import { CatalogComponent } from './ui/catalog/catalog.component';
-import {FormsModule} from '@angular/forms';
 import { OrderItemComponent } from './ui/order-item/order-item.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AddToCartDialogComponent } from './ui/add-to-cart-dialog/add-to-cart-dialog.component';
 
 @NgModule({
   declarations: [
@@ -25,21 +30,30 @@ import { OrderItemComponent } from './ui/order-item/order-item.component';
     OrderComponent,
     CatalogComponent,
     OrderItemComponent,
+    CatalogComponent,
+    AddToCartDialogComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
     MatButtonToggleModule,
     MatCardModule,
     MatToolbarModule,
     MatButtonModule,
     MatTableModule,
     MatGridListModule,
+    MatSelectModule,
+    MatInputModule,
+    MatDialogModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [
     AppComponent,
-  ]
+  ],
+  entryComponents: [AddToCartDialogComponent]
 })
 export class AppModule { }
