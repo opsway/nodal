@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 
 import { PaymentService } from './payment.service';
-import {Order} from './order';
-import {OrderItem} from './order-item';
-import {Item} from './item';
-import {Merchant} from './merchant';
+import {Order} from './order/order';
+import {OrderItem} from './order/order-item';
+import {Item} from './catalog/item';
+import {Merchant} from './member/merchant';
 
 describe('PaymentService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

@@ -1,6 +1,6 @@
-import {Merchant} from './merchant';
+import {Merchant} from './member/merchant';
 import {Payment} from './payment';
-import {OrderItem} from './order-item';
+import {OrderItem} from './order/order-item';
 
 export class NodalBalance {
   total = 0;

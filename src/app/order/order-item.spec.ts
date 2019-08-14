@@ -1,5 +1,5 @@
-import { Item } from './item';
-import { Merchant } from './merchant';
+import { Item } from '../catalog/item';
+import { Merchant } from '../member/merchant';
 import { OrderItem } from './order-item';
 
 describe('OrderItem', () => {

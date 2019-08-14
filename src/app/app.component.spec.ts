@@ -3,7 +3,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {AppComponent} from './app.component';
 import {ConvertPipe} from './convert.pipe';
 
-import {ItemService} from './item.service';
+import {ItemService} from './catalog/item.service';
 import {PaymentService} from './payment.service';
 import {TransferService} from './transfer.service';
 
