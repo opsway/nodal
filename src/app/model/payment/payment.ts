@@ -6,17 +6,22 @@ const feeGatewayPercent = 2.1;
 
 export class Payment {
   id: string;
+  createdAt: Date;
   order: Order;
   status: string;
+  gateway: string;
   feeGateway = 0;
 
-  constructor(order: Order) {
+  constructor(
+    order: Order,
+    gateway: string,
+  ) {
     this.id = Util.uuid('P');
+    this.createdAt = new Date();
     this.order = order;
     this.status = 'created';
-    order.items.forEach((item: OrderItem) => {
-      item.payment = this;
-    });
+    this.gateway = gateway;
+    order.attachePayment(this);
   }
 
   get total(): number {
