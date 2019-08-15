@@ -14,7 +14,8 @@ import {
   MatGridListModule,
   MatSelectModule,
   MatInputModule,
-  MatDialogModule
+  MatDialogModule,
+  MatDialogTitle
 } from '@angular/material';
 import { OrderComponent } from './ui/order/order.component';
 import { CatalogComponent } from './ui/catalog/catalog.component';
@@ -34,6 +35,7 @@ import { PaymentListComponent } from './ui/payment-list/payment-list.component';
     CatalogComponent,
     AddToCartDialogComponent,
     PaymentListComponent,
+    MatDialogTitle,
   ],
   imports: [
     BrowserAnimationsModule,

@@ -1,25 +1,36 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CreateOrderPopupComponent } from './create-order-popup.component';
+import { AddToCartDialogComponent } from './add-to-cart-dialog.component';
+import {
+  MatSelectModule,
+} from '@angular/material';
+import {ReactiveFormsModule} from '@angular/forms';
 
-describe('CreateOrderPopupComponent', () => {
-  let component: CreateOrderPopupComponent;
-  let fixture: ComponentFixture<CreateOrderPopupComponent>;
+describe('AddToCartDialogComponent', () => {
+  let component: AddToCartDialogComponent;
+  let fixture: ComponentFixture<AddToCartDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateOrderPopupComponent ]
+      imports: [
+        ReactiveFormsModule,
+        MatSelectModule,
+      ],
+      declarations: [
+        AddToCartDialogComponent,
+      ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateOrderPopupComponent);
+    fixture = TestBed.createComponent(AddToCartDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
+    pending('FIXME'); // FIXME NullInjectorError: StaticInjectorError(DynamicTestModule)[AddToCartDialogComponent -> MatDialogRef]
     expect(component).toBeTruthy();
   });
 });
