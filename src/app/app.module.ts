@@ -1,65 +1,31 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { ConvertPipe } from './util/convert.pipe';
-
-import {
-  MatToolbarModule,
-  MatCardModule,
-  MatButtonModule,
-  MatTableModule,
-  MatButtonToggleModule,
-  MatGridListModule,
-  MatSelectModule,
-  MatInputModule,
-  MatDialogModule,
-  MatTabsModule,
-  MatDialogTitle
-} from '@angular/material';
-import { OrderComponent } from './ui/order/order.component';
-import { CatalogComponent } from './ui/catalog/catalog.component';
-import { OrderItemComponent } from './ui/order-item/order-item.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AddToCartDialogComponent } from './ui/add-to-cart-dialog/add-to-cart-dialog.component';
-import { PaymentListComponent } from './ui/payment-list/payment-list.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {LayoutComponent} from './ui/layout/layout.component';
+import {MenuComponent} from './ui/menu/menu.component';
+import {OrdersComponent} from './page/orders/orders.component';
+import {PaymentsComponent} from './page/payments/payments.component';
+import {ShareComponent} from './page/share/share.component';
+import {ConvertPipe} from './util/convert.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
+    LayoutComponent,
+    MenuComponent,
+    OrdersComponent,
+    PaymentsComponent,
+    ShareComponent,
     ConvertPipe,
-    OrderComponent,
-    CatalogComponent,
-    OrderItemComponent,
-    CatalogComponent,
-    AddToCartDialogComponent,
-    PaymentListComponent,
   ],
   imports: [
-    BrowserAnimationsModule,
-    MatTableModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatTableModule,
-    MatGridListModule,
-    MatSelectModule,
-    MatInputModule,
-    MatDialogModule,
-    MatTabsModule,
     BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    FormsModule,
-    ReactiveFormsModule,
+    AppRoutingModule
   ],
   providers: [],
-  bootstrap: [
-    AppComponent,
-  ],
-  entryComponents: [AddToCartDialogComponent]
+  bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

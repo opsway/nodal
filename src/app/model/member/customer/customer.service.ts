@@ -17,9 +17,8 @@ export class CustomerService {
       'F',
       'F',
       'G',
-    ].forEach((name: string, index: number) => {
-      const shipping = index * 2 + 10;
-      const entity = new Customer(name, shipping);
+    ].forEach((name: string) => {
+      const entity = new Customer(name);
       this.collection.set(entity.id, entity);
     });
   }

@@ -7,6 +7,7 @@ import {Item} from '../item/item';
 import {Seller} from '../member/seller/seller';
 import {Customer} from '../member/customer/customer';
 import * as Util from '../../util/util';
+import {OrderItem} from '../order-item/order-item';
 
 describe('PaymentService', () => {
   beforeEach(() => {
@@ -21,11 +22,12 @@ describe('PaymentService', () => {
 
   it('total', () => {
     const service: PaymentService = new PaymentService(new TransferService());
-    const order = new Order(new Customer('bob', 100));
-    order.add(
-      new Item(
-        100,
-      ),
+    const order = new Order(new Customer('bob'));
+    const entity = new OrderItem(
+      100,
+      new Item(),
+      50,
+      1,
       new Seller('bar'),
     );
     service.toPay(order, 'foo');

@@ -1,34 +1,33 @@
+import * as Util from '../../util/util';
 import {Item} from '../item/item';
 import {Seller} from '../member/seller/seller';
 import {Order} from '../order/order';
-
-const feeMarketPercent = 7;
-const feeMarketGST = 18;
+import {Model} from '../model';
 
 export class OrderItem {
   id: string;
   item: Item;
   qty: number;
-  shippingPrice: number;
+  price: number;
+  priceShipping: number;
   seller: Seller;
   refunded: boolean;
   order: Order;
 
   constructor(
-    item: Item,
+    price: number, item: Item, // SellerItem
+    shippingPrice: number,
+    qty: number,
     seller: Seller,
     order: Order = null,
   ) {
-    this.id = OrderItem.genId(
-      order,
-      seller,
-      item,
-    );
+    this.id = Util.uuid('OI');
     this.item = item;
     this.seller = seller;
     this.order = order;
-    this.qty = 0;
-    this.shippingPrice = order.customer.shippingPrice;
+    this.qty = qty;
+    this.price = shippingPrice * Model.precisionOfPersist;
+    this.priceShipping = shippingPrice *  Model.precisionOfPersist;
     this.refunded = false;
   }
 
@@ -45,11 +44,11 @@ export class OrderItem {
   }
 
   get amountShipping(): number {
-    return this.shippingPrice * this.qty;
+    return this.priceShipping * this.qty;
   }
 
   get feeMarket(): number {
-    return this.refunded ? 0 : Math.floor((feeMarketPercent / 100) * this.amount) * (feeMarketGST / 100 + 1);
+    return this.refunded ? 0 : Math.floor((Model.feeMarketPercent / 100) * this.amount) * (Model.feeMarketGST / 100 + 1);
   }
 
   get amountSeller(): number {

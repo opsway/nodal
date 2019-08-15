@@ -1,0 +1,96 @@
+<!--
+<div class="header is-center">
+  <p>Orders and items (you can add a new one or make a payment on the order)</p>
+</div>
+-->
+<div class="content">
+<h2>Cart</h2>
+<form>
+  <label>
+    <span>Order</span>
+    <input type="text" disabled value="{{order.id}}">
+  </label>
+  <label>
+    <span>Date</span>
+    <input type="date" (ngModel)="date">
+  </label>
+  <label>
+    <span>Seller</span>
+    <select (ngModel)="seller">
+      <option *ngFor="let it of sellerService.all()" [value]="it">{{it.name}}</option>
+    </select>
+  </label>
+  <label>
+    <span>Customer</span>
+    <select (ngModel)="seller">
+      <option *ngFor="let it of customerService.all()" [value]="it">{{it.name}}</option>
+    </select>
+  </label>
+  <button (click)="addToCart()" class="button-xsmall pure-button">
+    <span>add</span>
+  </button>
+</form>
+
+<table class="pure-table pure-table-horizontal">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Customer</th>
+            <th>SKU</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="pure-table-odd">
+            <td>1</td>
+            <td>Honda</td>
+            <td>Accord</td>
+            <td>2009</td>
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td>Toyota</td>
+            <td>Camry</td>
+            <td>2012</td>
+        </tr>
+    </tbody>
+  <tfoot>
+       <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><button class="button-xsmall pure-button">checkout</button></td>
+        </tr>
+  </tfoot>
+</table>
+<h2>Orders</h2>
+<table class="pure-table pure-table-horizontal">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Customer</th>
+            <th>SKU</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="pure-table-odd">
+            <td>1</td>
+            <td>Honda</td>
+            <td>Accord</td>
+            <td>2009</td>
+            <td><button class="button-xsmall pure-button">pay</button></td>
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td>Toyota</td>
+            <td>Camry</td>
+            <td>2012</td>
+            <td><button class="button-xsmall pure-button">pay</button></td>
+        </tr>
+    </tbody>
+</table>
+</div>

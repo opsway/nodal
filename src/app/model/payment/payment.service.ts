@@ -41,20 +41,20 @@ export class PaymentService {
     this.collection.set(payment.id, payment);
   }
 
-  noCaptured(): Array<Payment> {
+  findNoCaptured(): Array<Payment> {
     return this.all().filter((payment: Payment) => payment.status !== 'captured');
   }
 
-  captured(): Array<Payment> {
+  findCaptured(): Array<Payment> {
     return this.all().filter((payment: Payment) => payment.status === 'captured');
   }
 
   totalCaptured(): Total {
-    return this.captured().reduce((total: Total, payment: Payment) => total.increment(payment), new Total());
+    return this.findCaptured().reduce((total: Total, payment: Payment) => total.increment(payment), new Total());
   }
 
   total(): Total {
-    return this.noCaptured().reduce((total: Total, payment: Payment) => total.increment(payment), new Total());
+    return this.findNoCaptured().reduce((total: Total, payment: Payment) => total.increment(payment), new Total());
   }
 
   nodalSettlement(): void {
@@ -70,9 +70,12 @@ export class PaymentService {
     this.nodalBalance.total = 0;
   }
 
-  gatewaySettlement(): void {
+  gatewaySettlement(gateway: string = null, from: Date = null): void {
+    // TODO add filter by gateway
+    // TODO add filter by date from
+    // TODO validate balance
     const nodalTotalPrev = this.nodalBalance.total;
-    this.noCaptured().forEach((payment: Payment) => {
+    this.findNoCaptured().forEach((payment: Payment) => {
       payment.capture();
       this.nodalBalance.increment(payment);
     });

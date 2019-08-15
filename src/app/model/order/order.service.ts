@@ -4,6 +4,7 @@ import {Customer} from '../member/customer/customer';
 import {Seller} from '../member/seller/seller';
 import {Item} from '../item/item';
 import {OrderItem} from '../order-item/order-item';
+import {OrderItemService} from '../order-item/order-item.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,9 @@ import {OrderItem} from '../order-item/order-item';
 export class OrderService {
   private collection: Map<string, Order>;
 
-  constructor() {
+  constructor(
+    private orderItemService: OrderItemService,
+  ) {
     this.collection = new Map();
   }
 
@@ -19,37 +22,28 @@ export class OrderService {
     return this.collection.get(id) || null;
   }
 
-  create(customer: Customer): Order {
+  create(customer: Customer = null): Order {
     const order = new Order(customer);
     this.collection.set(order.id, order);
 
     return order;
   }
 
-  currentCart(customer: Customer): Order {
-    const match = this.filter((order: Order) => order.customer.id === customer.id && order.isNew);
+  currentCart(): Order {
+    const match = this.filter((order: Order) => order.isNew);
     if (match.length > 0) {
       return match[0];
     }
 
-    return this.create(customer);
+    return this.create();
   }
 
   checkout(customer: Customer): void {
-    const cart = this.currentCart(customer);
+    const cart = this.currentCart();
     if (cart.amount > 0) {
       cart.checkout();
       this.create(customer);
     }
-  }
-
-  addToCart(
-    customer: Customer,
-    seller: Seller,
-    item: Item,
-  ): void {
-    console.log(customer, seller, item);
-    this.currentCart(customer).add(item, seller);
   }
 
   filter(fn: (value: Order) => boolean): Order[] {

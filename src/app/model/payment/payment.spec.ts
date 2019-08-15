@@ -2,7 +2,6 @@ import {Order} from '../order/order';
 import {Payment} from './payment';
 import {Customer} from '../member/customer/customer';
 import * as Util from '../../util/util';
-import {TestBed} from '@angular/core/testing';
 import {Item} from '../item/item';
 import {Seller} from '../member/seller/seller';
 
@@ -12,8 +11,8 @@ describe('Payment', () => {
   });
 
   it('should create an instance', () => {
-    const order = new Order(new Customer('bob', 100));
-    order.add(
+    const order = new Order(new Customer('bob'));
+    order.addItem(
       new Item(
         100,
       ),

@@ -9,19 +9,14 @@ export class ItemService {
 
   constructor() {
     this.collection = new Map();
-    [
-      200,
-      300,
-      350,
-      150,
-    ].forEach(price => {
-      const item = new Item(price);
-      this.collection.set(item.id, item);
-    });
+    this.create();
+    this.create();
+    this.create();
+    this.create();
   }
 
-  create(price: number): Item {
-    const item = new Item(price);
+  create(): Item {
+    const item = new Item();
     this.collection.set(item.id, item);
 
     return item;
@@ -37,5 +32,9 @@ export class ItemService {
 
   count(): number {
     return this.collection.size;
+  }
+
+  first(): Item {
+    return this.all()[0] || this.create();
   }
 }

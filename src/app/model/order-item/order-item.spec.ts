@@ -11,10 +11,11 @@ describe('OrderItem', () => {
   });
 
   it('should create an instance', () => {
-    const order = new Order(new Customer('bob', 100));
-
-    const entity = order.add(
-      new Item(100),
+    const entity = new OrderItem(
+      100,
+      new Item(),
+      50,
+      1,
       new Seller('bar'),
     );
     expect(entity).toBeTruthy();

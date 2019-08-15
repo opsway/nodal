@@ -17,12 +17,12 @@ export class Order {
   customer: Customer;
   private collection: Map<string, OrderItem>;
 
-  constructor(customer: Customer) {
+  constructor(customer: Customer = null) {
     this.id = Util.uuid('O');
     this.createdAt = new Date();
     this.status = Order.STATUS_CREATED;
     this.customer = customer;
-    this.collection = new Map();
+    this.collection = new Map(); // TODO remove
   }
 
   get isPaid(): boolean {
@@ -64,29 +64,5 @@ export class Order {
 
   checkout(): void {
     this.status = Order.STATUS_ORDERED;
-  }
-
-  add(
-    item: Item,
-    seller: Seller,
-    qty: number = 1,
-  ): OrderItem {
-    let entity: OrderItem;
-    const id = OrderItem.genId(
-      this,
-      seller,
-      item,
-    );
-
-    if (this.collection.has(id)) {
-      entity = this.collection.get(id);
-    } else {
-      entity = new OrderItem(item, seller, this);
-      this.collection.set(entity.id, entity);
-    }
-
-    entity.qty += qty;
-
-    return entity;
   }
 }

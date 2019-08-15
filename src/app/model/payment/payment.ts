@@ -1,7 +1,6 @@
 import * as Util from '../../util/util';
 import {Order} from '../order/order';
-
-const feeGatewayPercent = 2.1;
+import {Model} from '../model';
 
 export class Payment {
   id: string;
@@ -44,7 +43,7 @@ export class Payment {
   }
 
   capture(): void {
-    this.feeGateway = Math.floor((feeGatewayPercent / 100) * this.amount);
+    this.feeGateway = Math.floor((Model.feeGatewayPercent / 100) * this.amount);
     this.status = 'captured';
   }
 }

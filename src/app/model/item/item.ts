@@ -1,13 +1,11 @@
 import * as Util from '../../util/util';
 
-
 export class Item {
   id: string;
   price: number;
 
-  constructor(price: number) {
+  constructor() {
     this.id = Util.uuid('SKU');
-    this.price = price * 100;
   }
 
   get name(): string {
