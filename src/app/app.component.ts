@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Item} from './model/item/item';
-import {OrderItem} from './model/order/order-item';
-import {Merchant} from './model/member/merchant';
+import {OrderItem} from './model/order-item/order-item';
+import {Seller} from './model/member/seller/seller';
 import {Order} from './model/order/order';
 
 import {ItemService} from './model/item/item.service';
@@ -19,9 +19,9 @@ export class AppComponent implements OnInit {
   title = 'modeling nodal workflow';
   item: ItemService;
   payment: PaymentService;
-  merchants: Merchant[] = [];
+  sellers: Seller[] = [];
   order: Order;
-  catalog: Array<{item: Item, merchant: Merchant}> = [];
+  catalog: Array<{item: Item, seller: Seller}> = [];
   total = {
     gateway: {
       amount: 0,
@@ -39,26 +39,26 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const merchantTA = new Merchant('TA');
-    this.merchants.push(merchantTA);
-    const merchantSAAN = new Merchant('SAAN');
-    this.merchants.push(merchantSAAN);
+    const sellerTA = new Seller('TA');
+    this.sellers.push(sellerTA);
+    const sellerSAAN = new Seller('SAAN');
+    this.sellers.push(sellerSAAN);
 
     this.catalog.push({
       item: this.item.find('SKU1'),
-      merchant: merchantTA,
+      seller: sellerTA,
     });
     this.catalog.push({
       item: this.item.find('SKU2'),
-      merchant: merchantSAAN,
+      seller: sellerSAAN,
     });
     this.catalog.push({
       item: this.item.find('SKU3'),
-      merchant: merchantSAAN,
+      seller: sellerSAAN,
     });
     this.catalog.push({
       item: this.item.find('SKU4'),
-      merchant: merchantTA,
+      seller: sellerTA,
     });
   }
 

@@ -12,7 +12,7 @@ export class Total {
     return this.feeMarket - this.feeGateway;
   }
 
-  get merchant(): number {
+  get seller(): number {
     return this.amount - this.market;
   }
 

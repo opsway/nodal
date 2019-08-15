@@ -1,11 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { Customer } from '../../model/member/customer';
-import { Merchant } from '../../model/member/merchant';
+import { Customer } from '../../model/member/customer/customer';
+import { Seller } from '../../model/member/seller/seller';
 import { Item } from '../../model/item/item';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CustomerService } from '../../model/member/customer.service';
-import { MerchantService } from '../../model/member/merchant.service';
+import { CustomerService } from '../../model/member/customer/customer.service';
+import { SellerService } from '../../model/member/seller/seller.service';
 
 @Component({
   selector: 'app-create-order-dialog',
@@ -14,17 +14,17 @@ import { MerchantService } from '../../model/member/merchant.service';
 export class AddToCartDialogComponent implements OnInit {
   submitted = false;
   customerList: Array<Customer>;
-  sellerList: Array<Merchant>;
+  sellerList: Array<Seller>;
   form: FormGroup;
 
   constructor(
     private customerService: CustomerService,
-    private sellerService: MerchantService,
+    private sellerService: SellerService,
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<AddToCartDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
       customer: Customer,
-      seller: Merchant,
+      seller: Seller,
       item: Item
     }) {
   }

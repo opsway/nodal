@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Order} from './order';
-import {Customer} from '../member/customer';
-import {Merchant} from '../member/merchant';
+import {Customer} from '../member/customer/customer';
+import {Seller} from '../member/seller/seller';
 import {Item} from '../item/item';
-import {OrderItem} from './order-item';
+import {OrderItem} from '../order-item/order-item';
 
 @Injectable({
   providedIn: 'root'
@@ -46,11 +46,11 @@ export class OrderService {
 
   addToCart(
     customer: Customer,
-    merchant: Merchant,
+    seller: Seller,
     item: Item,
   ): void {
-    console.log(customer, merchant, item);
-    this.currentCart(customer).add(item, merchant);
+    console.log(customer, seller, item);
+    this.currentCart(customer).add(item, seller);
   }
 
   filter(fn: (value: Order) => boolean): Order[] {

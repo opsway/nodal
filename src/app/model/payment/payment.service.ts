@@ -5,8 +5,8 @@ import {Total} from '../transaction/total';
 import {NodalBalance} from '../transaction/nodal-balance';
 import {TransferService} from '../transaction/transfer.service';
 import {Transfer} from '../transaction/transfer';
-import {Merchant} from '../member/merchant';
-import {OrderItem} from '../order/order-item';
+import {Seller} from '../member/seller/seller';
+import {OrderItem} from '../order-item/order-item';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,7 @@ export class PaymentService {
 
   refund(item: OrderItem): void {
     const refund = item.refund();
-    this.nodalBalance.merchant -= refund;
+    this.nodalBalance.seller -= refund;
     this.nodalBalance.total -= refund;
   }
 
@@ -58,13 +58,13 @@ export class PaymentService {
   }
 
   nodalSettlement(): void {
-    this.nodalBalance.merchants.forEach((merchant: Merchant) => {
-      if (merchant.balance > 0) {
-        this.transfer.send(merchant.balance, merchant.name);
-        merchant.balance = 0;
+    this.nodalBalance.sellers.forEach((seller: Seller) => {
+      if (seller.balance > 0) {
+        this.transfer.send(seller.balance, seller.name);
+        seller.balance = 0;
       }
     });
-    this.nodalBalance.merchant = 0;
+    this.nodalBalance.seller = 0;
     this.transfer.send(this.nodalBalance.market, 'MARKET');
     this.nodalBalance.market = 0;
     this.nodalBalance.total = 0;

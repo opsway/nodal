@@ -4,8 +4,8 @@ import { PaymentService } from './payment.service';
 import {TransferService} from '../transaction/transfer.service';
 import {Order} from '../order/order';
 import {Item} from '../item/item';
-import {Merchant} from '../member/merchant';
-import {Customer} from '../member/customer';
+import {Seller} from '../member/seller/seller';
+import {Customer} from '../member/customer/customer';
 import * as Util from '../../util/util';
 
 describe('PaymentService', () => {
@@ -26,7 +26,7 @@ describe('PaymentService', () => {
       new Item(
         100,
       ),
-      new Merchant('bar'),
+      new Seller('bar'),
     );
     service.toPay(order, 'foo');
     let actual = service.total();

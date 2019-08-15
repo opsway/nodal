@@ -1,8 +1,8 @@
 import * as Util from '../../util/util';
-import {OrderItem} from './order-item';
+import {OrderItem} from '../order-item/order-item';
 import {Item} from '../item/item';
-import {Merchant} from '../member/merchant';
-import {Customer} from '../member/customer';
+import {Seller} from '../member/seller/seller';
+import {Customer} from '../member/customer/customer';
 import {Payment} from '../payment/payment';
 
 export class Order {
@@ -68,20 +68,20 @@ export class Order {
 
   add(
     item: Item,
-    merchant: Merchant,
+    seller: Seller,
     qty: number = 1,
   ): OrderItem {
     let entity: OrderItem;
     const id = OrderItem.genId(
       this,
-      merchant,
+      seller,
       item,
     );
 
     if (this.collection.has(id)) {
       entity = this.collection.get(id);
     } else {
-      entity = new OrderItem(item, merchant, this);
+      entity = new OrderItem(item, seller, this);
       this.collection.set(entity.id, entity);
     }
 

@@ -1,8 +1,8 @@
 import {Item} from '../item/item';
-import {Merchant} from '../member/merchant';
+import {Seller} from '../member/seller/seller';
 import {OrderItem} from './order-item';
-import {Order} from './order';
-import {Customer} from '../member/customer';
+import {Order} from '../order/order';
+import {Customer} from '../member/customer/customer';
 import * as Util from '../../util/util';
 
 describe('OrderItem', () => {
@@ -15,12 +15,12 @@ describe('OrderItem', () => {
 
     const entity = order.add(
       new Item(100),
-      new Merchant('bar'),
+      new Seller('bar'),
     );
     expect(entity).toBeTruthy();
     expect(entity.amount).toEqual(10000);
     expect(entity.feeMarket).toEqual(826);
-    expect(entity.amountMerchant).toEqual(9174);
+    expect(entity.amountSeller).toEqual(9174);
     expect(entity.id).toEqual('O1-M1-SKU1');
   });
 });

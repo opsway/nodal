@@ -1,10 +1,10 @@
 import {Order} from '../order/order';
 import {Payment} from './payment';
-import {Customer} from '../member/customer';
+import {Customer} from '../member/customer/customer';
 import * as Util from '../../util/util';
 import {TestBed} from '@angular/core/testing';
 import {Item} from '../item/item';
-import {Merchant} from '../member/merchant';
+import {Seller} from '../member/seller/seller';
 
 describe('Payment', () => {
   beforeEach(() => {
@@ -17,7 +17,7 @@ describe('Payment', () => {
       new Item(
         100,
       ),
-      new Merchant('bar'),
+      new Seller('bar'),
     );
     const entity = new Payment(
       order,

@@ -1,6 +1,6 @@
 import {Item} from '../item/item';
-import {Merchant} from '../member/merchant';
-import {Order} from './order';
+import {Seller} from '../member/seller/seller';
+import {Order} from '../order/order';
 
 const feeMarketPercent = 7;
 const feeMarketGST = 18;
@@ -10,22 +10,22 @@ export class OrderItem {
   item: Item;
   qty: number;
   shippingPrice: number;
-  merchant: Merchant;
+  seller: Seller;
   refunded: boolean;
   order: Order;
 
   constructor(
     item: Item,
-    merchant: Merchant,
+    seller: Seller,
     order: Order = null,
   ) {
     this.id = OrderItem.genId(
       order,
-      merchant,
+      seller,
       item,
     );
     this.item = item;
-    this.merchant = merchant;
+    this.seller = seller;
     this.order = order;
     this.qty = 0;
     this.shippingPrice = order.customer.shippingPrice;
@@ -34,10 +34,10 @@ export class OrderItem {
 
   static genId(
     order: Order,
-    merchant: Merchant,
+    seller: Seller,
     item: Item,
   ): string {
-    return `${order.id}-${merchant.id}-${item.id}`;
+    return `${order.id}-${seller.id}-${item.id}`;
   }
 
   get amount(): number {
@@ -52,7 +52,7 @@ export class OrderItem {
     return this.refunded ? 0 : Math.floor((feeMarketPercent / 100) * this.amount) * (feeMarketGST / 100 + 1);
   }
 
-  get amountMerchant(): number {
+  get amountSeller(): number {
     return this.amount - this.feeMarket;
   }
 
@@ -63,7 +63,7 @@ export class OrderItem {
   refund(): number {
     let refund = 0;
     if (!this.refunded && this.order.payment && this.order.payment.captured) {
-      this.merchant.balance -= refund = this.amountMerchant;
+      this.seller.balance -= refund = this.amountSeller;
     }
     this.refunded = true;
     return refund;

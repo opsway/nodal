@@ -1,5 +1,5 @@
 import { Order } from './order';
-import {Customer} from '../member/customer';
+import {Customer} from '../member/customer/customer';
 
 describe('Order', () => {
   it('should create an instance', () => {

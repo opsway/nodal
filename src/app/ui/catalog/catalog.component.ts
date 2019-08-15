@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {ItemService} from '../../model/item/item.service';
 import {OrderService} from '../../model/order/order.service';
-import {CustomerService} from '../../model/member/customer.service';
-import {MerchantService} from '../../model/member/merchant.service';
-import {Customer} from '../../model/member/customer';
+import {CustomerService} from '../../model/member/customer/customer.service';
+import {SellerService} from '../../model/member/seller/seller.service';
+import {Customer} from '../../model/member/customer/customer';
 import {Order} from '../../model/order/order';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { AddToCartDialogComponent } from '../add-to-cart-dialog/add-to-cart-dialog.component';
@@ -18,19 +18,19 @@ export class CatalogComponent implements OnInit {
   item: ItemService;
   order: OrderService;
   customer: CustomerService;
-  merchant: MerchantService;
+  seller: SellerService;
 
   constructor(
     item: ItemService,
     order: OrderService,
     customer: CustomerService,
-    merchant: MerchantService,
+    seller: SellerService,
     public dialog: MatDialog
   ) {
     this.item = item;
     this.order = order;
     this.customer = customer;
-    this.merchant = merchant;
+    this.seller = seller;
     this.currentCustomer = this.customer.first();
   }
 

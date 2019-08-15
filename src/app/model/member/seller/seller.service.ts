@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import {Merchant} from './merchant';
-import {Customer} from './customer';
+import {Seller} from './seller';
+import {Customer} from '../customer/customer';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MerchantService {
-  private collection: Map<string, Merchant>;
+export class SellerService {
+  private collection: Map<string, Seller>;
 
   constructor() {
     this.collection = new Map();
@@ -17,20 +17,20 @@ export class MerchantService {
       'CFC',
       'SWA',
     ].forEach((name: string) => {
-      const entity = new Merchant(name);
+      const entity = new Seller(name);
       this.collection.set(entity.id, entity);
     });
   }
 
-  find(id: string): Merchant|null {
+  find(id: string): Seller|null {
     return this.collection.get(id) || null;
   }
 
-  all(): Merchant[] {
+  all(): Seller[] {
     return Array.from(this.collection.values());
   }
 
-  first(): Merchant|null {
+  first(): Seller|null {
     return this.all()[0] || null;
   }
 }

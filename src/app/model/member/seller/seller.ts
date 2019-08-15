@@ -1,6 +1,6 @@
-import * as Util from '../../util/util';
+import * as Util from '../../../util/util';
 
-export class Merchant {
+export class Seller {
   id: string;
   name: string;
   balance = 0;

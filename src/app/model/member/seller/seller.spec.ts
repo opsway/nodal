@@ -1,8 +1,8 @@
-import { Merchant } from './merchant';
+import { Seller } from './seller';
 
-describe('Merchant', () => {
+describe('Seller', () => {
   it('should create an instance', () => {
-    const entity = new Merchant(
+    const entity = new Seller(
       'foo'
     );
     expect(entity).toBeTruthy();
