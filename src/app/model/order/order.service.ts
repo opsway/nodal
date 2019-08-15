@@ -29,7 +29,6 @@ export class OrderService {
   currentCart(customer: Customer): Order {
     const match = this.filter((order: Order) => order.customer.id === customer.id && order.isNew);
     if (match.length > 0) {
-      console.log('match:', match);
       return match[0];
     }
 
@@ -61,7 +60,6 @@ export class OrderService {
       }
     });
 
-    console.log('filter:', result);
     return result;
   }
 

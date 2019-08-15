@@ -1,7 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrderComponent } from './order.component';
-import {OrderService} from '../../model/order/order.service';
+import {MatTableModule} from '@angular/material';
+import {ConvertPipe} from '../../util/convert.pipe';
 
 describe('OrderComponent', () => {
   let component: OrderComponent;
@@ -9,11 +10,12 @@ describe('OrderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        OrderComponent,
+      imports: [
+        MatTableModule
       ],
-      providers: [
-        { provide: OrderService, useValue: new OrderService() },
+      declarations: [
+        ConvertPipe,
+        OrderComponent,
       ],
     })
     .compileComponents();
@@ -26,7 +28,6 @@ describe('OrderComponent', () => {
   });
 
   it('should create', () => {
-    pending('FIXME'); // FIXME
     expect(component).toBeTruthy();
   });
 });

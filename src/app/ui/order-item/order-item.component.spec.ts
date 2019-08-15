@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OrderItemComponent } from './order-item.component';
+import {MatTableModule} from '@angular/material';
+import {ConvertPipe} from '../../util/convert.pipe';
 
 describe('OrderItemComponent', () => {
   let component: OrderItemComponent;
@@ -8,7 +10,13 @@ describe('OrderItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrderItemComponent ]
+      imports: [
+        MatTableModule
+      ],
+      declarations: [
+        ConvertPipe,
+        OrderItemComponent,
+      ],
     })
     .compileComponents();
   }));
@@ -20,7 +28,6 @@ describe('OrderItemComponent', () => {
   });
 
   it('should create', () => {
-    pending('FIXME'); // FIXME
     expect(component).toBeTruthy();
   });
 });

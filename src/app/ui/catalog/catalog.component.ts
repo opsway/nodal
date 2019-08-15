@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+} from '@angular/core';
 import {ItemService} from '../../model/item/item.service';
 import {OrderService} from '../../model/order/order.service';
 import {CustomerService} from '../../model/member/customer/customer.service';
@@ -11,7 +14,9 @@ import { AddToCartDialogComponent } from '../add-to-cart-dialog/add-to-cart-dial
 @Component({
   selector: 'app-catalog',
   templateUrl: 'catalog.component.html',
-  styleUrls: ['catalog.component.css']
+  styleUrls: [
+    'catalog.component.css',
+  ],
 })
 export class CatalogComponent implements OnInit {
   currentCustomer: Customer;
