@@ -6,8 +6,9 @@ import {Order} from './model/order/order';
 
 import {ItemService} from './model/item/item.service';
 import {PaymentService} from './model/payment/payment.service';
-import {MatTable} from '@angular/material';
 import {OrderComponent} from './ui/order/order.component';
+import {ActivatedRoute} from '@angular/router';
+
 
 @Component({
   selector: 'app-root',
@@ -30,6 +31,7 @@ export class AppComponent implements OnInit {
   };
 
   constructor(
+    private route: ActivatedRoute,
     item: ItemService,
     payment: PaymentService,
   ) {
@@ -38,7 +40,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.route.paramMap.subscribe(params => {
+      this.import(params.get('data')); // TODO handling false
+    });
     const sellerTA = new Seller('TA');
     this.sellers.push(sellerTA);
     const sellerSAAN = new Seller('SAAN');
@@ -60,6 +64,30 @@ export class AppComponent implements OnInit {
       item: this.item.find('SKU4'),
       seller: sellerTA,
     });
+  }
+
+  import(content: string): boolean {
+    let data = null;
+    try {
+      data = JSON.parse(atob(content));
+    } catch (e) {
+      return false;
+    }
+
+    console.log(data); // TODO import model
+
+    return true;
+  }
+
+  export(data: Payment[]): string {
+    const content = JSON.stringify({count: data.length}); // TODO export model
+    return `${window.location.origin}/${btoa(content)}`;
+  }
+
+  save(): void {
+    const url = this.export(this.payment.all());
+    console.log(url);
+    window.location.href = url;
   }
 
   refund(item: OrderItem): void {
