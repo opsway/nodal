@@ -22,6 +22,7 @@ import { OrderItemComponent } from './ui/order-item/order-item.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddToCartDialogComponent } from './ui/add-to-cart-dialog/add-to-cart-dialog.component';
+import { PaymentListComponent } from './ui/payment-list/payment-list.component';
 
 @NgModule({
   declarations: [
@@ -32,9 +33,11 @@ import { AddToCartDialogComponent } from './ui/add-to-cart-dialog/add-to-cart-di
     OrderItemComponent,
     CatalogComponent,
     AddToCartDialogComponent,
+    PaymentListComponent,
   ],
   imports: [
     BrowserAnimationsModule,
+    MatTableModule,
     MatButtonToggleModule,
     MatCardModule,
     MatToolbarModule,

@@ -8,7 +8,7 @@ import {ItemService} from './model/item/item.service';
 import {PaymentService} from './model/payment/payment.service';
 import {OrderComponent} from './ui/order/order.component';
 import {ActivatedRoute} from '@angular/router';
-
+import {Payment} from './model/payment/payment';
 
 @Component({
   selector: 'app-root',
