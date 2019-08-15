@@ -15,6 +15,7 @@ import {
   MatSelectModule,
   MatInputModule,
   MatDialogModule,
+  MatTabsModule,
   MatDialogTitle
 } from '@angular/material';
 import { OrderComponent } from './ui/order/order.component';
@@ -48,6 +49,7 @@ import { PaymentListComponent } from './ui/payment-list/payment-list.component';
     MatSelectModule,
     MatInputModule,
     MatDialogModule,
+    MatTabsModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,

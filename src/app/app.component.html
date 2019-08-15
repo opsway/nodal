@@ -1,11 +1,35 @@
-<div style="width:900px; margin: 0 auto;">
+<div style="width:1000px; margin: 0 auto;">
   <mat-toolbar>
-    <span>{{title | uppercase}}</span>
+    <span class="toolbar-canter">{{title | uppercase}}</span>
     <!--<button mat-mini-fab (click)="save()">S</button> TODO import/export  -->
   </mat-toolbar>
-  <app-catalog></app-catalog>
-  <app-order></app-order>
-  <app-order-item></app-order-item>
-  <app-payment-list [dataSource]="payment.all()"></app-payment-list>
+
+  <mat-tab-group>
+    <mat-tab label="Orders">
+      <app-catalog></app-catalog>
+      <app-order></app-order>
+      <app-order-item></app-order-item>
+    </mat-tab>
+    <mat-tab label="Payments">
+      <app-payment-list [dataSource]="payment.all()"></app-payment-list>
+    </mat-tab>
+    <mat-tab label="Sellers / Invoices">
+      <h1>Some more tab content</h1>
+      <p>...</p>
+    </mat-tab>
+    <mat-tab label="Nodal">
+      <h1>Some more tab content</h1>
+      <p>...</p>
+    </mat-tab>
+    <mat-tab label="Refunds / CreditMemo">
+      <h1>Some more tab content</h1>
+      <p>...</p>
+    </mat-tab>
+    <mat-tab label="Customers">
+      <h1>Some more tab content</h1>
+      <p>...</p>
+    </mat-tab>
+  </mat-tab-group>
+
 </div>
 <router-outlet></router-outlet>
