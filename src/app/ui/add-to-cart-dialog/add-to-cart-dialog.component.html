@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>Fill Cart</h1>
 <div mat-dialog-content>
 
-  <form [formGroup]="form">
+  <form [formGroup]="form" autocomplete="off" novalidate>
     <mat-form-field>
       <mat-label>Customer</mat-label>
       <mat-select formControlName="customer" required>
@@ -24,32 +24,36 @@
       <mat-label>Price</mat-label>
       <input matInput placeholder="12.00" formControlName="price" type="number" min="0" step="0.01" required>
       <mat-hint>Hint</mat-hint>
+      <mat-error *ngIf="hasError('price', 'required')">Shipping is required</mat-error>
+      <mat-error *ngIf="hasError('price', 'min')">Please enter a value greater than 0</mat-error>
     </mat-form-field>
-
-    <mat-error>
-      <span *ngIf="!form.get(['price']).valid">Please enter a value greater than 0</span>
-    </mat-error>
 
     <mat-form-field>
       <mat-label>Shipping</mat-label>
       <input matInput placeholder="12.00" formControlName="shipping" type="number" min="0" step="0.01" required>
       <mat-hint>Hint</mat-hint>
+      <mat-error *ngIf="hasError('shipping', 'required')">Shipping is required</mat-error>
+      <mat-error *ngIf="hasError('shipping', 'min')">Please enter a value greater than 0</mat-error>
     </mat-form-field>
-
-    <mat-error>
-      <span *ngIf="!form.get(['shipping']).valid">Please enter a value greater than 0</span>
-    </mat-error>
 
     <mat-form-field>
       <mat-label>SKU</mat-label>
       <input matInput placeholder="SKU1" formControlName="sku" required>
       <mat-hint>Hint</mat-hint>
+      <mat-error *ngIf="hasError('sku', 'required')">SKU is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Qty</mat-label>
+      <input matInput placeholder="1" formControlName="qty" step="1" required>
+      <mat-hint>Hint</mat-hint>
+      <mat-error *ngIf="hasError('qty', 'required')">Qty is required</mat-error>
     </mat-form-field>
 
   </form>
 
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="close()">No Thanks</button>
-  <button mat-button (click)="save()" cdkFocusInitial>Add to Cart</button>
+  <button mat-stroked-button color="warn" (click)="close()">No Thanks</button>
+  <button mat-stroked-button color="primary" (click)="save()" cdkFocusInitial>Add to Cart</button>
 </div>

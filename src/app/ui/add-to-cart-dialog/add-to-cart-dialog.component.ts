@@ -47,6 +47,9 @@ export class AddToCartDialogComponent implements OnInit {
       sku: ['',
         Validators.required
       ],
+      qty: [1,
+        Validators.required
+      ],
     });
   }
 
@@ -55,6 +58,12 @@ export class AddToCartDialogComponent implements OnInit {
       this.dialogRef.close(this.form.value);
     } else {
       this.submitted = true;
+      for (const inner in this.form.controls) {
+        if (this.form.controls.hasOwnProperty(inner)) {
+          this.form.get(inner).markAsTouched();
+          this.form.get(inner).updateValueAndValidity();
+        }
+      }
     }
   }
 
@@ -62,4 +71,5 @@ export class AddToCartDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  hasError = (controlName: string, errorName: string) => this.form.controls[controlName].hasError(errorName);
 }
