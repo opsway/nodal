@@ -35,7 +35,6 @@ import { PaymentListComponent } from './ui/payment-list/payment-list.component';
     CatalogComponent,
     AddToCartDialogComponent,
     PaymentListComponent,
-    MatDialogTitle,
   ],
   imports: [
     BrowserAnimationsModule,
