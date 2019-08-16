@@ -130,54 +130,56 @@
         <button class="button-xsmall pure-button float-right mt-3" (click)="checkout()">checkout</button>
       </div>
     </div>
+    <div class="row justify-content-md-center mb-3">
+      <h2>Orders</h2>
+
+      <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Customer</th>
+          <th scope="col" colspan="2">SKU</th>
+          <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <th scope="row" rowspan="3">O1</th>
+          <td rowspan="3">CA</td>
+          <td>SKU1</td>
+          <td>100</td>
+          <td rowspan="3" class="text-center align-middle">
+            <div class="btn-group-vertical btn-group-sm" role="group" aria-label="Order action">
+              <button type="button" class="btn btn-primary">Pay</button>
+              <button type="button" class="btn btn-danger">Cancel</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>SKU2</td>
+          <td>300</td>
+        </tr>
+        <tr>
+          <td>SKU3</td>
+          <td>200</td>
+        </tr>
+
+        <tr>
+          <th scope="row" rowspan="2">O2</th>
+          <td rowspan="2">CB</td>
+          <td>SKU1</td>
+          <td>100</td>
+          <td rowspan="2" class="text-center align-middle">
+            <button type="button" class="btn btn-primary">Pay</button>
+          </td>
+        </tr>
+        <tr>
+          <td>SKU2</td>
+          <td>300</td>
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
   </div>
-
-
-<h2>Orders</h2>
-
-  <table class="table table-bordered table-striped table-hover">
-    <thead class="thead-light">
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Customer</th>
-      <th scope="col" colspan="2">SKU</th>
-      <th scope="col">Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <th scope="row" rowspan="3">O1</th>
-      <td rowspan="3">CA</td>
-      <td>SKU1</td>
-      <td>100</td>
-      <td rowspan="3" class="text-center align-middle">
-        <button type="button" class="btn btn-primary">Pay</button>
-      </td>
-    </tr>
-    <tr>
-      <td>SKU2</td>
-      <td>300</td>
-    </tr>
-    <tr>
-      <td>SKU3</td>
-      <td>200</td>
-    </tr>
-
-    <tr>
-      <th scope="row" rowspan="2">O2</th>
-      <td rowspan="2">CB</td>
-      <td>SKU1</td>
-      <td>100</td>
-      <td rowspan="2" class="text-center align-middle">
-        <button type="button" class="btn btn-primary">Pay</button>
-      </td>
-    </tr>
-    <tr>
-      <td>SKU2</td>
-      <td>300</td>
-    </tr>
-
-    </tbody>
-
-  </table>
 </div>
