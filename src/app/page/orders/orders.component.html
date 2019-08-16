@@ -21,9 +21,9 @@
               </div>
 
               <div class="form-group row">
-                <label for="customer" class="col-sm-3 col-form-label">Customer</label>
+                <label for="customerId" class="col-sm-3 col-form-label">Customer</label>
                 <div class="col-sm-9">
-                  <select name="seller" id="customer" formControlName="customer" class="form-control">
+                  <select name="customerId" id="customerId" formControlName="customerId" class="form-control">
                     <option *ngFor="let it of customerService.all()" [value]="it.id">{{it.name}}</option>
                   </select>
                 </div>
@@ -41,30 +41,30 @@
                 </div>
               </div>
 
-              <div class="form-group row" formGroupName="item">
-                <label class="col-sm-3 col-form-label">Items</label>
+              <div class="form-group row" formGroupName="orderItem">
+                <label class="col-sm-3 col-form-label">New Item of Order</label>
                 <div class="col-sm-9">
                   <div class="card">
                     <div class="card-body">
 
                       <div class="form-group row">
-                        <label for="seller" class="col-sm-2 col-form-label">Seller</label>
+                        <label for="sellerId" class="col-sm-2 col-form-label">Seller</label>
                         <div class="col-sm-10">
-                          <select name="seller" id="seller" formControlName="seller" class="form-control">
-                            <option *ngFor="let it of sellerService.all()" [value]="it">{{it.name}}</option>
+                          <select name="sellerId" id="sellerId" formControlName="sellerId" class="form-control">
+                            <option *ngFor="let it of sellerService.all()" [value]="it.id">{{it.name}}</option>
                           </select>
                         </div>
                       </div>
 
                       <div class="form-group row">
-                        <label for="sku" class="col-sm-2 col-form-label">SKU</label>
+                        <label for="itemId" class="col-sm-2 col-form-label">SKU</label>
                         <div class="col-sm-10">
-                          <select name="seller" id="sku" class="form-control" formControlName="sku"
-                                  [ngClass]="{'is-invalid': form.get(['item', 'sku']).invalid}">
-                            <option *ngFor="let it of model.items" [value]="it">{{it.name}}</option>
+                          <select name="itemId" id="itemId" class="form-control" formControlName="itemId"
+                                  [ngClass]="{'is-invalid': form.get(['orderItem', 'itemId']).invalid}">
+                            <option *ngFor="let it of model.items" [value]="it.id">{{it.name}}</option>
                           </select>
                           <div class="invalid-feedback">
-                            <div *ngIf="form.hasError('required', ['item', 'sku'])">SKU is required</div>
+                            <div *ngIf="form.hasError('required', ['orderItem', 'itemId'])">SKU is required</div>
                           </div>
                         </div>
                       </div>
@@ -73,23 +73,23 @@
                         <label for="price" class="col-sm-2 col-form-label">Price</label>
                         <div class="col-sm-10">
                           <input type="number" min="0.01" step="0.01" id="price" class="form-control" formControlName="price"
-                                 [ngClass]="{'is-invalid': form.get(['item', 'price']).invalid}">
+                                 [ngClass]="{'is-invalid': form.get(['orderItem', 'price']).invalid}">
                           <div class="invalid-feedback">
-                            <div *ngIf="form.hasError('required', ['item', 'price'])">Price is required</div>
-                            <div *ngIf="form.hasError('min', ['item', 'price'])">Price enter a value greater than 0</div>
+                            <div *ngIf="form.hasError('required', ['orderItem', 'price'])">Price is required</div>
+                            <div *ngIf="form.hasError('min', ['orderItem', 'price'])">Price enter a value greater than 0</div>
                           </div>
                         </div>
                       </div>
 
                       <div class="form-group row">
-                        <label for="priceShipping" class="col-sm-2 col-form-label">Shipping</label>
+                        <label for="priceShipping" class="col-sm-2 col-form-label">Shipping Price</label>
                         <div class="col-sm-10">
                           <input id="priceShipping" type="number" min="0" step="0.01" class="form-control"
                                  formControlName="shipping"
-                                 [ngClass]="{'is-invalid': form.get(['item', 'shipping']).invalid}">
+                                 [ngClass]="{'is-invalid': form.get(['orderItem', 'shipping']).invalid}">
                           <div class="invalid-feedback">
-                            <div *ngIf="form.hasError('required', ['item', 'shipping'])">Shipping is required</div>
-                            <div *ngIf="form.hasError('min', ['item', 'shipping'])">Please enter a value greater than 0</div>
+                            <div *ngIf="form.hasError('required', ['orderItem', 'shipping'])">Shipping is required</div>
+                            <div *ngIf="form.hasError('min', ['orderItem', 'shipping'])">Please enter a value greater than 0</div>
                           </div>
                         </div>
                       </div>
@@ -98,10 +98,10 @@
                         <label for="qty" class="col-sm-2 col-form-label">Qty</label>
                         <div class="col-sm-10">
                           <input type="number" step="1" min="1" id="qty" class="form-control" formControlName="qty"
-                                 [ngClass]="{'is-invalid': form.get(['item', 'qty']).invalid}">
+                                 [ngClass]="{'is-invalid': form.get(['orderItem', 'qty']).invalid}">
                           <div class="invalid-feedback">
-                            <div *ngIf="form.hasError('required', ['item', 'qty'])">Qty is required</div>
-                            <div *ngIf="form.hasError('min', ['item', 'qty'])">Please enter a value greater than 0</div>
+                            <div *ngIf="form.hasError('required', ['orderItem', 'qty'])">Qty is required</div>
+                            <div *ngIf="form.hasError('min', ['orderItem', 'qty'])">Please enter a value greater than 0</div>
                           </div>
                         </div>
                       </div>

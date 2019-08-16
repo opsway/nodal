@@ -63,7 +63,6 @@ export class Order {
   }
 
   save(): boolean {
-    console.log(this.total);
     if (this.isUnchanged) {
       return false;
     }

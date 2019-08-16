@@ -37,11 +37,11 @@ export class OrdersComponent implements OnInit {
     this.minDate = new Date().toISOString().split('T')[0];
     this.form = this.fb.group({
       orderId: [this.order.id, []],
-      customer: [this.customerService.first(), Validators.required],
+      customerId: [this.customerService.first().id, Validators.required],
       date: [this.minDate, Validators.required],
-      item: this.fb.group({
-        seller: [this.sellerService.first(), Validators.required],
-        sku: [this.itemService.first(), Validators.required],
+      orderItem: this.fb.group({
+        sellerId: [this.sellerService.first().id, Validators.required],
+        itemId: [this.itemService.first().id, Validators.required],
         qty: [1, Validators.required],
         price: [100, [
           Validators.required,
@@ -94,12 +94,12 @@ export class OrdersComponent implements OnInit {
   addToCart(): boolean {
     if (this.form.valid) {
       const entity = this.model.addToCart(
-        this.form.value.customer,
-        this.form.value.item.price,
-        this.form.value.item.sku, // TODO item
-        this.form.value.item.shipping,
-        this.form.value.item.qty,
-        this.form.value.item.seller
+        this.form.value.customerId,
+        this.form.value.orderItem.price,
+        this.form.value.orderItem.itemId,
+        this.form.value.orderItem.shipping,
+        this.form.value.orderItem.qty,
+        this.form.value.orderItem.sellerId
       );
       entity.order.createdAt = this.form.value.date;
     } else {

@@ -1,4 +1,6 @@
-import {Injectable, PipeTransform} from '@angular/core';
+import {
+  Injectable,
+} from '@angular/core';
 import {PaymentService} from './payment/payment.service';
 import {OrderService} from './order/order.service';
 import {SellerService} from './member/seller/seller.service';
@@ -7,12 +9,8 @@ import {Shared} from './shared';
 import {OrderItemService} from './order-item/order-item.service';
 import {ItemService} from './item/item.service';
 import {OrderItem} from './order-item/order-item';
-import {TableProvider} from '../ui/table/table-provider';
-import {Customer} from './member/customer/customer';
 import {Item} from './item/item';
-import {Seller} from './member/seller/seller';
 import {Order} from './order/order';
-import {ConvertPipe} from '../util/convert.pipe';
 
 @Injectable({
   providedIn: 'root'
@@ -93,16 +91,18 @@ export class ModelService {
   }
 
   addToCart(
-    customer: Customer,
+    customerId: string,
     price: number,
-    item: Item,
+    itemId: string,
     priceShipping: number,
     qty: number,
-    seller: Seller,
+    sellerId: string,
   ): OrderItem {
+    const customer = this.customerService.find(customerId);
+    const item = this.itemService.find(itemId);
+    const seller = this.sellerService.find(sellerId);
     const cart = this.orderService.currentCart();
     cart.customer = customer;
-
 
     return cart.addItem(this.orderItemService.create(
       price,
@@ -118,12 +118,12 @@ export class ModelService {
     // 1. Order flow
     // 1.1. Edit order
     const order = this.addToCart(
-      this.customerService.first(),
+      this.customerService.first().id,
       200,
-      this.itemService.first(),
+      this.itemService.first().id,
       50,
       2,
-      this.sellerService.first(),
+      this.sellerService.first().id,
     ).order;
     // 1.2. Save order
     this.saveOrder();
