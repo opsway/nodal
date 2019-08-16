@@ -16,6 +16,7 @@ import { ItemService } from '../../model/item/item.service';
 })
 export class OrdersComponent implements OnInit {
   order: Order;
+  minDate: string;
   form: FormGroup;
 
   constructor(
@@ -30,10 +31,11 @@ export class OrdersComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.minDate = new Date().toISOString().split('T')[0];
     this.form = this.fb.group({
       orderId: [this.order.id, []],
       customer: [this.customerService.first(), Validators.required],
-      date: [new Date().toISOString().split('T')[0], Validators.required],
+      date: [this.minDate, Validators.required],
       item: this.fb.group({
         seller: [this.sellerService.first(), Validators.required],
         sku: [this.itemService.first(), Validators.required],
@@ -77,6 +79,4 @@ export class OrdersComponent implements OnInit {
 
     return false;
   }
-  // hasError = (controlName: string, errorName: string) => this.form.controls[controlName].hasError(errorName);
-
 }

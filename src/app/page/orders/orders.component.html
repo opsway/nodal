@@ -5,7 +5,7 @@
 -->
 <div class="content">
   <div class="container-fluid">
-    <div class="row justify-content-md-center">
+q    <div class="row justify-content-md-center mb-3">
       <div class="col-md-8">
 
         <div class="card">
@@ -32,74 +32,107 @@
               <div class="form-group row">
                 <label for="date" class="col-sm-3 col-form-label">Date</label>
                 <div class="col-sm-9">
-                  <input type="date" id="date" class="form-control" formControlName="date" >
+                  <input type="date" id="date" class="form-control"
+                         [min]="minDate" formControlName="date"
+                         [ngClass]="{'is-invalid': form.get('date').invalid}">
+                  <div class="invalid-feedback">
+                    <div *ngIf="form.hasError('required', 'date')">Date is required</div>
+                  </div>
                 </div>
               </div>
 
               <div class="form-group row" formGroupName="item">
                 <label class="col-sm-3 col-form-label">Items</label>
                 <div class="col-sm-9">
+                  <div class="card">
+                    <div class="card-body">
 
-                  <div class="form-group row">
-                    <label for="seller" class="col-sm-2 col-form-label">Seller</label>
-                    <div class="col-sm-10">
-                      <select name="seller" id="seller" formControlName="seller" class="form-control">
-                        <option *ngFor="let it of sellerService.all()" [value]="it">{{it.name}}</option>
-                      </select>
+                      <div class="form-group row">
+                        <label for="seller" class="col-sm-2 col-form-label">Seller</label>
+                        <div class="col-sm-10">
+                          <select name="seller" id="seller" formControlName="seller" class="form-control">
+                            <option *ngFor="let it of sellerService.all()" [value]="it">{{it.name}}</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label for="sku" class="col-sm-2 col-form-label">SKU</label>
+                        <div class="col-sm-10">
+                          <select name="seller" id="sku" class="form-control" formControlName="sku"
+                                  [ngClass]="{'is-invalid': form.get(['item', 'sku']).invalid}">
+                            <option *ngFor="let it of model.items" [value]="it">{{it.name}}</option>
+                          </select>
+                          <div class="invalid-feedback">
+                            <div *ngIf="form.hasError('required', ['item', 'sku'])">SKU is required</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label for="price" class="col-sm-2 col-form-label">Price</label>
+                        <div class="col-sm-10">
+                          <input type="number" min="0.01" step="0.01" id="price" class="form-control" formControlName="price"
+                                 [ngClass]="{'is-invalid': form.get(['item', 'price']).invalid}">
+                          <div class="invalid-feedback">
+                            <div *ngIf="form.hasError('required', ['item', 'price'])">Price is required</div>
+                            <div *ngIf="form.hasError('min', ['item', 'price'])">Price enter a value greater than 0</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label for="priceShipping" class="col-sm-2 col-form-label">Shipping</label>
+                        <div class="col-sm-10">
+                          <input id="priceShipping" type="number" min="0" step="0.01" class="form-control"
+                                 formControlName="shipping"
+                                 [ngClass]="{'is-invalid': form.get(['item', 'shipping']).invalid}">
+                          <div class="invalid-feedback">
+                            <div *ngIf="form.hasError('required', ['item', 'shipping'])">Shipping is required</div>
+                            <div *ngIf="form.hasError('min', ['item', 'shipping'])">Please enter a value greater than 0</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <label for="qty" class="col-sm-2 col-form-label">Qty</label>
+                        <div class="col-sm-10">
+                          <input type="number" step="1" min="1" id="qty" class="form-control" formControlName="qty"
+                                 [ngClass]="{'is-invalid': form.get(['item', 'qty']).invalid}">
+                          <div class="invalid-feedback">
+                            <div *ngIf="form.hasError('required', ['item', 'qty'])">Qty is required</div>
+                            <div *ngIf="form.hasError('min', ['item', 'qty'])">Please enter a value greater than 0</div>
+                          </div>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
-
-                  <div class="form-group row">
-                    <label for="sku" class="col-sm-2 col-form-label">SKU</label>
-                    <div class="col-sm-10">
-                      <select name="seller" id="sku" formControlName="sku" class="form-control">
-                        <option *ngFor="let it of model.items" [value]="it">{{it.name}}</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="form-group row">
-                    <label for="price" class="col-sm-2 col-form-label">Price</label>
-                    <div class="col-sm-10">
-                      <input type="number" min="0.01" step="0.01" id="price" class="form-control" formControlName="price" >
-                    </div>
-                  </div>
-
-                  <div class="form-group row">
-                    <label for="priceShipping" class="col-sm-2 col-form-label">Shipping</label>
-                    <div class="col-sm-10">
-                      <input type="number" min="0" step="0.01" id="priceShipping" class="form-control" formControlName="shipping" >
-<!--                      <div class="invalid-feedback">-->
-<!--                        Shipping is required.-->
-<!--                      </div>-->
-<!--                      <p *ngIf="hasError(['item','shipping'], 'required')">Shipping is required</p>-->
-<!--                      <p *ngIf="hasError(['item','shipping'], 'min')">Please enter a value greater than 0</p>-->
-                    </div>
-                  </div>
-
-                  <div class="form-group row">
-                    <label for="qty" class="col-sm-2 col-form-label">Qty</label>
-                    <div class="col-sm-10">
-                      <input type="number" id="qty" class="form-control" formControlName="qty" >
-                    </div>
-                  </div>
-
                 </div>
               </div>
 
-              <button class="button-xsmall pure-button" type="submit">Add</button>
+              <button class="button-xsmall pure-button float-right" type="submit">Add</button>
+
+<!--              <div class="btn-group btn-group-toggle" data-toggle="buttons">-->
+<!--                <button class="btn btn-secondary" type="submit">Add</button>-->
+<!--                <button class="btn btn-secondary" (click)="checkout()">Checkout</button>-->
+<!--              </div>-->
 
             </form>
-
-            <button class="button-xsmall pure-button" (click)="checkout()">checkout</button>
           </div>
         </div>
 
       </div>
     </div>
+    <div class="row mb-3">
+      <div class="col">
+        <app-order-item-table [provider]="model.itemsCart"></app-order-item-table>
+        <button class="button-xsmall pure-button float-right mt-3" (click)="checkout()">checkout</button>
+      </div>
+    </div>
   </div>
 
-<app-order-item-table [provider]="model.itemsCart"></app-order-item-table>
+
 <h2>Orders</h2>
 <table class="pure-table pure-table-horizontal">
     <thead>
