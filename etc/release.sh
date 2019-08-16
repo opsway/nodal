@@ -22,9 +22,13 @@ releaseNumber() {
 	printf "%s-%s" "$(release)" "$(version)"
 }
 
+toFile() {
+	tee "$@" > /dev/null
+}
+
 createMeta() {
   number="${1:-"$(releaseNumber)"}"
-	printf "export const meta = { releaseNumber: '%s', repo: '%s' };" "${number}" "$(repo)" | tee "${projectDir}/src/app/app.meta.ts"
+	printf "export const meta = { releaseNumber: '%s', repo: '%s' };\n" "${number}" "$(repo)" | toFile "${projectDir}/src/app/app.meta.ts"
 }
 
 
