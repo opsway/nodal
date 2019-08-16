@@ -136,18 +136,38 @@
       <table class="table table-bordered table-striped table-hover">
         <thead class="thead-light">
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Customer</th>
-          <th scope="col" colspan="2">SKU</th>
-          <th scope="col">Action</th>
+          <th scope="col" rowspan="2">#</th>
+          <th scope="col" rowspan="2">Customer</th>
+          <th scope="colgroup" colspan="6">Item</th>
+          <th scope="col" rowspan="2">Action</th>
+        </tr>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">price</th>
+          <th scope="col">shipping</th>
+          <th scope="col">qty</th>
+          <th scope="col">sku</th>
+          <th scope="col">seller</th>
         </tr>
         </thead>
         <tbody>
+
+        <!-- Start Order row -->
+
         <tr>
-          <th scope="row" rowspan="3">O1</th>
+          <th scope="rowgroup" rowspan="3">O1</th>
           <td rowspan="3">CA</td>
-          <td>SKU1</td>
+
+          <!--Start Order Item row-->
+
+          <th scope="row">O-I-1</th>
           <td>100</td>
+          <td>20</td>
+          <td>3</td>
+          <td>SKU1</td>
+          <td>TA</td>
+          <!--End Order Item row-->
+
           <td rowspan="3" class="text-center align-middle">
             <div class="btn-group-vertical btn-group-sm" role="group" aria-label="Order action">
               <button type="button" class="btn btn-primary">Pay</button>
@@ -155,28 +175,68 @@
             </div>
           </td>
         </tr>
-        <tr>
-          <td>SKU2</td>
-          <td>300</td>
-        </tr>
-        <tr>
-          <td>SKU3</td>
-          <td>200</td>
-        </tr>
+
+        <!--Start Order Item row-->
 
         <tr>
-          <th scope="row" rowspan="2">O2</th>
-          <td rowspan="2">CB</td>
+          <th scope="row">O-I-2</th>
+          <td>200</td>
+          <td>30</td>
+          <td>1</td>
+          <td>SKU2</td>
+          <td>TA</td>
+        </tr>
+        <!--End Order Item row-->
+
+        <!--Start Order Item row-->
+
+        <tr>
+          <th scope="row">O-I-3</th>
+          <td>400</td>
+          <td>10</td>
+          <td>2</td>
           <td>SKU1</td>
+          <td>SAA</td>
+        </tr>
+        <!--End Order Item row-->
+        <!--End Order row-->
+
+        <!--Start Order row-->
+
+        <tr>
+          <th scope="rowgroup" rowspan="2">O1</th>
+          <td rowspan="2">CA</td>
+
+          <!--Start Order Item row-->
+
+          <th scope="row">O-I-1</th>
           <td>100</td>
+          <td>20</td>
+          <td>3</td>
+          <td>SKU1</td>
+          <td>TA</td>
+          <!--End Order Item row-->
+
           <td rowspan="2" class="text-center align-middle">
-            <button type="button" class="btn btn-primary">Pay</button>
+            <div class="btn-group-vertical btn-group-sm" role="group" aria-label="Order action">
+              <button type="button" class="btn btn-primary">Pay</button>
+              <button type="button" class="btn btn-danger">Cancel</button>
+            </div>
           </td>
         </tr>
+
+        <!--Start Order Item row-->
+
         <tr>
+          <th scope="row">O-I-2</th>
+          <td>200</td>
+          <td>30</td>
+          <td>1</td>
           <td>SKU2</td>
-          <td>300</td>
+          <td>TA</td>
         </tr>
+        <!--End Order Item row-->
+        <!--End Order row-->
 
         </tbody>
       </table>
