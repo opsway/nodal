@@ -22,6 +22,6 @@ describe('OrderItem', () => {
     expect(entity.amount).toEqual(10000);
     expect(entity.feeMarket).toEqual(826);
     expect(entity.amountSeller).toEqual(9174);
-    expect(entity.id).toEqual('O1-M1-SKU1');
+    expect(entity.id).toEqual('OI1');
   });
 });

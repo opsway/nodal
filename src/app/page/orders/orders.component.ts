@@ -68,6 +68,7 @@ export class OrdersComponent implements OnInit {
       );
       entity.order.createdAt = this.form.value.date;
       console.log(entity);
+      console.log(this.model.itemsCart.rows);
     } else {
       for (const inner in this.form.controls) {
         if (this.form.controls.hasOwnProperty(inner)) {

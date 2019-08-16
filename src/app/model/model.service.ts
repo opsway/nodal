@@ -34,12 +34,22 @@ export class ModelService {
     return new TableProvider<OrderItem>(
       this.orderItemService.findByOrder(this.orderService.currentCart()),
       [
-        'id',
-        'priceFormatted',
-        'priceShippingFormatted',
-        'qty',
-        'sku',
-        'sellerName',
+        TableProvider.cellDef('id'),
+        TableProvider.cellDef('sellerName'),
+        TableProvider.cellDef('sku'),
+        TableProvider.cellDef('price', [
+          new ConvertPipe(),
+        ]),
+        TableProvider.cellDef('qty'),
+        TableProvider.cellDef('priceShipping', [
+          new ConvertPipe(),
+        ]),
+        TableProvider.cellDef('total', [
+          new ConvertPipe(),
+        ]),
+        TableProvider.cellDef('feeMarket', [
+          new ConvertPipe(),
+        ]),
       ],
     );
   }
@@ -119,11 +129,11 @@ export class ModelService {
     cart.customer = customer;
 
     return this.orderItemService.create(
-      100,
-      this.itemService.first(),
-      200,
-      2,
-      this.sellerService.first(),
+      price,
+      item,
+      priceShipping,
+      qty,
+      seller,
       cart,
     );
   }

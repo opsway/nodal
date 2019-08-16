@@ -5,16 +5,8 @@
         </tr>
     </thead>
     <tbody>
-        <tr class="pure-table-odd" *ngFor="let item of provider.rows">
-            <td *ngFor="let field of provider.fields">{{item[field]}}</td>
+        <tr [class.pure-table-odd]="i % 2 === 0" *ngFor="let row of provider.rows; let i = index">
+            <td *ngFor="let cell of row">{{cell}}</td>
         </tr>
     </tbody>
-<!--  <tfoot>
-       <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-  </tfoot>-->
 </table>

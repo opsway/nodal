@@ -27,29 +27,13 @@ export class OrderItem {
     this.seller = seller;
     this.order = order;
     this.qty = qty;
-    this.price = priceShipping * Model.precisionOfPersist;
+    this.price = price * Model.precisionOfPersist;
     this.priceShipping = priceShipping *  Model.precisionOfPersist;
     this.refunded = false;
   }
 
-  static genId(
-    order: Order,
-    seller: Seller,
-    item: Item,
-  ): string {
-    return `${order.id}-${seller.id}-${item.id}`;
-  }
-
-  get priceFormatted(): string {
-    return (new ConvertPipe()).transform(this.price);
-  }
-
-  get priceShippingFormatted(): string {
-    return (new ConvertPipe()).transform(this.priceShipping);
-  }
-
   get amount(): number {
-    return this.refunded ? 0 : this.item.price * this.qty;
+    return this.price * this.qty;
   }
 
   get amountShipping(): number {
@@ -57,7 +41,7 @@ export class OrderItem {
   }
 
   get feeMarket(): number {
-    return this.refunded ? 0 : Math.floor((Model.feeMarketPercent / 100) * this.amount) * (Model.feeMarketGST / 100 + 1);
+    return Math.floor((Model.feeMarketPercent / 100) * this.amount) * (Model.feeMarketGST / 100 + 1);
   }
 
   get amountSeller(): number {
