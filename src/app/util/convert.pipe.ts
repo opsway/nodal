@@ -1,4 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
+import {Model} from '../model/model';
 
 const formatter = new Intl.NumberFormat(
   'en-EN',
@@ -13,6 +14,6 @@ const formatter = new Intl.NumberFormat(
 })
 export class ConvertPipe implements PipeTransform {
   transform(value: any, ...args: any[]): any {
-    return formatter.format(value / 100);
+    return formatter.format(value / Model.precisionOfPersist);
   }
 }

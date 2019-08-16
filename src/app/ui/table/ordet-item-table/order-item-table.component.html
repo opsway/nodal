@@ -1,11 +1,11 @@
 <table class="pure-table pure-table-horizontal">
     <thead>
         <tr>
-            <th *ngFor="let field of provider.fields">{{field}}</th>
+            <th *ngFor="let head of provider.fields">{{head}}</th>
         </tr>
     </thead>
     <tbody>
-        <tr class="pure-table-odd" *ngFor="let item of provider.data">
+        <tr class="pure-table-odd" *ngFor="let item of provider.rows">
             <td *ngFor="let field of provider.fields">{{item[field]}}</td>
         </tr>
     </tbody>

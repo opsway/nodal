@@ -62,7 +62,12 @@ export class Order {
     this.payment = payment;
   }
 
-  checkout(): void {
-    this.status = Order.STATUS_ORDERED;
+  checkout(): boolean {
+    if (this.total > 0) {
+      this.status = Order.STATUS_ORDERED;
+      return true;
+    }
+
+    return false;
   }
 }

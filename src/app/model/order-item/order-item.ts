@@ -3,6 +3,7 @@ import {Item} from '../item/item';
 import {Seller} from '../member/seller/seller';
 import {Order} from '../order/order';
 import {Model} from '../model';
+import {ConvertPipe} from '../../util/convert.pipe';
 
 export class OrderItem {
   id: string;
@@ -39,6 +40,14 @@ export class OrderItem {
     return `${order.id}-${seller.id}-${item.id}`;
   }
 
+  get priceFormatted(): string {
+    return (new ConvertPipe()).transform(this.price);
+  }
+
+  get priceShippingFormatted(): string {
+    return (new ConvertPipe()).transform(this.priceShipping);
+  }
+
   get amount(): number {
     return this.refunded ? 0 : this.item.price * this.qty;
   }
@@ -53,6 +62,14 @@ export class OrderItem {
 
   get amountSeller(): number {
     return this.amount - this.feeMarket;
+  }
+
+  get sku(): string {
+    return this.item.id;
+  }
+
+  get sellerName(): string {
+    return this.seller.name;
   }
 
   get total(): number {

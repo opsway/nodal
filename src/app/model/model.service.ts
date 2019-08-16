@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, PipeTransform} from '@angular/core';
 import {PaymentService} from './payment/payment.service';
 import {OrderService} from './order/order.service';
 import {SellerService} from './member/seller/seller.service';
@@ -12,6 +12,7 @@ import {Customer} from './member/customer/customer';
 import {Item} from './item/item';
 import {Seller} from './member/seller/seller';
 import {Order} from './order/order';
+import {ConvertPipe} from '../util/convert.pipe';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,11 @@ export class ModelService {
       this.orderItemService.findByOrder(this.orderService.currentCart()),
       [
         'id',
+        'priceFormatted',
+        'priceShippingFormatted',
         'qty',
+        'sku',
+        'sellerName',
       ],
     );
   }
@@ -95,8 +100,11 @@ export class ModelService {
 
   checkout(): Order {
     const cart = this.orderService.currentCart();
-    cart.checkout();
-    return  this.orderService.create(cart.customer);
+    if (cart.checkout()) {
+      return this.orderService.create(cart.customer);
+    }
+
+    return cart;
   }
 
   addToCart(
@@ -111,11 +119,11 @@ export class ModelService {
     cart.customer = customer;
 
     return this.orderItemService.create(
-      price,
-      item,
-      priceShipping,
-      qty,
-      seller,
+      100,
+      this.itemService.first(),
+      200,
+      2,
+      this.sellerService.first(),
       cart,
     );
   }
@@ -134,7 +142,7 @@ export class ModelService {
     // 1.2. Checkout order
     this.checkout();
 
-     // 2. Payment flow
+    // 2. Payment flow
     // TODO add create invoice (No, Total, Date) by item via Seller
     // TODO add setted cancel (reject)
     // TODO add setted status ship (reject)
