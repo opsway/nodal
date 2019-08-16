@@ -39,6 +39,10 @@ export class OrdersComponent implements OnInit {
   ngOnInit() {
   }
 
+  checkout(): void {
+    this.order = this.model.checkout();
+  }
+
   addToCart(): boolean {
     const entity = this.model.addToCart(
       this.customer,

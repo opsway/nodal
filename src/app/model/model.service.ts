@@ -93,6 +93,12 @@ export class ModelService {
     window.location.href = url;
   }
 
+  checkout(): Order {
+    const cart = this.orderService.currentCart();
+    cart.checkout();
+    return  this.orderService.create(cart.customer);
+  }
+
   addToCart(
     customer: Customer,
     price: number,
@@ -116,6 +122,7 @@ export class ModelService {
 
   flow(): void {
     // 1. Order flow
+    // 1.1. Edit order
     const cart = this.addToCart(
       this.customerService.first(),
       200,
@@ -123,11 +130,11 @@ export class ModelService {
       50,
       2,
       this.sellerService.first(),
-    );
+    ).order;
+    // 1.2. Checkout order
+    this.checkout();
 
      // 2. Payment flow
-    cart.checkout();
-
     // TODO add create invoice (No, Total, Date) by item via Seller
     // TODO add setted cancel (reject)
     // TODO add setted status ship (reject)
