@@ -2,14 +2,13 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import {Customer} from '../../model/member/customer/customer';
-import {Seller} from '../../model/member/seller/seller';
 import {SellerService} from '../../model/member/seller/seller.service';
 import {CustomerService} from '../../model/member/customer/customer.service';
 import {Order} from '../../model/order/order';
 import {OrderService} from '../../model/order/order.service';
 import {ModelService} from '../../model/model.service';
-import {Item} from '../../model/item/item';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ItemService } from '../../model/item/item.service';
 
 @Component({
   selector: 'app-orders',
@@ -17,26 +16,38 @@ import {Item} from '../../model/item/item';
 })
 export class OrdersComponent implements OnInit {
   order: Order;
-  customer: Customer;
-  item: Item;
-  price: number;
-  priceShipping: number;
-  qty: number;
-  seller: Seller;
-  date: Date;
+  form: FormGroup;
 
   constructor(
     public model: ModelService,
     public sellerService: SellerService,
     public customerService: CustomerService,
     public orderService: OrderService,
+    private itemService: ItemService,
+    private fb: FormBuilder,
   ) {
     this.order = this.orderService.currentCart();
-    this.customer = this.customerService.first();
-    this.seller = this.sellerService.first();
   }
 
   ngOnInit() {
+    this.form = this.fb.group({
+      orderId: [this.order.id, []],
+      customer: [this.customerService.first(), Validators.required],
+      date: [new Date().toISOString().split('T')[0], Validators.required],
+      item: this.fb.group({
+        seller: [this.sellerService.first(), Validators.required],
+        sku: [this.itemService.first(), Validators.required],
+        qty: [1, Validators.required],
+        price: [100, [
+          Validators.required,
+          Validators.min(0.01)
+        ]],
+        shipping: [20, [
+          Validators.required,
+          Validators.min(0)
+        ]],
+      })
+    });
   }
 
   checkout(): void {
@@ -44,18 +55,28 @@ export class OrdersComponent implements OnInit {
   }
 
   addToCart(): boolean {
-    const entity = this.model.addToCart(
-      this.customer,
-      this.price,
-      this.item,
-      this.priceShipping,
-      this.qty,
-      this.seller,
-    );
-    entity.order.createdAt = this.date;
-    console.log(entity);
+    if (this.form.valid) {
+      const entity = this.model.addToCart(
+        this.form.value.customer,
+        this.form.value.item.price,
+        this.form.value.item.sku, // TODO item
+        this.form.value.item.shipping,
+        this.form.value.item.qty,
+        this.form.value.item.seller
+      );
+      entity.order.createdAt = this.form.value.date;
+      console.log(entity);
+    } else {
+      for (const inner in this.form.controls) {
+        if (this.form.controls.hasOwnProperty(inner)) {
+          this.form.get(inner).markAsTouched();
+          this.form.get(inner).updateValueAndValidity();
+        }
+      }
+    }
 
     return false;
   }
+  // hasError = (controlName: string, errorName: string) => this.form.controls[controlName].hasError(errorName);
 
 }

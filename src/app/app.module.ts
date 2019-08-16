@@ -10,6 +10,9 @@ import {PaymentsComponent} from './page/payments/payments.component';
 import {ShareComponent} from './page/share/share.component';
 import {ConvertPipe} from './util/convert.pipe';
 import { OrderItemTableComponent } from './ui/table/ordet-item-table/order-item-table.component';
+import { FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,9 @@ import { OrderItemTableComponent } from './ui/table/ordet-item-table/order-item-
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

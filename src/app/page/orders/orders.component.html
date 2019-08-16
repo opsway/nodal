@@ -4,52 +4,101 @@
 </div>
 -->
 <div class="content">
-<h2>Cart</h2>
-<form>
-  <label>
-    <span>Order</span>
-    <input type="text" disabled value="{{order.id}}">
-  </label>
-  <label>
-    <span>Date</span>
-    <input type="date" (ngModel)="date">
-  </label>
-  <label>
-    <span>Item</span>
-    <select (ngModel)="item">
-      <option *ngFor="let it of model.items" [value]="it">{{it.name}}</option>
-    </select>
-  </label>
-  <label>
-    <span>Seller</span>
-    <select (ngModel)="seller">
-      <option *ngFor="let it of sellerService.all()" [value]="it">{{it.name}}</option>
-    </select>
-  </label>
-  <label>
-    <span>Customer</span>
-    <select (ngModel)="seller">
-      <option *ngFor="let it of customerService.all()" [value]="it">{{it.name}}</option>
-    </select>
-  </label>
+  <div class="container-fluid">
+    <div class="row justify-content-md-center">
+      <div class="col-md-8">
 
-  <label>
-    <span>Price</span>
-    <input type="text" (ngModel)="price">
-  </label>
-  <label>
-    <span>Shipping</span>
-    <input type="text" (ngModel)="priceShipping">
-  </label>
-  <label>
-    <span>QTY</span>
-    <input type="text" (ngModel)="qty">
-  </label>
-  <button (click)="addToCart()" class="button-xsmall pure-button">
-    <span>add</span>
-  </button>
-</form>
-<button class="button-xsmall pure-button" (click)="checkout()">checkout</button>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Create Order</h5>
+            <form [formGroup]="form" autocomplete="off" (ngSubmit)="addToCart()"> <!--novalidate-->
+
+              <div class="form-group row">
+                <label for="order-id" class="col-sm-3 col-form-label">Order</label>
+                <div class="col-sm-9">
+                  <input type="text" id="order-id" class="form-control-plaintext" readonly formControlName="orderId" >
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="customer" class="col-sm-3 col-form-label">Customer</label>
+                <div class="col-sm-9">
+                  <select name="seller" id="customer" formControlName="customer" class="form-control">
+                    <option *ngFor="let it of customerService.all()" [value]="it">{{it.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="date" class="col-sm-3 col-form-label">Date</label>
+                <div class="col-sm-9">
+                  <input type="date" id="date" class="form-control" formControlName="date" >
+                </div>
+              </div>
+
+              <div class="form-group row" formGroupName="item">
+                <label class="col-sm-3 col-form-label">Items</label>
+                <div class="col-sm-9">
+
+                  <div class="form-group row">
+                    <label for="seller" class="col-sm-2 col-form-label">Seller</label>
+                    <div class="col-sm-10">
+                      <select name="seller" id="seller" formControlName="seller" class="form-control">
+                        <option *ngFor="let it of sellerService.all()" [value]="it">{{it.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="sku" class="col-sm-2 col-form-label">SKU</label>
+                    <div class="col-sm-10">
+                      <select name="seller" id="sku" formControlName="sku" class="form-control">
+                        <option *ngFor="let it of model.items" [value]="it">{{it.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="price" class="col-sm-2 col-form-label">Price</label>
+                    <div class="col-sm-10">
+                      <input type="number" min="0.01" step="0.01" id="price" class="form-control" formControlName="price" >
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="priceShipping" class="col-sm-2 col-form-label">Shipping</label>
+                    <div class="col-sm-10">
+                      <input type="number" min="0" step="0.01" id="priceShipping" class="form-control" formControlName="shipping" >
+<!--                      <div class="invalid-feedback">-->
+<!--                        Shipping is required.-->
+<!--                      </div>-->
+<!--                      <p *ngIf="hasError(['item','shipping'], 'required')">Shipping is required</p>-->
+<!--                      <p *ngIf="hasError(['item','shipping'], 'min')">Please enter a value greater than 0</p>-->
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="qty" class="col-sm-2 col-form-label">Qty</label>
+                    <div class="col-sm-10">
+                      <input type="number" id="qty" class="form-control" formControlName="qty" >
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <button class="button-xsmall pure-button" type="submit">Add</button>
+
+            </form>
+
+            <button class="button-xsmall pure-button" (click)="checkout()">checkout</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 <app-order-item-table [provider]="model.itemsCart"></app-order-item-table>
 <h2>Orders</h2>
 <table class="pure-table pure-table-horizontal">
