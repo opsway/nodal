@@ -54,6 +54,9 @@ export class OrdersComponent implements OnInit {
 
   checkout(): void {
     this.order = this.model.checkout();
+    this.form.patchValue({
+      orderId: this.order.id,
+    });
   }
 
   addToCart(): boolean {
