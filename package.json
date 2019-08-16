@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --disable-host-check",
-    "build": "ng build",
+    "start": "etc/start.sh",
+    "build": "etc/build.sh",
     "watch": "ng test --watch",
     "test": "npm run lint && ng test --watch=false --browsers=ChromeHeadless --code-coverage",
     "test-watch": "ng test --watch",
@@ -22,6 +22,7 @@
     "@angular/platform-browser": "~8.2.0",
     "@angular/platform-browser-dynamic": "~8.2.0",
     "@angular/router": "~8.2.0",
+    "bootstrap": "^4.3.1",
     "purecss": "^1.0.1",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",

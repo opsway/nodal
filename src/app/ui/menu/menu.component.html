@@ -1,10 +1,13 @@
 <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
-  <a class="pure-menu-heading" routerLink="/">{{heading}} v190815</a>
+  <a class="pure-menu-heading" routerLink="{{meta.releaseNumber}}">{{heading}} {{meta.releaseNumber}}</a>
   <ul class="pure-menu-list">
     <li class="pure-menu-item"
         [class.pure-menu-selected]="router.isActive(item.path, true)"
         *ngFor="let item of list">
       <a [routerLink]="item.path" class="pure-menu-link">{{item.title}}</a>
+    </li>
+    <li class="pure-menu-item">
+      <a href="{{meta.repo}}">G</a>
     </li>
   </ul>
 </div>

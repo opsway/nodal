@@ -11,7 +11,7 @@ before_script:
   - pip install --user codecov
 script:
   - npm test
-  - ng build --prod --base-href https://opsway.github.io/nodal/
+  - npm run build
 after_success:
   - codecov --token $CODECOV_TOKEN
 deploy:
