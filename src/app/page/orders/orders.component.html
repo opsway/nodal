@@ -134,32 +134,50 @@ q    <div class="row justify-content-md-center mb-3">
 
 
 <h2>Orders</h2>
-<table class="pure-table pure-table-horizontal">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Customer</th>
-            <th>SKU</th>
-            <th>Total</th>
-            <th></th>
-        </tr>
+
+  <table class="table table-bordered table-striped table-hover">
+    <thead class="thead-light">
+    <tr>
+      <th scope="col">Order #</th>
+      <th scope="col">Customer</th>
+      <th scope="col" colspan="2">SKU</th>
+      <th scope="col">Action</th>
+    </tr>
     </thead>
     <tbody>
-        <tr class="pure-table-odd">
-            <td>1</td>
-            <td>Honda</td>
-            <td>Accord</td>
-            <td>2009</td>
-            <td><button class="button-xsmall pure-button">pay</button></td>
-        </tr>
+    <tr>
+      <th scope="row" rowspan="3">O1</th>
+      <td rowspan="3">CA</td>
+      <td>SKU1</td>
+      <td>100</td>
+      <td rowspan="3" class="text-center align-middle">
+        <button type="button" class="btn btn-primary">Pay</button>
+      </td>
+    </tr>
+    <tr>
+      <td>SKU2</td>
+      <td>300</td>
+    </tr>
+    <tr>
+      <td>SKU3</td>
+      <td>200</td>
+    </tr>
 
-        <tr>
-            <td>2</td>
-            <td>Toyota</td>
-            <td>Camry</td>
-            <td>2012</td>
-            <td><button class="button-xsmall pure-button">pay</button></td>
-        </tr>
+    <tr>
+      <th scope="row" rowspan="2">O2</th>
+      <td rowspan="2">CB</td>
+      <td>SKU1</td>
+      <td>100</td>
+      <td rowspan="2" class="text-center align-middle">
+        <button type="button" class="btn btn-primary">Pay</button>
+      </td>
+    </tr>
+    <tr>
+      <td>SKU2</td>
+      <td>300</td>
+    </tr>
+
     </tbody>
-</table>
+
+  </table>
 </div>
