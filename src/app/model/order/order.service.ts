@@ -41,7 +41,7 @@ export class OrderService {
   checkout(customer: Customer): void {
     const cart = this.currentCart();
     if (cart.amount > 0) {
-      cart.checkout();
+      cart.save();
       this.create(customer);
     }
   }

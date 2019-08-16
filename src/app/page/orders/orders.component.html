@@ -24,7 +24,7 @@
                 <label for="customer" class="col-sm-3 col-form-label">Customer</label>
                 <div class="col-sm-9">
                   <select name="seller" id="customer" formControlName="customer" class="form-control">
-                    <option *ngFor="let it of customerService.all()" [value]="it">{{it.name}}</option>
+                    <option *ngFor="let it of customerService.all()" [value]="it.id">{{it.name}}</option>
                   </select>
                 </div>
               </div>
@@ -111,7 +111,7 @@
                 </div>
               </div>
 
-              <button class="button-xsmall pure-button float-right" type="submit">Add</button>
+              <button class="button-xsmall pure-button float-right" type="submit">add</button>
 
 <!--              <div class="btn-group btn-group-toggle" data-toggle="buttons">-->
 <!--                <button class="btn btn-secondary" type="submit">Add</button>-->
@@ -126,8 +126,8 @@
     </div>
     <div class="row mb-3">
       <div class="col">
-        <app-order-item-table [provider]="model.itemsCart"></app-order-item-table>
-        <button class="button-xsmall pure-button float-right mt-3" (click)="checkout()">checkout</button>
+        <app-pure-table [provider]="itemsCart"></app-pure-table>
+        <button class="button-xsmall pure-button float-right mt-3" (click)="saveOrder()">save</button>
       </div>
     </div>
     <div class="row justify-content-md-center mb-3">

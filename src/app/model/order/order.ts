@@ -7,7 +7,7 @@ import {Payment} from '../payment/payment';
 
 export class Order {
   static STATUS_CREATED = 'created';
-  static STATUS_ORDERED = 'ordered';
+  static STATUS_SAVED = 'saved';
   static STATUS_PAID = 'paid';
 
   id: string;
@@ -22,7 +22,7 @@ export class Order {
     this.createdAt = new Date();
     this.status = Order.STATUS_CREATED;
     this.customer = customer;
-    this.collection = new Map(); // TODO remove
+    this.collection = new Map();
   }
 
   get isPaid(): boolean {
@@ -62,12 +62,19 @@ export class Order {
     this.payment = payment;
   }
 
-  checkout(): boolean {
-    if (this.total > 0) {
-      this.status = Order.STATUS_ORDERED;
-      return true;
+  save(): boolean {
+    console.log(this.total);
+    if (this.isUnchanged) {
+      return false;
     }
+    this.status = Order.STATUS_SAVED;
 
-    return false;
+    return true;
+  }
+
+  addItem(entity: OrderItem): OrderItem {
+    this.collection.set(entity.id, entity);
+
+    return entity;
   }
 }

@@ -1,49 +1,62 @@
 import {TableCellDef} from './table-cell-def';
 import {PipeTransform} from '@angular/core';
+import {TableCellValue} from './table-cell-value';
 
 export class TableProvider<T> {
-  private transform: Map<string, PipeTransform[]>;
-
   constructor(
     private data: Array<T>,
-    private cells: TableCellDef[],
+    private columns: TableCellDef[],
   ) {
-    this.transform = new Map();
-    this.cells.forEach((def: TableCellDef) => {
-      this.transform.set(def.name, def.transform || []);
-    });
   }
 
-  get fields(): string[] {
-    return this.cells.map((def: TableCellDef) => def.name);
+  get headers(): string[] {
+    return this.columns.map((def: TableCellDef) => def.header || def.field);
+  }
+
+  private get fields(): string[] {
+    return this.columns.map((def: TableCellDef) => def.field);
+  }
+
+  get footers(): TableCellValue[] {
+    const result = [];
+    let footerIndex = 0;
+    let colspanTotal = 0;
+    let colspanOffset = 1;
+    this.columns.forEach((def: TableCellDef, fieldIndex: number) => {
+      if (def.footer === null) {
+        return;
+      }
+      const colspan = fieldIndex - colspanTotal - footerIndex + colspanOffset;
+      colspanTotal += colspan;
+      colspanOffset++;
+      result.push(new TableCellValue(
+        def.footer !== '' ? this.pipe(fieldIndex, def.footer) : '',
+        colspan,
+      ));
+      footerIndex++;
+    });
+
+    return result;
   }
 
   get rows(): any[] {
     return this.data
       .map((item: T) =>
         this.fields
-          .reduce((cells: any[], field: string) => {
-            cells.push(this.pipe(field, item[field]));
+          .reduce((cells: any[], field: string, fieldIndex: number) => {
+            cells.push(this.pipe(fieldIndex, item[field]));
             return cells;
           }, [])
       );
   }
 
-  static cellDef(
-    name: string,
-    pipe: PipeTransform[] = [],
-  ): TableCellDef {
-    return new TableCellDef(
-      name,
-      pipe,
-    );
+  static cellDef(name: string): TableCellDef {
+    return new TableCellDef(name);
   }
 
-  private pipe(defName: string, value: any): any {
-    return this.transform
-      .get(defName)
-      .reduce((acc: any, cnt: PipeTransform) =>
-        cnt.transform(acc), value
+  private pipe(fieldIndex: number, value: any): any {
+    return this.columns[fieldIndex].pipes.reduce((acc: any, pipe: PipeTransform) =>
+        pipe.transform(acc), value
       );
   }
 }

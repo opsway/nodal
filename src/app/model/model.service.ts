@@ -29,31 +29,6 @@ export class ModelService {
   ) {
   }
 
-
-  get itemsCart(): TableProvider<OrderItem> {
-    return new TableProvider<OrderItem>(
-      this.orderItemService.findByOrder(this.orderService.currentCart()),
-      [
-        TableProvider.cellDef('id'),
-        TableProvider.cellDef('sellerName'),
-        TableProvider.cellDef('sku'),
-        TableProvider.cellDef('price', [
-          new ConvertPipe(),
-        ]),
-        TableProvider.cellDef('qty'),
-        TableProvider.cellDef('priceShipping', [
-          new ConvertPipe(),
-        ]),
-        TableProvider.cellDef('total', [
-          new ConvertPipe(),
-        ]),
-        TableProvider.cellDef('feeMarket', [
-          new ConvertPipe(),
-        ]),
-      ],
-    );
-  }
-
   get items(): Item[] {
     return this.itemService.all();
   }
@@ -108,9 +83,9 @@ export class ModelService {
     window.location.href = url;
   }
 
-  checkout(): Order {
+  saveOrder(): Order {
     const cart = this.orderService.currentCart();
-    if (cart.checkout()) {
+    if (cart.save()) {
       return this.orderService.create(cart.customer);
     }
 
@@ -128,20 +103,21 @@ export class ModelService {
     const cart = this.orderService.currentCart();
     cart.customer = customer;
 
-    return this.orderItemService.create(
+
+    return cart.addItem(this.orderItemService.create(
       price,
       item,
       priceShipping,
       qty,
       seller,
       cart,
-    );
+    ));
   }
 
   flow(): void {
     // 1. Order flow
     // 1.1. Edit order
-    const cart = this.addToCart(
+    const order = this.addToCart(
       this.customerService.first(),
       200,
       this.itemService.first(),
@@ -149,8 +125,8 @@ export class ModelService {
       2,
       this.sellerService.first(),
     ).order;
-    // 1.2. Checkout order
-    this.checkout();
+    // 1.2. Save order
+    this.saveOrder();
 
     // 2. Payment flow
     // TODO add create invoice (No, Total, Date) by item via Seller
@@ -158,7 +134,7 @@ export class ModelService {
     // TODO add setted status ship (reject)
     // TODO add setted status returned etc
     // TODO add remay ???
-    this.paymentService.toPay(cart, 'pytm');
+    this.paymentService.toPay(order, 'pytm');
 
     // TODO add refunds before gateway settlement
     // 3. Settlement flow

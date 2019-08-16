@@ -9,6 +9,9 @@ import {OrderService} from '../../model/order/order.service';
 import {ModelService} from '../../model/model.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ItemService } from '../../model/item/item.service';
+import {TableProvider} from '../../ui/table/table-provider';
+import {OrderItem} from '../../model/order-item/order-item';
+import {ConvertPipe} from '../../util/convert.pipe';
 
 @Component({
   selector: 'app-orders',
@@ -52,8 +55,37 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  checkout(): void {
-    this.order = this.model.checkout();
+  get itemsCart(): TableProvider<OrderItem> {
+    return new TableProvider<OrderItem>(
+      this.order.items,
+      [
+        TableProvider.cellDef('sellerName')
+          .withHeader('Seller'),
+        TableProvider.cellDef('sku')
+          .withHeader('SKU'),
+        TableProvider.cellDef('price')
+          .withFooter('')
+          .withPipe(new ConvertPipe()),
+        TableProvider.cellDef('qty')
+          .withFooter('Total'),
+        TableProvider.cellDef('amountShipping')
+          .withHeader('total shipping')
+          .withPipe(new ConvertPipe())
+          .withFooter(this.order.amountShipping),
+        TableProvider.cellDef('total')
+          .withHeader('total price')
+          .withPipe(new ConvertPipe())
+          .withFooter(this.order.total),
+        TableProvider.cellDef('feeMarket')
+          .withHeader('total fee')
+          .withPipe(new ConvertPipe())
+          .withFooter(this.order.feeMarket),
+      ],
+    );
+  }
+
+  saveOrder(): void {
+    this.order = this.model.saveOrder();
     this.form.patchValue({
       orderId: this.order.id,
     });
@@ -70,8 +102,6 @@ export class OrdersComponent implements OnInit {
         this.form.value.item.seller
       );
       entity.order.createdAt = this.form.value.date;
-      console.log(entity);
-      console.log(this.model.itemsCart.rows);
     } else {
       for (const inner in this.form.controls) {
         if (this.form.controls.hasOwnProperty(inner)) {

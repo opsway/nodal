@@ -1,0 +1,19 @@
+<table class="pure-table pure-table-horizontal">
+    <thead>
+        <tr>
+            <th *ngFor="let head of provider.headers">{{head}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of provider.rows; let i = index"
+            [class.pure-table-odd]="i % 2 === 0">
+            <td *ngFor="let cell of row">{{cell}}</td>
+        </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td *ngFor="let footer of provider.footers"
+            [attr.colspan]="footer.colspan">{{footer.value}}</td>
+      </tr>
+    </tfoot>
+</table>
