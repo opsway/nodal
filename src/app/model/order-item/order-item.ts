@@ -16,7 +16,7 @@ export class OrderItem {
 
   constructor(
     price: number, item: Item, // SellerItem
-    shippingPrice: number,
+    priceShipping: number,
     qty: number,
     seller: Seller,
     order: Order = null,
@@ -26,8 +26,8 @@ export class OrderItem {
     this.seller = seller;
     this.order = order;
     this.qty = qty;
-    this.price = shippingPrice * Model.precisionOfPersist;
-    this.priceShipping = shippingPrice *  Model.precisionOfPersist;
+    this.price = priceShipping * Model.precisionOfPersist;
+    this.priceShipping = priceShipping *  Model.precisionOfPersist;
     this.refunded = false;
   }
 

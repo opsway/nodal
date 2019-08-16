@@ -6,6 +6,12 @@ import {CustomerService} from './member/customer/customer.service';
 import {Shared} from './shared';
 import {OrderItemService} from './order-item/order-item.service';
 import {ItemService} from './item/item.service';
+import {OrderItem} from './order-item/order-item';
+import {TableProvider} from '../ui/table/table-provider';
+import {Customer} from './member/customer/customer';
+import {Item} from './item/item';
+import {Seller} from './member/seller/seller';
+import {Order} from './order/order';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +26,21 @@ export class ModelService {
     private orderService: OrderService,
     private paymentService: PaymentService,
   ) {
+  }
+
+
+  get itemsCart(): TableProvider<OrderItem> {
+    return new TableProvider<OrderItem>(
+      this.orderItemService.findByOrder(this.orderService.currentCart()),
+      [
+        'id',
+        'qty',
+      ],
+    );
+  }
+
+  get items(): Item[] {
+    return this.itemService.all();
   }
 
   get payments() {
@@ -72,18 +93,36 @@ export class ModelService {
     window.location.href = url;
   }
 
+  addToCart(
+    customer: Customer,
+    price: number,
+    item: Item,
+    priceShipping: number,
+    qty: number,
+    seller: Seller,
+  ): OrderItem {
+    const cart = this.orderService.currentCart();
+    cart.customer = customer;
+
+    return this.orderItemService.create(
+      price,
+      item,
+      priceShipping,
+      qty,
+      seller,
+      cart,
+    );
+  }
+
   flow(): void {
     // 1. Order flow
-    const cart = this.orderService.currentCart();
-    cart.customer = this.customerService.first();
-
-    this.orderItemService.create(
+    const cart = this.addToCart(
+      this.customerService.first(),
       200,
       this.itemService.first(),
       50,
       2,
       this.sellerService.first(),
-      cart,
     );
 
      // 2. Payment flow

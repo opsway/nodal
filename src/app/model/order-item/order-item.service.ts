@@ -17,7 +17,7 @@ export class OrderItemService {
   create(
     price: number,
     item: Item,
-    shippingPrice: number,
+    priceShipping: number,
     qty: number,
     seller: Seller,
     order: Order = null,
@@ -25,7 +25,7 @@ export class OrderItemService {
     const entity = new OrderItem(
       price,
       item,
-      shippingPrice,
+      priceShipping,
       qty,
       seller,
       order,

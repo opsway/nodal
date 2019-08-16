@@ -9,6 +9,7 @@ import {OrdersComponent} from './page/orders/orders.component';
 import {PaymentsComponent} from './page/payments/payments.component';
 import {ShareComponent} from './page/share/share.component';
 import {ConvertPipe} from './util/convert.pipe';
+import { OrderItemTableComponent } from './ui/table/ordet-item-table/order-item-table.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import {ConvertPipe} from './util/convert.pipe';
     PaymentsComponent,
     ShareComponent,
     ConvertPipe,
+    OrderItemTableComponent,
   ],
   imports: [
     BrowserModule,

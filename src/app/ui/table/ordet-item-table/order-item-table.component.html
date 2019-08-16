@@ -1,0 +1,20 @@
+<table class="pure-table pure-table-horizontal">
+    <thead>
+        <tr>
+            <th *ngFor="let field of provider.fields">{{field}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="pure-table-odd" *ngFor="let item of provider.data">
+            <td *ngFor="let field of provider.fields">{{item[field]}}</td>
+        </tr>
+    </tbody>
+  <tfoot>
+       <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><button class="button-xsmall pure-button">checkout</button></td>
+        </tr>
+  </tfoot>
+</table>

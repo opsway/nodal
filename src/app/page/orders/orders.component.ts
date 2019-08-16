@@ -8,6 +8,8 @@ import {SellerService} from '../../model/member/seller/seller.service';
 import {CustomerService} from '../../model/member/customer/customer.service';
 import {Order} from '../../model/order/order';
 import {OrderService} from '../../model/order/order.service';
+import {ModelService} from '../../model/model.service';
+import {Item} from '../../model/item/item';
 
 @Component({
   selector: 'app-orders',
@@ -16,10 +18,15 @@ import {OrderService} from '../../model/order/order.service';
 export class OrdersComponent implements OnInit {
   order: Order;
   customer: Customer;
+  item: Item;
+  price: number;
+  priceShipping: number;
+  qty: number;
   seller: Seller;
-  date: DOMStringList;
+  date: Date;
 
   constructor(
+    public model: ModelService,
     public sellerService: SellerService,
     public customerService: CustomerService,
     public orderService: OrderService,
@@ -33,10 +40,16 @@ export class OrdersComponent implements OnInit {
   }
 
   addToCart(): boolean {
-    console.log(this.date);
-    this.order.customer = this.customer;
-    this.order.createdAt = new Date();
-    console.log(this.order);
+    const entity = this.model.addToCart(
+      this.customer,
+      this.price,
+      this.item,
+      this.priceShipping,
+      this.qty,
+      this.seller,
+    );
+    entity.order.createdAt = this.date;
+    console.log(entity);
 
     return false;
   }

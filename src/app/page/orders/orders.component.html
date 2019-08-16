@@ -15,6 +15,12 @@
     <input type="date" (ngModel)="date">
   </label>
   <label>
+    <span>Item</span>
+    <select (ngModel)="item">
+      <option *ngFor="let it of model.items" [value]="it">{{it.name}}</option>
+    </select>
+  </label>
+  <label>
     <span>Seller</span>
     <select (ngModel)="seller">
       <option *ngFor="let it of sellerService.all()" [value]="it">{{it.name}}</option>
@@ -26,44 +32,24 @@
       <option *ngFor="let it of customerService.all()" [value]="it">{{it.name}}</option>
     </select>
   </label>
+
+  <label>
+    <span>Price</span>
+    <input type="text" (ngModel)="price">
+  </label>
+  <label>
+    <span>Shipping</span>
+    <input type="text" (ngModel)="priceShipping">
+  </label>
+  <label>
+    <span>QTY</span>
+    <input type="text" (ngModel)="qty">
+  </label>
   <button (click)="addToCart()" class="button-xsmall pure-button">
     <span>add</span>
   </button>
 </form>
-
-<table class="pure-table pure-table-horizontal">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Customer</th>
-            <th>SKU</th>
-            <th>Total</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr class="pure-table-odd">
-            <td>1</td>
-            <td>Honda</td>
-            <td>Accord</td>
-            <td>2009</td>
-        </tr>
-
-        <tr>
-            <td>2</td>
-            <td>Toyota</td>
-            <td>Camry</td>
-            <td>2012</td>
-        </tr>
-    </tbody>
-  <tfoot>
-       <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><button class="button-xsmall pure-button">checkout</button></td>
-        </tr>
-  </tfoot>
-</table>
+<app-order-item-table [provider]="model.itemsCart"></app-order-item-table>
 <h2>Orders</h2>
 <table class="pure-table pure-table-horizontal">
     <thead>
