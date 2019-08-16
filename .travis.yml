@@ -10,10 +10,11 @@ before_script:
   - npm install -g @angular/cli
   - pip install --user codecov
 script:
-  - npm test
+#  - npm test
+  - npm run lint
   - npm run build
-after_success:
-  - codecov --token $CODECOV_TOKEN
+#after_success:
+#  - codecov --token $CODECOV_TOKEN
 deploy:
   provider: pages
   target_branch: gh-pages
