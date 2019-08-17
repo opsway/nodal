@@ -25,6 +25,14 @@ export class AppComponent {
       path: '/payments',
     },
     {
+      title: 'Sellers',
+      path: '/sellers',
+    },
+    {
+      title: 'Nodal',
+      path: '/nodal',
+    },
+    {
       title: 'Share',
       path: '/share',
     },

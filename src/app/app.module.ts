@@ -10,12 +10,8 @@ import {PaymentsComponent} from './page/payments/payments.component';
 import {ShareComponent} from './page/share/share.component';
 import {ConvertPipe} from './util/convert.pipe';
 import {PureTableComponent} from './ui/table/pure-table/pure-table.component';
-
-import {
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-
+import {SellersComponent} from './page/sellers/sellers.component';
+import {NodalComponent} from './page/nodal/nodal.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +23,8 @@ import {
     ShareComponent,
     ConvertPipe,
     PureTableComponent,
+    SellersComponent,
+    NodalComponent,
   ],
   imports: [
     BrowserModule,
