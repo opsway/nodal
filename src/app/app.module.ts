@@ -12,6 +12,7 @@ import {ConvertPipe} from './util/convert.pipe';
 import {PureTableComponent} from './ui/table/pure-table/pure-table.component';
 import {SellersComponent} from './page/sellers/sellers.component';
 import {NodalComponent} from './page/nodal/nodal.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
