@@ -1,19 +1,22 @@
 <table class="pure-table pure-table-horizontal">
-    <thead>
-        <tr>
-            <th *ngFor="let head of provider.headers">{{head}}</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let row of provider.rows; let i = index"
-            [class.pure-table-odd]="i % 2 === 0">
-            <td *ngFor="let cell of row">{{cell}}</td>
-        </tr>
-    </tbody>
-    <tfoot>
+  <thead *ngIf="showHeader">
       <tr>
-        <td *ngFor="let footer of provider.footers"
-            [attr.colspan]="footer.colspan">{{footer.value}}</td>
+          <th *ngFor="let header of provider.headers">{{header}}</th>
       </tr>
-    </tfoot>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of provider.rows; let i = index"
+        [class.pure-table-odd]="i % 2 === 0">
+        <td *ngFor="let cell of row">{{cell}}</td>
+    </tr>
+    <tr *ngIf="isEmpty">
+      <td [attr.colspan]="provider.headers.length">empty</td>
+    </tr>
+  </tbody>
+  <tfoot *ngIf="showFooter && !isEmpty">
+    <tr>
+      <td *ngFor="let footer of provider.footers"
+          [attr.colspan]="footer.colspan">{{footer.value}}</td>
+    </tr>
+  </tfoot>
 </table>

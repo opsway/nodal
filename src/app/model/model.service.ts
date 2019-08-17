@@ -35,8 +35,8 @@ export class ModelService {
     return this.paymentService;
   }
 
-  get orders() {
-    return this.orderService;
+  get orders(): Order[] {
+    return this.orderService.all();
   }
 
   import(content: string): boolean {
@@ -90,7 +90,7 @@ export class ModelService {
     return cart;
   }
 
-  addToCart(
+  addOrderItem(
     customerId: string,
     price: number,
     itemId: string,
@@ -117,7 +117,7 @@ export class ModelService {
   flow(): void {
     // 1. Order flow
     // 1.1. Edit order
-    const order = this.addToCart(
+    const order = this.addOrderItem(
       this.customerService.first().id,
       200,
       this.itemService.first().id,
@@ -127,9 +127,11 @@ export class ModelService {
     ).order;
     // 1.2. Save order
     this.saveOrder();
+    // TODO 1.3. Cancel Order
+    // TODO 1.4. Pay Order
+    // TODO 1.5. Create invoice for payed Order by item via Seller
 
     // 2. Payment flow
-    // TODO add create invoice (No, Total, Date) by item via Seller
     // TODO add setted cancel (reject)
     // TODO add setted status ship (reject)
     // TODO add setted status returned etc

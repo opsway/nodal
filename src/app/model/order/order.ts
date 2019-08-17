@@ -25,6 +25,10 @@ export class Order {
     this.collection = new Map();
   }
 
+  get customerName(): string {
+    return this.customer.name
+  }
+
   get isPaid(): boolean {
     return this.status === Order.STATUS_PAID;
   }

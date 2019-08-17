@@ -7,8 +7,8 @@ import {CustomerService} from '../../model/member/customer/customer.service';
 import {Order} from '../../model/order/order';
 import {OrderService} from '../../model/order/order.service';
 import {ModelService} from '../../model/model.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ItemService } from '../../model/item/item.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ItemService} from '../../model/item/item.service';
 import {TableProvider} from '../../ui/table/table-provider';
 import {OrderItem} from '../../model/order-item/order-item';
 import {ConvertPipe} from '../../util/convert.pipe';
@@ -55,9 +55,24 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  get itemsCart(): TableProvider<OrderItem> {
+  get orders(): TableProvider<Order> {
+    return new TableProvider<Order>(
+      this.model.orders,
+      [
+        TableProvider.cellDef('id'),
+        TableProvider.cellDef('customerName')
+          .withHeader('Customer'),
+      ],
+    );
+  }
+
+  get itemsOrder(): TableProvider<OrderItem> {
+    return this.createItemsOrderProvider(this.order.items);
+  }
+
+  createItemsOrderProvider(data: OrderItem[]): TableProvider<OrderItem> {
     return new TableProvider<OrderItem>(
-      this.order.items,
+      data,
       [
         TableProvider.cellDef('sellerName')
           .withHeader('Seller'),
@@ -91,9 +106,9 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  addToCart(): boolean {
+  addOrderItem(): boolean {
     if (this.form.valid) {
-      const entity = this.model.addToCart(
+      const entity = this.model.addOrderItem(
         this.form.value.customerId,
         this.form.value.orderItem.price,
         this.form.value.orderItem.itemId,
