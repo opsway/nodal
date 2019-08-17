@@ -18,8 +18,10 @@ export class Collection<T extends Entity> {
     list.forEach(entity => this.add(entity));
   }
 
-  add(entity: T): void {
+  add(entity: T): T {
     this.elements.set(entity.id, entity);
+
+    return entity;
   }
 
   count(): number {

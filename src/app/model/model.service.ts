@@ -12,11 +12,15 @@ import {Item} from './entity/item';
 import {Order} from './order/order';
 import {Collection} from './collection';
 import {meta} from '../../app/app.meta';
+import {Invoice} from './entity/invoice';
+import {Seller} from './member/seller/seller';
+
 @Injectable({
   providedIn: 'root'
 })
 export class ModelService {
   private itemCollection: Collection<Item> = new Collection<Item>();
+  private invoiceCollection: Collection<Invoice> = new Collection<Invoice>();
 
   constructor(
     private orderItemService: OrderItemService,
@@ -42,6 +46,31 @@ export class ModelService {
 
   get currentOrder(): Order {
     return this.orderService.currentOrder();
+  }
+
+  invoicesByOrder(o: Order): Collection<Invoice> {
+    console.log(this.invoiceCollection.all());
+    return this.invoiceCollection
+      .filter(e => e.hasOrder(o));
+  }
+
+  createInvoice(o: OrderItem): Invoice {
+    const invoice = this.invoiceCollection.add(new Invoice(o.seller));
+    invoice.items.add(o);
+
+    return invoice;
+  }
+
+  currentInvoice(o: OrderItem): Invoice {
+    const invoice = this.invoiceCollection
+      .filter(e => e.createdAt === null && e.seller.id === o.seller.id)
+      .first();
+    if (invoice) {
+      invoice.items.add(o);
+      return invoice;
+    }
+
+    return this.createInvoice(o);
   }
 
   get customers(): CustomerService {
@@ -110,6 +139,21 @@ export class ModelService {
     this.paymentService.toPay(order, gateway);
   }
 
+  toInvoiceOrderItem(orderItem: OrderItem): OrderItem {
+    return orderItem.attacheInvoice(this.currentInvoice(orderItem));
+  }
+
+  toInvoiceOrder(order: Order): Order {
+    order.items.forEach(item => {
+      this.toInvoiceOrderItem(item);
+    });
+    this.invoiceCollection
+      .filter(entity => entity.isDraft)
+      .walk(entity => entity.save());
+
+    return order;
+  }
+
   saveOrder(): boolean {
     const cart = this.orderService.currentOrder();
     if (cart.save().isSaved) {
@@ -145,7 +189,15 @@ export class ModelService {
   }
 
   private flowEditNewOrder(): Order {
-    return  this.addOrderItem(
+    this.addOrderItem(
+      this.customerService.first().id,
+      200,
+      this.items.first().id,
+      50,
+      2,
+      this.sellerService.all()[1].id,
+    );
+    return this.addOrderItem(
       this.customerService.first().id,
       200,
       this.items.first().id,
@@ -157,13 +209,25 @@ export class ModelService {
 
   private flow(): void {
     // 1. Order flow
+    let order: Order = null;
     // 1.1. Edit new Order
     this.flowEditNewOrder();
     // 1.2. Save order
     this.saveOrder();
     // 1.3. Pay Order
     this.toPay(this.flowEditNewOrder().save(), 'RP');
-    // TODO 1.5. Create invoice for payed Order by item via Seller
+    // 1.4. Create invoice for payed Order by item via Seller
+    order = this.flowEditNewOrder().save();
+    this.toPay(order, 'RP');
+    this.toInvoiceOrder(order);
+    // 1.5. Ship invoice
+    // TODO add cases for statuses
+    // 1.6. Cancel invoice
+    // TODO add cases for statuses
+    // 1.7. Return item
+    // TODO add cases for statuses
+    // 1.8. Refund item
+    // TODO add cases for statuses
 
     // 2. Payment flow
     // TODO add setted cancel (reject)

@@ -6,21 +6,29 @@ import {Model} from '../model';
 import {Entity} from '../entity/entity';
 import {Payment} from '../payment/payment';
 import {Collection} from '../collection';
+import {Invoice} from '../entity/invoice';
 
 export class OrderItem implements Entity {
-  static STATUS_CREATED = 'created';
-  static STATUS_SAVED = 'saved';
-  static STATUS_CANCELED = 'canceled';
+  static STATUS_ORDERED = 'ordered';
   static STATUS_PAID = 'paid';
+  static STATUS_INVOICED = 'invoiced';
+  static STATUS_RETURNED = 'returned';
+  static STATUS_REFUNDED = 'refunded';
+  static STATUS_CANCELED = 'canceled';
+  static STATUS_SHIPPED = 'shipped';
+
   id: string;
   item: Item;
   qty: number;
   price: number;
   priceShipping: number;
   seller: Seller;
-  refunded: boolean;
+  isRefunded: boolean;
+  isReturned: boolean;
+  isCanceled: boolean;
   order: Order;
   status: string;
+  private invoice: Invoice = null;
   private payments: Collection<Payment> = new Collection<Payment>();
 
   constructor(
@@ -37,20 +45,53 @@ export class OrderItem implements Entity {
     this.qty = qty;
     this.price = price * Model.precisionOfPersist;
     this.priceShipping = priceShipping * Model.precisionOfPersist;
-    this.refunded = false;
-    this.status = OrderItem.STATUS_CREATED;
+    this.isRefunded = false;
+    this.isReturned = false;
+    this.isCanceled = false;
+    this.status = null;
   }
 
-  get isSaved(): boolean {
-    return this.status === OrderItem.STATUS_SAVED;
+  get isInvoiced(): boolean {
+    return this.invoice !== null;
+  }
+
+  get canInvoiced(): boolean {
+    return !this.isCanceled
+      && this.isPaid
+      && !this.isInvoiced;
+  }
+
+  get canReturned(): boolean {
+    return this.isPaid
+      && this.isInvoiced
+      && this.invoice.isShipped
+      && !this.isReturned;
+  }
+
+  get canRefunded(): boolean {
+   return this.isPaid
+     && this.isInvoiced
+     && this.invoice.isShipped
+     && this.isReturned
+     && !this.isRefunded;
+  }
+
+  get canCanceled(): boolean {
+    return this.isPaid
+      && !this.isInvoiced
+      && !this.isCanceled;
+  }
+
+  get isShipped(): boolean {
+    return this.invoice && this.invoice.isShipped;
   }
 
   get isPaid(): boolean {
-    return this.status === OrderItem.STATUS_PAID;
+    return this.payments.count() > 0;
   }
 
   get isNew(): boolean {
-    return this.status === OrderItem.STATUS_CREATED;
+    return this.status === null;
   }
 
   get amount(): number {
@@ -83,8 +124,35 @@ export class OrderItem implements Entity {
 
   // ACTION
 
+  return(): OrderItem {
+    this.status = OrderItem.STATUS_REFUNDED;
+    this.isReturned = true;
+
+    return this;
+  }
+
+  ship(): OrderItem {
+    this.status = OrderItem.STATUS_SHIPPED;
+
+    return this;
+  }
+
+  cancel(): OrderItem {
+    this.status = OrderItem.STATUS_CANCELED;
+    this.isCanceled = true;
+
+    return this;
+  }
+
   save(): OrderItem {
-    this.status = OrderItem.STATUS_SAVED;
+    this.status = OrderItem.STATUS_ORDERED;
+
+    return this;
+  }
+
+  attacheInvoice(invoice: Invoice): OrderItem {
+    this.invoice = invoice;
+    this.status = OrderItem.STATUS_INVOICED;
 
     return this;
   }
@@ -98,10 +166,10 @@ export class OrderItem implements Entity {
 
   refund(): number {
     let refund = 0;
-    if (!this.refunded && this.order.payment && this.order.payment.captured) {
+    if (!this.isRefunded && this.order.payment && this.order.payment.captured) {
       this.seller.balance -= refund = this.amountSeller;
     }
-    this.refunded = true;
+    this.isRefunded = true;
     return refund;
   }
 }

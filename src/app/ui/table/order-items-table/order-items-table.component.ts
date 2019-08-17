@@ -45,7 +45,7 @@ export class OrderItemsTableComponent {
   get provider(): TableProvider<OrderItem> {
     const columns = this.defaultColumns;
     if (this.isNested) {
-      columns.push(TableProvider.cellDef('status'));
+     // columns.push(TableProvider.cellDef('status'));
     }
     return new TableProvider<OrderItem>(
       this.data.items || [],

@@ -46,18 +46,95 @@
                         (click)="model.toPay(order, 'PT')"
                         type="button">pay PT</button>
                 <button class="btn btn-success"
-                        *ngIf="!order.isNoPaid"
-                        disabled
+                        *ngIf="order.canInvoice"
+                        (click)="model.toInvoiceOrder(order)"
                         type="button">invoice</button>
+                <button class="btn btn-danger"
+                        *ngIf="order.canRefund"
+                        disabled
+                        type="button">refund</button>
               </div>
             </td>
             <td>{{order.createdAt | date : 'yy/M/d h:mm:ss'}}</td>
             <td>{{order.customerName}}</td>
-            <td colspan="2" class="align-middle text-center"></td>
-            <td colspan="8" style="padding: 0" class="align-middle text-center">
+            <td colspan="2" class="align-middle text-center">
+              <table class="pure-table pure-table-horizontal text-center"
+              *ngIf="model.invoicesByOrder(order).count() > 0">
+                <tbody>
+                  <tr *ngFor="let invoice of model.invoicesByOrder(order).all(); let i = index"
+                      [class.pure-table-odd]="i % 2 === 0">
+                    <td>
+                      <span>{{invoice.id}}</span>
+                      <div class="btn-group" role="group">
+                        <button type="button"
+                          *ngIf="invoice.canShipped"
+                          (click)="invoice.ship()"
+                          class="btn btn-sm btn-success"
+                          title="ship invoice">S</button>
+                        <button type="button"
+                          *ngIf="invoice.canCanceled"
+                          (click)="invoice.cancel()"
+                          class="btn btn-sm btn-primary"
+                          title="cancel invoice">C</button>
+                      </div>
+                    </td>
+                    <td>
+                      <span>{{invoice.createdAt | date : 'yy/M/d h:mm'}}</span>
+                      <div class="btn-group" role="group">
+                        <button type="button"
+                                *ngIf="invoice.isSaved"
+                                (click)="invoice.save()"
+                                class="btn btn-sm btn-success"
+                                title="add to invoice">save</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+<!--                <tfoot>
+                  <tr>
+                    <td>&nbsp;</td>
+                  </tr>
+                </tfoot>-->
+              </table>
+            </td>
+            <td colspan="7" style="padding: 0" class="align-middle text-center">
               <app-order-items-table
                 [isNested]="true"
                 [data]="order"></app-order-items-table>
+            </td>
+            <td style="padding: 0" class="align-middle text-center">
+              <table class="pure-table pure-table-horizontal text-center">
+                <tbody>
+                  <tr *ngFor="let item of order.items; let i = index"
+                      [class.pure-table-odd]="i % 2 === 0">
+                    <td>
+                      <span>{{item.status}}</span>
+                      <div class="btn-group" role="group">
+                        <button type="button"
+                                *ngIf="item.canInvoiced"
+                                (click)="model.toInvoiceOrderItem(item)"
+                                class="btn btn-sm btn-success"
+                                title="add to invoice">I</button>
+                        <button type="button"
+                                *ngIf="item.canCanceled"
+                                (click)="item.cancel()"
+                                class="btn btn-sm btn-primary"
+                                title="cancel item">C</button>
+                        <button type="button"
+                                *ngIf="item.canReturned"
+                                (click)="item.cancel()"
+                                class="btn btn-sm btn-secondary"
+                                title="create RMA">R</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+<!--                <tfoot>
+                  <tr>
+                    <td>&nbsp;</td>
+                  </tr>
+                </tfoot>-->
+              </table>
             </td>
           </tr>
           <tr *ngIf="model.orders.length === 0">

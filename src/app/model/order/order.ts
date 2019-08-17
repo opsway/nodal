@@ -3,19 +3,20 @@ import {OrderItem} from '../order-item/order-item';
 import {Customer} from '../member/customer/customer';
 import {Payment} from '../payment/payment';
 import {Collection} from '../collection';
+import {Invoice} from '../entity/invoice';
 
 export class Order {
   id: string;
   createdAt: Date;
   payment: Payment;
   customer: Customer;
-  private collection: Collection<OrderItem>;
+  private itemCollection: Collection<OrderItem>;
 
   constructor(customer: Customer = null) {
     this.id = Util.uuid('O');
     this.createdAt = new Date();
     this.customer = customer;
-    this.collection = new Collection<OrderItem>();
+    this.itemCollection = new Collection<OrderItem>();
   }
 
   // PROPERTIES
@@ -25,7 +26,7 @@ export class Order {
   }
 
   get items(): OrderItem[] {
-    return this.collection.all();
+    return this.itemCollection.all();
   }
 
   get amount(): number {
@@ -44,17 +45,33 @@ export class Order {
     return this.items.reduce((amount, item) => amount + item.feeMarket, 0);
   }
 
-  get noPaymentItems(): Collection<OrderItem> {
-    return this.collection.filter(entity => !entity.isPaid);
+  get notPaidItems(): Collection<OrderItem> {
+    return this.itemCollection.filter(entity => !entity.isPaid);
+  }
+
+  get notInvoicedItems(): Collection<OrderItem> {
+    return this.itemCollection.filter(entity => entity.canInvoiced);
+  }
+
+  get returnedItems(): Collection<OrderItem> {
+    return this.itemCollection.filter(entity => entity.isReturned || entity.isCanceled);
   }
 
   get newItems(): Collection<OrderItem> {
-    return this.collection.filter(entity => entity.isNew);
+    return this.itemCollection.filter(entity => entity.isNew);
   }
 
   // STATUS
+  get canInvoice(): boolean {
+    return !this.isNoPaid && this.notInvoicedItems.count() > 0;
+  }
+
+  get canRefund(): boolean {
+    return this.returnedItems.count() > 0;
+  }
+
   get isNoPaid(): boolean {
-    return this.noPaymentItems.count() > 0;
+    return this.notPaidItems.count() > 0;
   }
 
   get isSaved(): boolean {
@@ -62,7 +79,7 @@ export class Order {
   }
 
   get isEmpty(): boolean {
-    return this.collection.count() === 0;
+    return this.itemCollection.count() === 0;
   }
 
   get isNew(): boolean {
@@ -77,7 +94,7 @@ export class Order {
   // ACTION
 
   attachePayment(payment: Payment): Order {
-    this.noPaymentItems
+    this.notPaidItems
       .walk(entity => entity.attachePayment(payment));
 
     return this;
@@ -94,7 +111,7 @@ export class Order {
   }
 
   addItem(entity: OrderItem): OrderItem {
-    this.collection.add(entity);
+    this.itemCollection.add(entity);
 
     return entity;
   }
