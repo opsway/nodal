@@ -37,14 +37,17 @@ export class OrderCreateComponent implements OnInit {
       orderItem: this.fb.group({
         sellerId: [this.model.sellers.first().id, Validators.required],
         itemId: [this.model.items.first().id, Validators.required],
-        qty: [1, Validators.required],
+        qty: [1, [
+          Validators.required,
+          Validators.min(1),
+        ]],
         price: [100, [
           Validators.required,
-          Validators.min(0.01)
+          Validators.min(0.01),
         ]],
         shipping: [20, [
           Validators.required,
-          Validators.min(0)
+          Validators.min(0),
         ]],
       })
     });

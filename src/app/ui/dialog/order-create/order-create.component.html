@@ -9,102 +9,83 @@
     <div class="row justify-content-md-center mb-3">
       <div class="col-md-8">
         <form [formGroup]="form" autocomplete="off" (ngSubmit)="addOrderItem()"> <!--novalidate-->
-          <div class="form-group row">
-            <label for="order-id" class="col-sm-3 col-form-label">Order</label>
-            <div class="col-sm-9">
-              <input type="text" id="order-id" class="form-control-plaintext" readonly formControlName="orderId" >
-            </div>
-          </div>
+          <div class="form-row">
 
-          <div class="form-group row">
-            <label for="customerId" class="col-sm-3 col-form-label">Customer</label>
-            <div class="col-sm-9">
-              <select name="customerId" id="customerId" formControlName="customerId" class="form-control">
+            <div class="form-group col-sm">
+              <label for="order-id">Order</label>
+              <input type="text" id="order-id" class="form-control-plaintext" readonly formControlName="orderId">
+            </div>
+
+            <div class="form-group col-sm">
+              <label for="customerId">Customer</label>
+              <select name="customerId" id="customerId" formControlName="customerId" class="form-control" appAutoFocus>
                 <option *ngFor="let it of model.customers.all()" [value]="it.id">{{it.name}}</option>
               </select>
             </div>
-          </div>
 
-          <div class="form-group row">
-            <label for="date" class="col-sm-3 col-form-label">Date</label>
-            <div class="col-sm-9">
+            <div class="form-group col-sm">
+              <label for="date">Date</label>
               <input type="date" id="date" class="form-control"
                      [min]="minDate" formControlName="date"
                      [ngClass]="{'is-invalid': form.get('date').invalid}">
-              <div class="invalid-feedback">
-                <div *ngIf="form.hasError('required', 'date')">Date is required</div>
-              </div>
+              <div *ngIf="form.hasError('required', 'date')"
+                   class="invalid-feedback">Date is required</div>
             </div>
+
           </div>
 
-          <div class="form-group row" formGroupName="orderItem">
-            <label class="col-sm-3 col-form-label">New Item of Order</label>
-            <div class="col-sm-9">
-              <div class="card">
-                <div class="card-body">
+          <h5>New Item of Order</h5>
 
-                  <div class="form-group row">
-                    <label for="sellerId" class="col-sm-2 col-form-label">Seller</label>
-                    <div class="col-sm-10">
-                      <select name="sellerId" id="sellerId" formControlName="sellerId" class="form-control">
-                        <option *ngFor="let it of model.sellers.all()" [value]="it.id">{{it.name}}</option>
-                      </select>
-                    </div>
-                  </div>
+          <div class="form-row" formGroupName="orderItem">
 
-                  <div class="form-group row">
-                    <label for="itemId" class="col-sm-2 col-form-label">SKU</label>
-                    <div class="col-sm-10">
-                      <select name="itemId" id="itemId" class="form-control" formControlName="itemId"
-                              [ngClass]="{'is-invalid': form.get(['orderItem', 'itemId']).invalid}">
-                        <option *ngFor="let it of model.items.all()" [value]="it.id">{{it.name}}</option>
-                      </select>
-                      <div class="invalid-feedback">
-                        <div *ngIf="form.hasError('required', ['orderItem', 'itemId'])">SKU is required</div>
-                      </div>
-                    </div>
-                  </div>
+            <div class="form-group col-sm">
+              <label for="sellerId">Seller</label>
+              <select name="sellerId" id="sellerId" formControlName="sellerId" class="form-control">
+                <option *ngFor="let it of model.sellers.all()" [value]="it.id">{{it.name}}</option>
+              </select>
+            </div>
 
-                  <div class="form-group row">
-                    <label for="price" class="col-sm-2 col-form-label">Price</label>
-                    <div class="col-sm-10">
-                      <input type="number" min="0.01" step="0.01" id="price" class="form-control" formControlName="price"
-                             [ngClass]="{'is-invalid': form.get(['orderItem', 'price']).invalid}">
-                      <div class="invalid-feedback">
-                        <div *ngIf="form.hasError('required', ['orderItem', 'price'])">Price is required</div>
-                        <div *ngIf="form.hasError('min', ['orderItem', 'price'])">Price enter a value greater than 0</div>
-                      </div>
-                    </div>
-                  </div>
+            <div class="form-group col-sm">
+              <label for="itemId">SKU</label>
+              <select name="itemId" id="itemId" class="form-control" formControlName="itemId"
+                      [ngClass]="{'is-invalid': form.get(['orderItem', 'itemId']).invalid}">
+                <option *ngFor="let it of model.items.all()" [value]="it.id">{{it.name}}</option>
+              </select>
+              <div *ngIf="form.hasError('required', ['orderItem', 'itemId'])"
+                   class="invalid-feedback">SKU is required</div>
+            </div>
 
-                  <div class="form-group row">
-                    <label for="priceShipping" class="col-sm-2 col-form-label">Shipping Price</label>
-                    <div class="col-sm-10">
-                      <input id="priceShipping" type="number" min="0" step="0.01" class="form-control"
-                             formControlName="shipping"
-                             [ngClass]="{'is-invalid': form.get(['orderItem', 'shipping']).invalid}">
-                      <div class="invalid-feedback">
-                        <div *ngIf="form.hasError('required', ['orderItem', 'shipping'])">Shipping is required</div>
-                        <div *ngIf="form.hasError('min', ['orderItem', 'shipping'])">Please enter a value greater than 0</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-group row">
-                    <label for="qty" class="col-sm-2 col-form-label">Qty</label>
-                    <div class="col-sm-10">
-                      <input type="number" step="1" min="1" id="qty" class="form-control" formControlName="qty"
-                             [ngClass]="{'is-invalid': form.get(['orderItem', 'qty']).invalid}">
-                      <div class="invalid-feedback">
-                        <div *ngIf="form.hasError('required', ['orderItem', 'qty'])">Qty is required</div>
-                        <div *ngIf="form.hasError('min', ['orderItem', 'qty'])">Please enter a value greater than 0</div>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
+            <div class="form-group col-sm">
+              <label for="price" >Price</label>
+              <input type="number" min="0.01" step="1" id="price" class="form-control" formControlName="price"
+                     [ngClass]="{'is-invalid': form.get(['orderItem', 'price']).invalid}">
+              <div class="invalid-feedback">
+                <div *ngIf="form.hasError('required', ['orderItem', 'price'])">Price is required</div>
+                <div *ngIf="form.hasError('min', ['orderItem', 'price'])">Price enter a value greater than 0</div>
               </div>
             </div>
+
+            <div class="form-group col-sm">
+              <label for="priceShipping">Shipping Price</label>
+              <input id="priceShipping" type="number" min="0" step="1" class="form-control"
+                     formControlName="shipping"
+                     [ngClass]="{'is-invalid': form.get(['orderItem', 'shipping']).invalid}">
+              <div class="invalid-feedback">
+                <div *ngIf="form.hasError('required', ['orderItem', 'shipping'])">Shipping is required</div>
+                <div *ngIf="form.hasError('min', ['orderItem', 'shipping'])">Please enter a value greater than 0</div>
+              </div>
+            </div>
+
+            <div class="form-group col-sm">
+              <label for="qty">Qty</label>
+              <input type="number" step="1" min="1" id="qty" class="form-control" formControlName="qty"
+                     [ngClass]="{'is-invalid': form.get(['orderItem', 'qty']).invalid}">
+              <div class="invalid-feedback">
+                <div *ngIf="form.hasError('required', ['orderItem', 'qty'])">Qty is required</div>
+                <div *ngIf="form.hasError('min', ['orderItem', 'qty'])">Please enter 1 or greater</div>
+              </div>
+            </div>
+
           </div>
 
           <button class="button-xsmall pure-button float-right" type="submit">add</button>
