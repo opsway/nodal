@@ -1,6 +1,7 @@
 import * as Util from '../../util/util';
+import {Entity} from './entity';
 
-export class Item {
+export class Item implements Entity {
   id: string;
 
   constructor() {

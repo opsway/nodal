@@ -11,9 +11,9 @@ import {OrderItem} from '../../../model/order-item/order-item';
 })
 export class PureTableComponent {
   @Input() provider: TableProvider<OrderItem>;
-  @Input() showHeader: boolean = true;
-  @Input() showFooter: boolean = true;
-  get isEmpty():boolean {
+  @Input() showHeader = true;
+  @Input() showFooter = true;
+  get isEmpty(): boolean {
     return this.provider.rows.length === 0;
   }
 }

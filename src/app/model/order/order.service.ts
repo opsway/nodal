@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Order} from './order';
 import {Customer} from '../member/customer/customer';
-import {Seller} from '../member/seller/seller';
-import {Item} from '../item/item';
 import {OrderItem} from '../order-item/order-item';
 import {OrderItemService} from '../order-item/order-item.service';
 
@@ -29,7 +27,7 @@ export class OrderService {
     return order;
   }
 
-  currentCart(): Order {
+  currentOrder(): Order {
     const match = this.filter((order: Order) => order.isNew);
     if (match.length > 0) {
       return match[0];
@@ -39,7 +37,7 @@ export class OrderService {
   }
 
   checkout(customer: Customer): void {
-    const cart = this.currentCart();
+    const cart = this.currentOrder();
     if (cart.amount > 0) {
       cart.save();
       this.create(customer);

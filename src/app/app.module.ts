@@ -1,6 +1,14 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
+import {
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  NgbModule,
+} from '@ng-bootstrap/ng-bootstrap';
+
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {LayoutComponent} from './ui/layout/layout.component';
@@ -12,7 +20,8 @@ import {ConvertPipe} from './util/convert.pipe';
 import {PureTableComponent} from './ui/table/pure-table/pure-table.component';
 import {SellersComponent} from './page/sellers/sellers.component';
 import {NodalComponent} from './page/nodal/nodal.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {OrderCreateComponent} from './ui/dialog/order-create/order-create.component';
+import {OrderItemsTableComponent} from './ui/table/order-items-table/order-items-table.component';
 
 @NgModule({
   declarations: [
@@ -26,12 +35,15 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     PureTableComponent,
     SellersComponent,
     NodalComponent,
+    OrderCreateComponent,
+    OrderItemsTableComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

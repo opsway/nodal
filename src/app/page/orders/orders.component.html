@@ -6,175 +6,51 @@
 <div class="content">
   <div class="container-fluid">
     <div class="row justify-content-md-center mb-3">
-      <div class="col-md-8">
-
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Create Order</h5>
-            <form [formGroup]="form" autocomplete="off" (ngSubmit)="addOrderItem()"> <!--novalidate-->
-
-              <div class="form-group row">
-                <label for="order-id" class="col-sm-3 col-form-label">Order</label>
-                <div class="col-sm-9">
-                  <input type="text" id="order-id" class="form-control-plaintext" readonly formControlName="orderId" >
-                </div>
-              </div>
-
-              <div class="form-group row">
-                <label for="customerId" class="col-sm-3 col-form-label">Customer</label>
-                <div class="col-sm-9">
-                  <select name="customerId" id="customerId" formControlName="customerId" class="form-control">
-                    <option *ngFor="let it of customerService.all()" [value]="it.id">{{it.name}}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group row">
-                <label for="date" class="col-sm-3 col-form-label">Date</label>
-                <div class="col-sm-9">
-                  <input type="date" id="date" class="form-control"
-                         [min]="minDate" formControlName="date"
-                         [ngClass]="{'is-invalid': form.get('date').invalid}">
-                  <div class="invalid-feedback">
-                    <div *ngIf="form.hasError('required', 'date')">Date is required</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group row" formGroupName="orderItem">
-                <label class="col-sm-3 col-form-label">New Item of Order</label>
-                <div class="col-sm-9">
-                  <div class="card">
-                    <div class="card-body">
-
-                      <div class="form-group row">
-                        <label for="sellerId" class="col-sm-2 col-form-label">Seller</label>
-                        <div class="col-sm-10">
-                          <select name="sellerId" id="sellerId" formControlName="sellerId" class="form-control">
-                            <option *ngFor="let it of sellerService.all()" [value]="it.id">{{it.name}}</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div class="form-group row">
-                        <label for="itemId" class="col-sm-2 col-form-label">SKU</label>
-                        <div class="col-sm-10">
-                          <select name="itemId" id="itemId" class="form-control" formControlName="itemId"
-                                  [ngClass]="{'is-invalid': form.get(['orderItem', 'itemId']).invalid}">
-                            <option *ngFor="let it of model.items" [value]="it.id">{{it.name}}</option>
-                          </select>
-                          <div class="invalid-feedback">
-                            <div *ngIf="form.hasError('required', ['orderItem', 'itemId'])">SKU is required</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="form-group row">
-                        <label for="price" class="col-sm-2 col-form-label">Price</label>
-                        <div class="col-sm-10">
-                          <input type="number" min="0.01" step="0.01" id="price" class="form-control" formControlName="price"
-                                 [ngClass]="{'is-invalid': form.get(['orderItem', 'price']).invalid}">
-                          <div class="invalid-feedback">
-                            <div *ngIf="form.hasError('required', ['orderItem', 'price'])">Price is required</div>
-                            <div *ngIf="form.hasError('min', ['orderItem', 'price'])">Price enter a value greater than 0</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="form-group row">
-                        <label for="priceShipping" class="col-sm-2 col-form-label">Shipping Price</label>
-                        <div class="col-sm-10">
-                          <input id="priceShipping" type="number" min="0" step="0.01" class="form-control"
-                                 formControlName="shipping"
-                                 [ngClass]="{'is-invalid': form.get(['orderItem', 'shipping']).invalid}">
-                          <div class="invalid-feedback">
-                            <div *ngIf="form.hasError('required', ['orderItem', 'shipping'])">Shipping is required</div>
-                            <div *ngIf="form.hasError('min', ['orderItem', 'shipping'])">Please enter a value greater than 0</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="form-group row">
-                        <label for="qty" class="col-sm-2 col-form-label">Qty</label>
-                        <div class="col-sm-10">
-                          <input type="number" step="1" min="1" id="qty" class="form-control" formControlName="qty"
-                                 [ngClass]="{'is-invalid': form.get(['orderItem', 'qty']).invalid}">
-                          <div class="invalid-feedback">
-                            <div *ngIf="form.hasError('required', ['orderItem', 'qty'])">Qty is required</div>
-                            <div *ngIf="form.hasError('min', ['orderItem', 'qty'])">Please enter a value greater than 0</div>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <button class="button-xsmall pure-button float-right" type="submit">add</button>
-
-<!--              <div class="btn-group btn-group-toggle" data-toggle="buttons">-->
-<!--                <button class="btn btn-secondary" type="submit">Add</button>-->
-<!--                <button class="btn btn-secondary" (click)="checkout()">Checkout</button>-->
-<!--              </div>-->
-
-            </form>
-          </div>
-        </div>
-
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col">
-        <app-pure-table [provider]="itemsOrder"></app-pure-table>
-        <button class="button-xsmall pure-button float-right mt-3" (click)="saveOrder()">save</button>
-      </div>
-    </div>
-    <div class="row justify-content-md-center mb-3">
       <h2>Orders</h2>
+      <app-dialog-order-create></app-dialog-order-create>
 
       <table class="pure-table pure-table-horizontal">
       <thead>
         <tr>
-          <th rowspan="2">Order No#</th>
-          <th rowspan="2">Date</th>
-          <th rowspan="2">Customer</th>
-          <th colspan="2">Invoices</th>
-          <th colspan="7">Items</th>
+          <th rowspan="2" class="align-middle text-center">Order No#</th>
+          <th rowspan="2" class="align-middle text-center">Date</th>
+          <th rowspan="2" class="align-middle text-center">Customer</th>
+          <th colspan="2" class="align-middle text-center">Invoices</th>
+          <th colspan="7" class="align-middle text-center">Items</th>
         </tr>
-          <tr class="text-center">
-          <th>No#</th>
-          <th>Date</th>
-          <th>Seller</th>
-          <th>SKU</th>
-          <th>price</th>
-          <th>qty</th>
-          <th>total shipping</th>
-          <th>total price</th>
-          <th>total fee</th>
+        <tr>
+          <th class="align-middle text-center">No#</th>
+          <th class="align-middle text-center">Date</th>
+          <th class="align-middle text-center">Seller</th>
+          <th class="align-middle text-center">SKU</th>
+          <th class="align-middle text-center">price</th>
+          <th class="align-middle text-center">qty</th>
+          <th class="align-middle text-center">total shipping</th>
+          <th class="align-middle text-center">total price</th>
+          <th class="align-middle text-center">total fee</th>
         </tr>
       </thead>
         <tbody>
           <tr *ngFor="let order of model.orders">
             <td class="text-center align-middle">
               <span>{{order.id}}</span>
-              <div class="btn-group-vertical btn-group-sm" role="group" aria-label="Order action">
-                <button type="button" class="btn btn-primary" disabled>Pay</button>
-                <button type="button" class="btn btn-danger" disabled>Cancel</button>
+              <div class="btn-group-vertical btn-group-sm" role="group">
+                <button type="button" class="btn btn-primary" (click)="order.cancel()" disabled>pay</button>
+                <!--<button type="button" class="btn btn-success" (click)="order.cancel()">invoice</button>-->
+                <button type="button" class="btn btn-danger" (click)="order.cancel()" disabled>cancel</button>
               </div>
             </td>
             <td>{{order.createdAt}}</td>
             <td>{{order.customerName}}</td>
-            <td colspan="2"></td>
-            <td colspan="7">
-              <app-pure-table
-                [showHeader]="false"
-                [showFooter]="false"
-                [provider]="createItemsOrderProvider(order.items)"></app-pure-table>-
+            <td colspan="2" class="align-middle text-center"></td>
+            <td colspan="7" style="padding: 0" class="align-middle text-center">
+              <app-order-items-table
+                [isNested]="true"
+                [data]="order.items"></app-order-items-table>
             </td>
           </tr>
           <tr *ngIf="model.orders.length === 0">
-            <td colspan="12">empty</td>
+            <td colspan="12" class="align-middle text-center">empty</td>
           </tr>
         </tbody>
       </table>

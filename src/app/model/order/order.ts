@@ -1,6 +1,6 @@
 import * as Util from '../../util/util';
 import {OrderItem} from '../order-item/order-item';
-import {Item} from '../item/item';
+import {Item} from '../entity/item';
 import {Seller} from '../member/seller/seller';
 import {Customer} from '../member/customer/customer';
 import {Payment} from '../payment/payment';
@@ -8,6 +8,7 @@ import {Payment} from '../payment/payment';
 export class Order {
   static STATUS_CREATED = 'created';
   static STATUS_SAVED = 'saved';
+  static STATUS_CANCELED = 'canceled';
   static STATUS_PAID = 'paid';
 
   id: string;
@@ -26,11 +27,15 @@ export class Order {
   }
 
   get customerName(): string {
-    return this.customer.name
+    return this.customer.name;
   }
 
   get isPaid(): boolean {
     return this.status === Order.STATUS_PAID;
+  }
+
+  get isCancel(): boolean {
+    return this.status === Order.STATUS_CANCELED;
   }
 
   get isNew(): boolean {
@@ -64,6 +69,15 @@ export class Order {
   attachePayment(payment: Payment): void {
     this.status = Order.STATUS_PAID;
     this.payment = payment;
+  }
+
+  cancel(): boolean {
+    if (this.isUnchanged) {
+      return false;
+    }
+    this.status = Order.STATUS_CANCELED;
+
+    return true;
   }
 
   save(): boolean {

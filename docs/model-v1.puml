@@ -1,0 +1,38 @@
+@startuml
+
+title <b>Model v1</b>
+left to right direction
+skinparam shadowing false
+
+class Customer {
+  +string **id**
+  +string **name**
+  +number **balance**
+}
+
+class Seller {
+  +string **id**
+  +string **name**
+  +number **balance**
+}
+
+class Order {
+  +string **id**
+  +Date **createdAt**
+  +Payment **payment**
+  +string **status**
+  +Customer **customer**
+}
+
+class OrderItem
+
+class Item
+
+class Payment
+
+Customer "1" -- "0..N" Order
+Order "1" -- "N..1" OrderItem
+Order "1" -- "N..1" Payment
+OrderItem "1..N" -- "1" Item
+OrderItem "0..N" -- "1" Seller
+@enduml

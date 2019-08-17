@@ -1,8 +1,6 @@
-import {Item} from '../item/item';
+import {Item} from '../entity/item';
 import {Seller} from '../member/seller/seller';
 import {OrderItem} from './order-item';
-import {Order} from '../order/order';
-import {Customer} from '../member/customer/customer';
 import * as Util from '../../util/util';
 
 describe('OrderItem', () => {

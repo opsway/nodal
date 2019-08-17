@@ -7,28 +7,50 @@ import {SellerService} from './member/seller/seller.service';
 import {CustomerService} from './member/customer/customer.service';
 import {Shared} from './shared';
 import {OrderItemService} from './order-item/order-item.service';
-import {ItemService} from './item/item.service';
 import {OrderItem} from './order-item/order-item';
-import {Item} from './item/item';
+import {Item} from './entity/item';
 import {Order} from './order/order';
+import {Collection} from './collection';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ModelService {
+  private itemCollection: Collection<Item> = new Collection<Item>();
 
   constructor(
-    private itemService: ItemService,
     private orderItemService: OrderItemService,
     private customerService: CustomerService,
     private sellerService: SellerService,
     private orderService: OrderService,
     private paymentService: PaymentService,
   ) {
+    this.load();
   }
 
-  get items(): Item[] {
-    return this.itemService.all();
+  load(): void {
+    this.itemCollection.load([
+      new Item(),
+      new Item(),
+      new Item(),
+      new Item(),
+    ]);
+  }
+
+  get currentOrder(): Order {
+    return this.orderService.currentOrder();
+  }
+
+  get customers(): CustomerService {
+    return this.customerService;
+  }
+
+  get sellers(): SellerService {
+    return this.sellerService;
+  }
+
+  get items(): Collection<Item> {
+    return this.itemCollection;
   }
 
   get payments() {
@@ -81,13 +103,14 @@ export class ModelService {
     window.location.href = url;
   }
 
-  saveOrder(): Order {
-    const cart = this.orderService.currentCart();
+  saveOrder(): boolean {
+    const cart = this.orderService.currentOrder();
     if (cart.save()) {
-      return this.orderService.create(cart.customer);
+      this.orderService.create(cart.customer);
+      return true;
     }
 
-    return cart;
+    return false;
   }
 
   addOrderItem(
@@ -99,9 +122,9 @@ export class ModelService {
     sellerId: string,
   ): OrderItem {
     const customer = this.customerService.find(customerId);
-    const item = this.itemService.find(itemId);
+    const item = this.items.find(itemId);
     const seller = this.sellerService.find(sellerId);
-    const cart = this.orderService.currentCart();
+    const cart = this.orderService.currentOrder();
     cart.customer = customer;
 
     return cart.addItem(this.orderItemService.create(
@@ -120,7 +143,7 @@ export class ModelService {
     const order = this.addOrderItem(
       this.customerService.first().id,
       200,
-      this.itemService.first().id,
+      this.items.first().id,
       50,
       2,
       this.sellerService.first().id,
