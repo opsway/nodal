@@ -79,7 +79,7 @@ export class OrderCreateComponent implements OnInit {
         this.form.value.orderItem.qty,
         this.form.value.orderItem.sellerId
       );
-      entity.order.createdAt = this.form.value.date;
+      entity.order.createdAt = new Date(this.form.value.date);
     } else {
       for (const inner in this.form.controls) {
         if (this.form.controls.hasOwnProperty(inner)) {
