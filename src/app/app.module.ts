@@ -16,6 +16,7 @@ import {MenuComponent} from './ui/menu/menu.component';
 import {OrdersComponent} from './page/orders/orders.component';
 import {PaymentsComponent} from './page/payments/payments.component';
 import {ShareComponent} from './page/share/share.component';
+import { AutoFocusDirective } from './util/auto-focus/auto-focus.directive';
 import {ConvertPipe} from './util/convert.pipe';
 import {PureTableComponent} from './ui/table/pure-table/pure-table.component';
 import {SellersComponent} from './page/sellers/sellers.component';
@@ -37,6 +38,7 @@ import {OrderItemsTableComponent} from './ui/table/order-items-table/order-items
     NodalComponent,
     OrderCreateComponent,
     OrderItemsTableComponent,
+    AutoFocusDirective,
   ],
   imports: [
     BrowserModule,
