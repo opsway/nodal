@@ -37,6 +37,7 @@ export class OrderItemsTableComponent {
         .withFooter(this.data ? this.data.total : 0),
       TableProvider.cellDef('feeMarket')
         .withHeader('total fee')
+        .withPipe(new ConvertPipe())
         .withFooter(this.data ? this.data.feeMarket : 0),
     ];
   }
