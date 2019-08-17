@@ -1,10 +1,15 @@
-import {
-  Component,
-} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-nodal',
-  templateUrl: 'nodal.component.html',
+  templateUrl: 'nodal.component.html'
 })
-export class NodalComponent {
+export class NodalComponent implements OnInit {
+
+  constructor() {
+  }
+
+  ngOnInit() {
+  }
+
 }
