@@ -11,7 +11,7 @@ import {OrderItem} from './order-item/order-item';
 import {Item} from './entity/item';
 import {Order} from './order/order';
 import {Collection} from './collection';
-
+import {meta} from '../../app/app.meta';
 @Injectable({
   providedIn: 'root'
 })
@@ -26,6 +26,9 @@ export class ModelService {
     private paymentService: PaymentService,
   ) {
     this.load();
+    if (meta.releaseNumber === 'local') {
+      this.flow();
+    }
   }
 
   load(): void {
@@ -103,9 +106,13 @@ export class ModelService {
     window.location.href = url;
   }
 
+  toPay(order: Order, gateway: string): void {
+    this.paymentService.toPay(order, gateway);
+  }
+
   saveOrder(): boolean {
     const cart = this.orderService.currentOrder();
-    if (cart.save()) {
+    if (cart.save().isSaved) {
       this.orderService.create(cart.customer);
       return true;
     }
@@ -126,7 +133,7 @@ export class ModelService {
     const seller = this.sellerService.find(sellerId);
     const cart = this.orderService.currentOrder();
     cart.customer = customer;
-
+    console.log(`${cart.id} addOrderItem:`, customer, item, seller);
     return cart.addItem(this.orderItemService.create(
       price,
       item,
@@ -137,10 +144,8 @@ export class ModelService {
     ));
   }
 
-  flow(): void {
-    // 1. Order flow
-    // 1.1. Edit order
-    const order = this.addOrderItem(
+  private flowEditNewOrder(): Order {
+    return  this.addOrderItem(
       this.customerService.first().id,
       200,
       this.items.first().id,
@@ -148,10 +153,16 @@ export class ModelService {
       2,
       this.sellerService.first().id,
     ).order;
+  }
+
+  private flow(): void {
+    // 1. Order flow
+    // 1.1. Edit new Order
+    this.flowEditNewOrder();
     // 1.2. Save order
     this.saveOrder();
-    // TODO 1.3. Cancel Order
-    // TODO 1.4. Pay Order
+    // 1.3. Pay Order
+    this.toPay(this.flowEditNewOrder().save(), 'RP');
     // TODO 1.5. Create invoice for payed Order by item via Seller
 
     // 2. Payment flow
@@ -159,13 +170,13 @@ export class ModelService {
     // TODO add setted status ship (reject)
     // TODO add setted status returned etc
     // TODO add remay ???
-    this.paymentService.toPay(order, 'pytm');
+    // ;
 
     // TODO add refunds before gateway settlement
     // 3. Settlement flow
-    this.paymentService.gatewaySettlement('pytm', (new Date()));
+    // this.paymentService.gatewaySettlement('pytm', (new Date()));
 
     // TODO add refunds after checkout
-    this.paymentService.nodalSettlement();
+    // this.paymentService.nodalSettlement();
   }
 }

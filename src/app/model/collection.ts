@@ -40,4 +40,8 @@ export class Collection<T extends Entity> {
 
     return result;
   }
+
+  walk(walker: (entity: T) => void): void {
+    this.elements.forEach((entity: T) => walker(entity));
+  }
 }

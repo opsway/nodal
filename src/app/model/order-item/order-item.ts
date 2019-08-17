@@ -3,9 +3,15 @@ import {Item} from '../entity/item';
 import {Seller} from '../member/seller/seller';
 import {Order} from '../order/order';
 import {Model} from '../model';
-import {ConvertPipe} from '../../util/convert.pipe';
+import {Entity} from '../entity/entity';
+import {Payment} from '../payment/payment';
+import {Collection} from '../collection';
 
-export class OrderItem {
+export class OrderItem implements Entity {
+  static STATUS_CREATED = 'created';
+  static STATUS_SAVED = 'saved';
+  static STATUS_CANCELED = 'canceled';
+  static STATUS_PAID = 'paid';
   id: string;
   item: Item;
   qty: number;
@@ -14,6 +20,8 @@ export class OrderItem {
   seller: Seller;
   refunded: boolean;
   order: Order;
+  status: string;
+  private payments: Collection<Payment> = new Collection<Payment>();
 
   constructor(
     price: number, item: Item, // SellerItem
@@ -28,8 +36,21 @@ export class OrderItem {
     this.order = order;
     this.qty = qty;
     this.price = price * Model.precisionOfPersist;
-    this.priceShipping = priceShipping *  Model.precisionOfPersist;
+    this.priceShipping = priceShipping * Model.precisionOfPersist;
     this.refunded = false;
+    this.status = OrderItem.STATUS_CREATED;
+  }
+
+  get isSaved(): boolean {
+    return this.status === OrderItem.STATUS_SAVED;
+  }
+
+  get isPaid(): boolean {
+    return this.status === OrderItem.STATUS_PAID;
+  }
+
+  get isNew(): boolean {
+    return this.status === OrderItem.STATUS_CREATED;
   }
 
   get amount(): number {
@@ -58,6 +79,21 @@ export class OrderItem {
 
   get total(): number {
     return this.amount + this.amountShipping;
+  }
+
+  // ACTION
+
+  save(): OrderItem {
+    this.status = OrderItem.STATUS_SAVED;
+
+    return this;
+  }
+
+  attachePayment(payment: Payment): OrderItem {
+    this.payments.add(payment);
+    this.status = OrderItem.STATUS_PAID;
+
+    return this;
   }
 
   refund(): number {

@@ -16,7 +16,7 @@
           <th rowspan="2" class="align-middle text-center">Date</th>
           <th rowspan="2" class="align-middle text-center">Customer</th>
           <th colspan="2" class="align-middle text-center">Invoices</th>
-          <th colspan="7" class="align-middle text-center">Items</th>
+          <th colspan="8" class="align-middle text-center">Items</th>
         </tr>
         <tr>
           <th class="align-middle text-center">No#</th>
@@ -28,6 +28,7 @@
           <th class="align-middle text-center">total shipping</th>
           <th class="align-middle text-center">total price</th>
           <th class="align-middle text-center">total fee</th>
+          <th class="align-middle text-center">status</th>
         </tr>
       </thead>
         <tbody>
@@ -35,22 +36,32 @@
             <td class="text-center align-middle">
               <span>{{order.id}}</span>
               <div class="btn-group-vertical btn-group-sm" role="group">
-                <button type="button" class="btn btn-primary" (click)="order.cancel()" disabled>pay</button>
-                <!--<button type="button" class="btn btn-success" (click)="order.cancel()">invoice</button>-->
-                <button type="button" class="btn btn-danger" (click)="order.cancel()" disabled>cancel</button>
+                <button class="btn btn-primary"
+                        *ngIf="order.isNoPaid"
+                        (click)="model.toPay(order, 'RP')"
+                        type="button">pay RP</button>
+                <button class="btn btn-primary"
+                        *ngIf="order.isNoPaid"
+                        (click)="model.toPay(order, 'PT')"
+                        type="button">pay PT</button>
+                <button class="btn btn-success"
+                        *ngIf="!order.isNoPaid"
+                        disabled
+                        type="button">invoice</button>
               </div>
             </td>
-            <td>{{order.createdAt}}</td>
+            <td>{{order.createdAt | date : 'yy/M/d h:mm:ss'}}</td>
             <td>{{order.customerName}}</td>
             <td colspan="2" class="align-middle text-center"></td>
-            <td colspan="7" style="padding: 0" class="align-middle text-center">
+            <td colspan="8" style="padding: 0" class="align-middle text-center">
               <app-order-items-table
                 [isNested]="true"
-                [data]="order.items"></app-order-items-table>
+                [data]="order"></app-order-items-table>
             </td>
           </tr>
           <tr *ngIf="model.orders.length === 0">
-            <td colspan="12" class="align-middle text-center">empty</td>
+            <td colspan="14"
+                class="align-middle text-center">empty</td>
           </tr>
         </tbody>
       </table>

@@ -36,14 +36,6 @@ export class OrderService {
     return this.create();
   }
 
-  checkout(customer: Customer): void {
-    const cart = this.currentOrder();
-    if (cart.amount > 0) {
-      cart.save();
-      this.create(customer);
-    }
-  }
-
   filter(fn: (value: Order) => boolean): Order[] {
     const result = [];
     this.collection.forEach((entity: Order) => {
@@ -56,7 +48,7 @@ export class OrderService {
   }
 
   all(): Order[] {
-    return Array.from(this.collection.values()).filter((it: Order) => it.status !== Order.STATUS_CREATED);
+    return Array.from(this.collection.values()).filter((it: Order) => it.isSaved);
   }
 
   get total(): number {
