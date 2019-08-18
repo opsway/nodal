@@ -14,6 +14,14 @@ import { Order } from './order/order';
 import { Collection } from './collection';
 import { Invoice } from './entity/invoice';
 import { Refund } from './entity/refund';
+import { Model } from './model';
+
+declare interface Action {
+  name: string;
+  title: string;
+  color: string;
+  handler: () => void;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +30,7 @@ export class ModelService {
   private itemCollection: Collection<Item> = new Collection<Item>();
   private invoiceCollection: Collection<Invoice> = new Collection<Invoice>();
   private refundCollection: Collection<Refund> = new Collection<Refund>();
+  private readonly paymentGateways: string[];
 
   constructor(
     private orderItemService: OrderItemService,
@@ -30,6 +39,7 @@ export class ModelService {
     private orderService: OrderService,
     private paymentService: PaymentService,
   ) {
+    this.paymentGateways = Model.paymentGateways;
     this.load();
     if (meta.releaseNumber === 'local') {
       this.flow();
@@ -43,6 +53,10 @@ export class ModelService {
       new Item(),
       new Item(),
     ]);
+  }
+
+  get paymentMethods(): string[] {
+    return this.paymentGateways;
   }
 
   get currentOrder(): Order {
@@ -137,6 +151,47 @@ export class ModelService {
     const url = this.export();
     console.log(url);
     window.location.href = url;
+  }
+
+  orderActions(order: Order): Action[] {
+    const actions = [];
+
+    if (order.isNoPaid) {
+      actions.push(...this.paymentMethods.map(gateway => {
+        return {
+          name: gateway,
+          title: `pay by ${gateway}`,
+          color: 'primary',
+          handler: () => {
+            this.toPay(order, gateway);
+          },
+        };
+      }));
+    }
+
+    if (order.canInvoice) {
+      actions.push({
+        name: 'invoice',
+        title: 'crate invoice for all Seller in order',
+        color: 'success',
+        handler: () => {
+          this.toInvoiceOrder(order);
+        },
+      });
+    }
+
+    if (order.canRefund) {
+      actions.push({
+        name: 'refund',
+        title: 'make a refund for all canceled items',
+        color: 'danger',
+        handler: () => {
+          this.toRefundOrder(order);
+        },
+      });
+    }
+
+    return actions;
   }
 
   toPay(order: Order, gateway: string): void {

@@ -33,26 +33,13 @@
             <td class="text-center align-middle">
               <span>{{order.id}}</span>
               <div class="btn-group-vertical btn-group-sm" role="group">
-                <button class="btn btn-sm btn-primary"
-                        *ngIf="order.isNoPaid"
-                        (click)="model.toPay(order, 'RP')"
+                <button class="btn btn-sm btn-{{action.color}}"
+                        [title]="action.title"
+                        *ngFor="let action of model.orderActions(order)"
+                        (click)="action.handler()"
                         type="button"
-                >pay RP</button>
-                <button class="btn btn-sm  btn-primary"
-                        *ngIf="order.isNoPaid"
-                        (click)="model.toPay(order, 'PT')"
-                        type="button"
-                >pay PT</button>
-                <button class="btn btn-sm btn-success"
-                        *ngIf="order.canInvoice"
-                        (click)="model.toInvoiceOrder(order)"
-                        type="button"
-                >invoice</button>
-                <button class="btn btn-sm btn-danger"
-                        *ngIf="order.canRefund"
-                        (click)="model.toRefundOrder(order)"
-                        type="button"
-                >refund</button>
+
+                >{{action.name}}</button>
               </div>
             </td>
             <td>{{order.createdAt | dateFormat}}</td>
