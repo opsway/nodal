@@ -2,8 +2,8 @@ import {
   Pipe,
   PipeTransform,
 } from '@angular/core';
-import {DatePipe} from '@angular/common';
-import {Model} from '../model/model';
+import { DatePipe } from '@angular/common';
+import { Model } from '../model/model';
 
 const formatter = new DatePipe(Model.locale);
 

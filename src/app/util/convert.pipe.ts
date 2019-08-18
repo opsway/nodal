@@ -1,5 +1,5 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {Model} from '../model/model';
+import { Pipe, PipeTransform } from '@angular/core';
+import { Model } from '../model/model';
 
 const formatter = new Intl.NumberFormat(
   Model.locale,

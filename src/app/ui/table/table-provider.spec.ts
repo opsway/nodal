@@ -1,6 +1,6 @@
-import {TableProvider} from './table-provider';
-import {ConvertPipe} from '../../util/convert.pipe';
-import {TableCellValue} from './table-cell-value';
+import { TableProvider } from './table-provider';
+import { ConvertPipe } from '../../util/convert.pipe';
+import { TableCellValue } from './table-cell-value';
 
 describe('TableProvider', () => {
   it('should create an instance', () => {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Customer} from './customer';
+import { Customer } from './customer';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class CustomerService {
     });
   }
 
-  find(id: string): Customer|null {
+  find(id: string): Customer | null {
     return this.collection.get(id) || null;
   }
 

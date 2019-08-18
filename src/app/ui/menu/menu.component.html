@@ -3,7 +3,8 @@
   <ul class="pure-menu-list">
     <li class="pure-menu-item"
         [class.pure-menu-selected]="router.isActive(item.path, true)"
-        *ngFor="let item of list">
+        *ngFor="let item of list"
+    >
       <a [routerLink]="item.path" class="pure-menu-link">{{item.title}}</a>
     </li>
     <li class="pure-menu-item">

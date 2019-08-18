@@ -1,4 +1,4 @@
-import {PipeTransform} from '@angular/core';
+import { PipeTransform } from '@angular/core';
 
 export class TableCellDef {
   constructor(

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Transfer} from './transfer';
+import { Transfer } from './transfer';
 
 @Injectable({
   providedIn: 'root'

@@ -2,11 +2,11 @@ import {
   Component,
   Input,
 } from '@angular/core';
-import {ConvertPipe} from '../../../util/convert.pipe';
-import {DateFormatPipe} from '../../../util/date-format.pipe';
-import {TableProvider} from '../table-provider';
-import {TableCellDef} from '../table-cell-def';
-import {Payment} from '../../../model/payment/payment';
+import { ConvertPipe } from '../../../util/convert.pipe';
+import { DateFormatPipe } from '../../../util/date-format.pipe';
+import { TableProvider } from '../table-provider';
+import { TableCellDef } from '../table-cell-def';
+import { Payment } from '../../../model/payment/payment';
 
 @Component({
   selector: 'app-payments-table',

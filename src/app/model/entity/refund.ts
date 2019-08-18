@@ -1,6 +1,6 @@
 import * as Util from '../../util/util';
-import {Entity} from './entity';
-import {Payment} from '../payment/payment';
+import { Entity } from './entity';
+import { Payment } from '../payment/payment';
 
 export class Refund implements Entity {
   id: string;

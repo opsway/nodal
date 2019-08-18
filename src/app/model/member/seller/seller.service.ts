@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Seller} from './seller';
-import {Customer} from '../customer/customer';
+import { Seller } from './seller';
+import { Customer } from '../customer/customer';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class SellerService {
     });
   }
 
-  find(id: string): Seller|null {
+  find(id: string): Seller | null {
     return this.collection.get(id) || null;
   }
 
@@ -30,7 +30,7 @@ export class SellerService {
     return Array.from(this.collection.values());
   }
 
-  first(): Seller|null {
+  first(): Seller | null {
     return this.all()[0] || null;
   }
 }

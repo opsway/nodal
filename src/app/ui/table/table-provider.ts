@@ -1,6 +1,6 @@
-import {TableCellDef} from './table-cell-def';
-import {PipeTransform} from '@angular/core';
-import {TableCellValue} from './table-cell-value';
+import { TableCellDef } from './table-cell-def';
+import { PipeTransform } from '@angular/core';
+import { TableCellValue } from './table-cell-value';
 
 export class TableProvider<T> {
   constructor(
@@ -56,7 +56,7 @@ export class TableProvider<T> {
 
   private pipe(fieldIndex: number, value: any): any {
     return this.columns[fieldIndex].pipes.reduce((acc: any, pipe: PipeTransform) =>
-        pipe.transform(acc), value
-      );
+      pipe.transform(acc), value
+    );
   }
 }

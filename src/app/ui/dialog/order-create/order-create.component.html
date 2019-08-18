@@ -27,9 +27,11 @@
               <label for="date">Date</label>
               <input type="date" id="date" class="form-control"
                      [min]="minDate" formControlName="date"
-                     [ngClass]="{'is-invalid': form.get('date').invalid}">
+                     [ngClass]="{'is-invalid': form.get('date').invalid}"
+              >
               <div *ngIf="form.hasError('required', 'date')"
-                   class="invalid-feedback">Date is required</div>
+                   class="invalid-feedback"
+              >Date is required</div>
             </div>
 
           </div>
@@ -48,17 +50,20 @@
             <div class="form-group col-sm">
               <label for="itemId">SKU</label>
               <select name="itemId" id="itemId" class="form-control" formControlName="itemId"
-                      [ngClass]="{'is-invalid': form.get(['orderItem', 'itemId']).invalid}">
+                      [ngClass]="{'is-invalid': form.get(['orderItem', 'itemId']).invalid}"
+              >
                 <option *ngFor="let it of model.items.all()" [value]="it.id">{{it.name}}</option>
               </select>
               <div *ngIf="form.hasError('required', ['orderItem', 'itemId'])"
-                   class="invalid-feedback">SKU is required</div>
+                   class="invalid-feedback"
+              >SKU is required</div>
             </div>
 
             <div class="form-group col-sm">
-              <label for="price" >Price</label>
+              <label for="price">Price</label>
               <input type="number" min="0.01" step="1" id="price" class="form-control" formControlName="price"
-                     [ngClass]="{'is-invalid': form.get(['orderItem', 'price']).invalid}">
+                     [ngClass]="{'is-invalid': form.get(['orderItem', 'price']).invalid}"
+              >
               <div class="invalid-feedback">
                 <div *ngIf="form.hasError('required', ['orderItem', 'price'])">Price is required</div>
                 <div *ngIf="form.hasError('min', ['orderItem', 'price'])">Price enter a value greater than 0</div>
@@ -69,7 +74,8 @@
               <label for="priceShipping">Shipping Price</label>
               <input id="priceShipping" type="number" min="0" step="1" class="form-control"
                      formControlName="shipping"
-                     [ngClass]="{'is-invalid': form.get(['orderItem', 'shipping']).invalid}">
+                     [ngClass]="{'is-invalid': form.get(['orderItem', 'shipping']).invalid}"
+              >
               <div class="invalid-feedback">
                 <div *ngIf="form.hasError('required', ['orderItem', 'shipping'])">Shipping is required</div>
                 <div *ngIf="form.hasError('min', ['orderItem', 'shipping'])">Please enter a value greater than 0</div>
@@ -79,7 +85,8 @@
             <div class="form-group col-sm">
               <label for="qty">Qty</label>
               <input type="number" step="1" min="1" id="qty" class="form-control" formControlName="qty"
-                     [ngClass]="{'is-invalid': form.get(['orderItem', 'qty']).invalid}">
+                     [ngClass]="{'is-invalid': form.get(['orderItem', 'qty']).invalid}"
+              >
               <div class="invalid-feedback">
                 <div *ngIf="form.hasError('required', ['orderItem', 'qty'])">Qty is required</div>
                 <div *ngIf="form.hasError('min', ['orderItem', 'qty'])">Please enter 1 or greater</div>
@@ -101,7 +108,8 @@
   <div class="modal-footer">
     <button class="button-xsmall pure-button float-right"
             [disabled]="model.currentOrder.isUnchanged"
-            (click)="modal.close()">save</button>
+            (click)="modal.close()"
+    >save</button>
   </div>
 </ng-template>
 <button class="button-xsmall pure-button" (click)="open(content)">new order</button>

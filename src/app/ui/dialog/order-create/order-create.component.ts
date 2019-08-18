@@ -10,7 +10,7 @@ import {
   FormBuilder,
   FormGroup, Validators,
 } from '@angular/forms';
-import {ModelService} from '../../../model/model.service';
+import { ModelService } from '../../../model/model.service';
 
 @Component({
   selector: 'app-dialog-order-create',

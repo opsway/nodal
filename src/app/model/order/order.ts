@@ -1,9 +1,9 @@
 import * as Util from '../../util/util';
-import {OrderItem} from '../order-item/order-item';
-import {Customer} from '../member/customer/customer';
-import {Payment} from '../payment/payment';
-import {Collection} from '../collection';
-import {Invoice} from '../entity/invoice';
+import { OrderItem } from '../order-item/order-item';
+import { Customer } from '../member/customer/customer';
+import { Payment } from '../payment/payment';
+import { Collection } from '../collection';
+import { Invoice } from '../entity/invoice';
 
 export class Order {
   id: string;

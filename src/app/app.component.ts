@@ -1,10 +1,10 @@
-import {Component} from '@angular/core';
-import {Menu} from './ui/menu/menu';
+import { Component } from '@angular/core';
+import { Menu } from './ui/menu/menu';
 import {
   ActivatedRoute,
   Router,
 } from '@angular/router';
-import {ModelService} from './model/model.service';
+import { ModelService } from './model/model.service';
 
 @Component({
   selector: 'app-root',

@@ -36,42 +36,50 @@
                 <button class="btn btn-sm btn-primary"
                         *ngIf="order.isNoPaid"
                         (click)="model.toPay(order, 'RP')"
-                        type="button">pay RP</button>
+                        type="button"
+                >pay RP</button>
                 <button class="btn btn-sm  btn-primary"
                         *ngIf="order.isNoPaid"
                         (click)="model.toPay(order, 'PT')"
-                        type="button">pay PT</button>
+                        type="button"
+                >pay PT</button>
                 <button class="btn btn-sm btn-success"
                         *ngIf="order.canInvoice"
                         (click)="model.toInvoiceOrder(order)"
-                        type="button">invoice</button>
+                        type="button"
+                >invoice</button>
                 <button class="btn btn-sm btn-danger"
                         *ngIf="order.canRefund"
                         (click)="model.toRefundOrder(order)"
-                        type="button">refund</button>
+                        type="button"
+                >refund</button>
               </div>
             </td>
             <td>{{order.createdAt | dateFormat}}</td>
             <td>{{order.customerName}}</td>
             <td colspan="2" style="padding: 0" class="align-middle text-center">
               <table class="pure-table pure-table-horizontal text-center"
-              *ngIf="model.invoicesByOrder(order).count() > 0">
+                     *ngIf="model.invoicesByOrder(order).count() > 0"
+              >
                 <tbody>
                   <tr *ngFor="let invoice of model.invoicesByOrder(order).all(); let i = index"
-                      [class.pure-table-odd]="i % 2 === 0">
+                      [class.pure-table-odd]="i % 2 === 0"
+                  >
                     <td>
                       <span>{{invoice.id}}</span>
                       <div class="btn-group" role="group">
                         <button type="button"
-                          *ngIf="invoice.canShipped"
-                          (click)="invoice.ship()"
-                          class="btn btn-sm btn-success"
-                          title="ship invoice">SH</button>
+                                *ngIf="invoice.canShipped"
+                                (click)="invoice.ship()"
+                                class="btn btn-sm btn-success"
+                                title="ship invoice"
+                        >SH</button>
                         <button type="button"
-                          *ngIf="invoice.canCanceled"
-                          (click)="invoice.cancel()"
-                          class="btn btn-sm btn-primary"
-                          title="cancel invoice">CA</button>
+                                *ngIf="invoice.canCanceled"
+                                (click)="invoice.cancel()"
+                                class="btn btn-sm btn-primary"
+                                title="cancel invoice"
+                        >CA</button>
                       </div>
                     </td>
                     <td>
@@ -81,28 +89,26 @@
                                 *ngIf="invoice.isSaved"
                                 (click)="invoice.save()"
                                 class="btn btn-sm btn-success"
-                                title="add to invoice">save</button>
+                                title="add to invoice"
+                        >save</button>
                       </div>
                     </td>
                   </tr>
                 </tbody>
-<!--                <tfoot>
-                  <tr>
-                    <td>&nbsp;</td>
-                  </tr>
-                </tfoot>-->
               </table>
             </td>
             <td colspan="7" style="padding: 0" class="align-middle text-center">
               <app-order-items-table
                 [isNested]="true"
-                [data]="order"></app-order-items-table>
+                [data]="order"
+              ></app-order-items-table>
             </td>
             <td style="padding: 0" class="align-middle text-center">
               <table class="pure-table pure-table-horizontal text-center">
                 <tbody>
                   <tr *ngFor="let item of order.items; let i = index"
-                      [class.pure-table-odd]="i % 2 === 0">
+                      [class.pure-table-odd]="i % 2 === 0"
+                  >
                     <td>
                       <span>{{item.status}}</span>
                       <div class="btn-group" role="group">
@@ -110,37 +116,37 @@
                                 *ngIf="item.canInvoiced"
                                 (click)="model.toInvoiceOrderItem(item)"
                                 class="btn btn-sm btn-success"
-                                title="add to invoice">IN</button>
+                                title="add to invoice"
+                        >IN</button>
                         <button type="button"
                                 *ngIf="item.canCanceled"
                                 (click)="item.cancel()"
                                 class="btn btn-sm btn-primary"
-                                title="cancel item">CA</button>
+                                title="cancel item"
+                        >CA</button>
                         <button type="button"
                                 *ngIf="item.canReturned"
                                 (click)="item.return()"
                                 class="btn btn-sm btn-secondary"
-                                title="create RMA">RM</button>
+                                title="create RMA"
+                        >RM</button>
                         <button type="button"
                                 *ngIf="item.canRefunded"
                                 (click)="model.toRefundOrderItem(item)"
                                 class="btn btn-sm btn-danger"
-                                title="refund">RF</button>
+                                title="refund"
+                        >RF</button>
                       </div>
                     </td>
                   </tr>
                 </tbody>
-<!--                <tfoot>
-                  <tr>
-                    <td>&nbsp;</td>
-                  </tr>
-                </tfoot>-->
               </table>
             </td>
           </tr>
           <tr *ngIf="model.orders.length === 0">
             <td colspan="14"
-                class="align-middle text-center">empty</td>
+                class="align-middle text-center"
+            >empty</td>
           </tr>
         </tbody>
       </table>

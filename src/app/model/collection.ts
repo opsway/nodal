@@ -1,4 +1,4 @@
-import {Entity} from './entity/entity';
+import { Entity } from './entity/entity';
 
 export class Collection<T extends Entity> {
   constructor(

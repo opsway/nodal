@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {Order} from './order';
-import {Customer} from '../member/customer/customer';
-import {OrderItem} from '../order-item/order-item';
-import {OrderItemService} from '../order-item/order-item.service';
+import { Injectable } from '@angular/core';
+import { Order } from './order';
+import { Customer } from '../member/customer/customer';
+import { OrderItem } from '../order-item/order-item';
+import { OrderItemService } from '../order-item/order-item.service';
 
 @Injectable({
   providedIn: 'root'
@@ -70,8 +70,8 @@ export class OrderService {
   get items(): OrderItem[] {
     const result: OrderItem[] = [];
     this.all().forEach((it: Order) => {
-       result.push(...it.items);
-     });
+      result.push(...it.items);
+    });
 
     return result;
   }

@@ -1,5 +1,5 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 
 import {
   FormsModule,
@@ -9,25 +9,25 @@ import {
   NgbModule,
 } from '@ng-bootstrap/ng-bootstrap';
 
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
-import {LayoutComponent} from './ui/layout/layout.component';
-import {MenuComponent} from './ui/menu/menu.component';
-import {OrdersComponent} from './page/orders/orders.component';
-import {PaymentsComponent} from './page/payments/payments.component';
-import {ShareComponent} from './page/share/share.component';
-import {AutoFocusDirective} from './util/auto-focus/auto-focus.directive';
-import {ConvertPipe} from './util/convert.pipe';
-import {PureTableComponent} from './ui/table/pure-table/pure-table.component';
-import {SellersComponent} from './page/sellers/sellers.component';
-import {NodalComponent} from './page/nodal/nodal.component';
-import {OrderCreateComponent} from './ui/dialog/order-create/order-create.component';
-import {OrderItemsTableComponent} from './ui/table/order-items-table/order-items-table.component';
-import {RefundsComponent} from './page/refunds/refunds.component';
-import {CustomersComponent} from './page/customers/customers.component';
-import {PaymentsTableComponent} from './ui/table/payments-table/payments-table.component';
-import {DateFormatPipe} from './util/date-format.pipe';
-import {RefundsTableComponent} from './ui/table/refunds-table/refunds-table.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { LayoutComponent } from './ui/layout/layout.component';
+import { MenuComponent } from './ui/menu/menu.component';
+import { OrdersComponent } from './page/orders/orders.component';
+import { PaymentsComponent } from './page/payments/payments.component';
+import { ShareComponent } from './page/share/share.component';
+import { AutoFocusDirective } from './util/auto-focus/auto-focus.directive';
+import { ConvertPipe } from './util/convert.pipe';
+import { PureTableComponent } from './ui/table/pure-table/pure-table.component';
+import { SellersComponent } from './page/sellers/sellers.component';
+import { NodalComponent } from './page/nodal/nodal.component';
+import { OrderCreateComponent } from './ui/dialog/order-create/order-create.component';
+import { OrderItemsTableComponent } from './ui/table/order-items-table/order-items-table.component';
+import { RefundsComponent } from './page/refunds/refunds.component';
+import { CustomersComponent } from './page/customers/customers.component';
+import { PaymentsTableComponent } from './ui/table/payments-table/payments-table.component';
+import { DateFormatPipe } from './util/date-format.pipe';
+import { RefundsTableComponent } from './ui/table/refunds-table/refunds-table.component';
 
 @NgModule({
   declarations: [

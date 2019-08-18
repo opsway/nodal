@@ -1,4 +1,4 @@
-import {Refund} from './refund';
+import { Refund } from './refund';
 import payment from './payment.stub';
 
 describe('Refund', () => {

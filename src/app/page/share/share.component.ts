@@ -2,8 +2,8 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
-import {ModelService} from '../../model/model.service';
-import {ActivatedRoute} from '@angular/router';
+import { ModelService } from '../../model/model.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-share',

@@ -8,7 +8,8 @@ import {
   templateUrl: 'layout.component.html',
 })
 export class LayoutComponent implements OnInit {
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

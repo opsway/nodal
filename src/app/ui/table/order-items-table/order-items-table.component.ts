@@ -2,11 +2,11 @@ import {
   Component,
   Input,
 } from '@angular/core';
-import {TableProvider} from '../table-provider';
-import {OrderItem} from '../../../model/order-item/order-item';
-import {ConvertPipe} from '../../../util/convert.pipe';
-import {TableCellDef} from '../table-cell-def';
-import {Order} from '../../../model/order/order';
+import { TableProvider } from '../table-provider';
+import { OrderItem } from '../../../model/order-item/order-item';
+import { ConvertPipe } from '../../../util/convert.pipe';
+import { TableCellDef } from '../table-cell-def';
+import { Order } from '../../../model/order/order';
 
 @Component({
   selector: 'app-order-items-table',
@@ -45,7 +45,7 @@ export class OrderItemsTableComponent {
   get provider(): TableProvider<OrderItem> {
     const columns = this.defaultColumns;
     if (this.isNested) {
-     // columns.push(TableProvider.cellDef('status'));
+      // columns.push(TableProvider.cellDef('status'));
     }
     return new TableProvider<OrderItem>(
       this.data.items || [],

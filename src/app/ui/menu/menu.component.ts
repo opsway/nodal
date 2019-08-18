@@ -3,9 +3,9 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import {Menu} from './menu';
-import {Router} from '@angular/router';
-import {meta} from '../../app.meta';
+import { Menu } from './menu';
+import { Router } from '@angular/router';
+import { meta } from '../../app.meta';
 
 @Component({
   selector: 'app-menu',

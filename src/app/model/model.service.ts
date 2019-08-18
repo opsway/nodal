@@ -1,19 +1,19 @@
 import {
   Injectable,
 } from '@angular/core';
-import {meta} from '../app.meta';
-import {PaymentService} from './payment/payment.service';
-import {OrderService} from './order/order.service';
-import {SellerService} from './member/seller/seller.service';
-import {CustomerService} from './member/customer/customer.service';
-import {Shared} from './shared';
-import {OrderItemService} from './order-item/order-item.service';
-import {OrderItem} from './order-item/order-item';
-import {Item} from './entity/item';
-import {Order} from './order/order';
-import {Collection} from './collection';
-import {Invoice} from './entity/invoice';
-import {Refund} from './entity/refund';
+import { meta } from '../app.meta';
+import { PaymentService } from './payment/payment.service';
+import { OrderService } from './order/order.service';
+import { SellerService } from './member/seller/seller.service';
+import { CustomerService } from './member/customer/customer.service';
+import { Shared } from './shared';
+import { OrderItemService } from './order-item/order-item.service';
+import { OrderItem } from './order-item/order-item';
+import { Item } from './entity/item';
+import { Order } from './order/order';
+import { Collection } from './collection';
+import { Invoice } from './entity/invoice';
+import { Refund } from './entity/refund';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +50,6 @@ export class ModelService {
   }
 
   invoicesByOrder(o: Order): Collection<Invoice> {
-    console.log(this.invoiceCollection.all());
     return this.invoiceCollection
       .filter(e => e.hasOrder(o));
   }

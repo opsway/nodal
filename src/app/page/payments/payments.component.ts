@@ -1,7 +1,7 @@
 import {
   Component,
 } from '@angular/core';
-import {ModelService} from '../../model/model.service';
+import { ModelService } from '../../model/model.service';
 
 @Component({
   selector: 'app-payments',

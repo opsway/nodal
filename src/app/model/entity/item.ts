@@ -1,5 +1,5 @@
 import * as Util from '../../util/util';
-import {Entity} from './entity';
+import { Entity } from './entity';
 
 export class Item implements Entity {
   id: string;

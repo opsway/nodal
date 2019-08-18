@@ -1,13 +1,13 @@
 import * as Util from '../../util/util';
-import {Item} from '../entity/item';
-import {Seller} from '../member/seller/seller';
-import {Order} from '../order/order';
-import {Model} from '../model';
-import {Entity} from '../entity/entity';
-import {Payment} from '../payment/payment';
-import {Collection} from '../collection';
-import {Invoice} from '../entity/invoice';
-import {Refund} from '../entity/refund';
+import { Item } from '../entity/item';
+import { Seller } from '../member/seller/seller';
+import { Order } from '../order/order';
+import { Model } from '../model';
+import { Entity } from '../entity/entity';
+import { Payment } from '../payment/payment';
+import { Collection } from '../collection';
+import { Invoice } from '../entity/invoice';
+import { Refund } from '../entity/refund';
 
 export class OrderItem implements Entity {
   static STATUS_ORDERED = 'ordered';
@@ -71,12 +71,12 @@ export class OrderItem implements Entity {
   }
 
   get canRefunded(): boolean {
-   return this.order.hasPaymentAvailable
-     && (
-       this.isReturned
-       || this.isCanceled
-     )
-     && !this.isRefunded;
+    return this.order.hasPaymentAvailable
+      && (
+        this.isReturned
+        || this.isCanceled
+      )
+      && !this.isRefunded;
   }
 
   get canCanceled(): boolean {

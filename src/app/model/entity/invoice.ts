@@ -1,9 +1,9 @@
 import * as Util from '../../util/util';
-import {Entity} from './entity';
-import {Seller} from '../member/seller/seller';
-import {Collection} from '../collection';
-import {OrderItem} from '../order-item/order-item';
-import {Order} from '../order/order';
+import { Entity } from './entity';
+import { Seller } from '../member/seller/seller';
+import { Collection } from '../collection';
+import { OrderItem } from '../order-item/order-item';
+import { Order } from '../order/order';
 
 export class Invoice implements Entity {
   static STATUS_CANCELED = 'canceled';
@@ -28,8 +28,8 @@ export class Invoice implements Entity {
 
   get canCanceled(): boolean {
     return !this.isDraft
-    && !this.isShipped
-    && !this.isCanceled;
+      && !this.isShipped
+      && !this.isCanceled;
   }
 
   get canShipped(): boolean {

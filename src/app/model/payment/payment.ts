@@ -1,8 +1,8 @@
 import * as Util from '../../util/util';
-import {Order} from '../order/order';
-import {Model} from '../model';
-import {Collection} from '../collection';
-import {Refund} from '../entity/refund';
+import { Order } from '../order/order';
+import { Model } from '../model';
+import { Collection } from '../collection';
+import { Refund } from '../entity/refund';
 
 export class Payment {
   id: string;
