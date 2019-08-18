@@ -37,21 +37,21 @@
             <td class="text-center align-middle">
               <span>{{order.id}}</span>
               <div class="btn-group-vertical btn-group-sm" role="group">
-                <button class="btn btn-primary"
+                <button class="btn btn-sm btn-primary"
                         *ngIf="order.isNoPaid"
                         (click)="model.toPay(order, 'RP')"
                         type="button">pay RP</button>
-                <button class="btn btn-primary"
+                <button class="btn btn-sm  btn-primary"
                         *ngIf="order.isNoPaid"
                         (click)="model.toPay(order, 'PT')"
                         type="button">pay PT</button>
-                <button class="btn btn-success"
+                <button class="btn btn-sm btn-success"
                         *ngIf="order.canInvoice"
                         (click)="model.toInvoiceOrder(order)"
                         type="button">invoice</button>
-                <button class="btn btn-danger"
+                <button class="btn btn-sm btn-danger"
                         *ngIf="order.canRefund"
-                        disabled
+                        (click)="model.toRefundOrder(order)"
                         type="button">refund</button>
               </div>
             </td>
@@ -70,12 +70,12 @@
                           *ngIf="invoice.canShipped"
                           (click)="invoice.ship()"
                           class="btn btn-sm btn-success"
-                          title="ship invoice">S</button>
+                          title="ship invoice">SH</button>
                         <button type="button"
                           *ngIf="invoice.canCanceled"
                           (click)="invoice.cancel()"
                           class="btn btn-sm btn-primary"
-                          title="cancel invoice">C</button>
+                          title="cancel invoice">CA</button>
                       </div>
                     </td>
                     <td>
@@ -114,17 +114,22 @@
                                 *ngIf="item.canInvoiced"
                                 (click)="model.toInvoiceOrderItem(item)"
                                 class="btn btn-sm btn-success"
-                                title="add to invoice">I</button>
+                                title="add to invoice">IN</button>
                         <button type="button"
                                 *ngIf="item.canCanceled"
                                 (click)="item.cancel()"
                                 class="btn btn-sm btn-primary"
-                                title="cancel item">C</button>
+                                title="cancel item">CA</button>
                         <button type="button"
                                 *ngIf="item.canReturned"
-                                (click)="item.cancel()"
+                                (click)="item.return()"
                                 class="btn btn-sm btn-secondary"
-                                title="create RMA">R</button>
+                                title="create RMA">RM</button>
+                        <button type="button"
+                                *ngIf="item.canRefunded"
+                                (click)="item.refund()"
+                                class="btn btn-sm btn-danger"
+                                title="refund">RF</button>
                       </div>
                     </td>
                   </tr>

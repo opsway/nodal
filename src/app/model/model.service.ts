@@ -11,7 +11,7 @@ import {OrderItem} from './order-item/order-item';
 import {Item} from './entity/item';
 import {Order} from './order/order';
 import {Collection} from './collection';
-import {meta} from '../../app/app.meta';
+import {meta} from '../app.meta';
 import {Invoice} from './entity/invoice';
 import {Seller} from './member/seller/seller';
 
@@ -141,6 +141,12 @@ export class ModelService {
 
   toInvoiceOrderItem(orderItem: OrderItem): OrderItem {
     return orderItem.attacheInvoice(this.currentInvoice(orderItem));
+  }
+
+  toRefundOrder(order: Order): Order {
+    order.canRefundedItems
+      .walk(entity => entity.refund());
+    return order;
   }
 
   toInvoiceOrder(order: Order): Order {

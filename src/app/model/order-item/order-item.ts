@@ -70,9 +70,10 @@ export class OrderItem implements Entity {
 
   get canRefunded(): boolean {
    return this.isPaid
-     && this.isInvoiced
-     && this.invoice.isShipped
-     && this.isReturned
+     && (
+       this.isReturned
+       || this.isCanceled
+     )
      && !this.isRefunded;
   }
 
@@ -125,7 +126,7 @@ export class OrderItem implements Entity {
   // ACTION
 
   return(): OrderItem {
-    this.status = OrderItem.STATUS_REFUNDED;
+    this.status = OrderItem.STATUS_RETURNED;
     this.isReturned = true;
 
     return this;
@@ -164,12 +165,10 @@ export class OrderItem implements Entity {
     return this;
   }
 
-  refund(): number {
-    let refund = 0;
-    if (!this.isRefunded && this.order.payment && this.order.payment.captured) {
-      this.seller.balance -= refund = this.amountSeller;
-    }
+  refund(): OrderItem {
+    this.status = OrderItem.STATUS_REFUNDED;
     this.isRefunded = true;
-    return refund;
+
+    return this;
   }
 }

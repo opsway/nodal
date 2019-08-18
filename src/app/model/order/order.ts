@@ -53,8 +53,8 @@ export class Order {
     return this.itemCollection.filter(entity => entity.canInvoiced);
   }
 
-  get returnedItems(): Collection<OrderItem> {
-    return this.itemCollection.filter(entity => entity.isReturned || entity.isCanceled);
+  get canRefundedItems(): Collection<OrderItem> {
+    return this.itemCollection.filter(entity => entity.canRefunded);
   }
 
   get newItems(): Collection<OrderItem> {
@@ -67,7 +67,7 @@ export class Order {
   }
 
   get canRefund(): boolean {
-    return this.returnedItems.count() > 0;
+    return this.canRefundedItems.count() > 0;
   }
 
   get isNoPaid(): boolean {

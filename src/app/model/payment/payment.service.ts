@@ -31,7 +31,7 @@ export class PaymentService {
   }
 
   refund(item: OrderItem): void {
-    const refund = item.refund();
+    const refund = item.refund().amountSeller;
     this.nodalBalance.seller -= refund;
     this.nodalBalance.total -= refund;
   }
