@@ -13,7 +13,7 @@
       <td [attr.colspan]="provider.headers.length">empty</td>
     </tr>
   </tbody>
-  <tfoot *ngIf="showFooter && provider.footers > 0">
+  <tfoot *ngIf="hasFooter">
     <tr>
       <td *ngFor="let footer of provider.footers"
           [attr.colspan]="footer.colspan">{{footer.value}}</td>
