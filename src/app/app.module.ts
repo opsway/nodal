@@ -27,6 +27,7 @@ import {RefundsComponent} from './page/refunds/refunds.component';
 import {CustomersComponent} from './page/customers/customers.component';
 import {PaymentsTableComponent} from './ui/table/payments-table/payments-table.component';
 import {DateFormatPipe} from './util/date-format.pipe';
+import {RefundsTableComponent} from './ui/table/refunds-table/refunds-table.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import {DateFormatPipe} from './util/date-format.pipe';
     CustomersComponent,
     PaymentsTableComponent,
     DateFormatPipe,
+    RefundsTableComponent,
   ],
   imports: [
     BrowserModule,

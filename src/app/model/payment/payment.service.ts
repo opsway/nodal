@@ -30,12 +30,6 @@ export class PaymentService {
     return this.collection.get(id);
   }
 
-  refund(item: OrderItem): void {
-    const refund = item.refund().amountSeller;
-    this.nodalBalance.seller -= refund;
-    this.nodalBalance.total -= refund;
-  }
-
   toPay(order: Order, gateway: string): void {
     const payment = new Payment(order, gateway);
     this.collection.set(payment.id, payment);

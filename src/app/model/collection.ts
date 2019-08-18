@@ -46,4 +46,13 @@ export class Collection<T extends Entity> {
   walk(walker: (entity: T) => void): void {
     this.elements.forEach((entity: T) => walker(entity));
   }
+
+  reduce<U>(reducer: (entity: T, acc: U) => U, initial: U): U {
+    let result = initial;
+    this.elements.forEach((entity: T) => {
+      result = reducer(entity, result);
+    });
+
+    return result;
+  }
 }

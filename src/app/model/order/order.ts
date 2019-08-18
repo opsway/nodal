@@ -8,9 +8,9 @@ import {Invoice} from '../entity/invoice';
 export class Order {
   id: string;
   createdAt: Date;
-  payment: Payment;
   customer: Customer;
   private itemCollection: Collection<OrderItem>;
+  private paymentCollection: Collection<Payment> = new Collection<Payment>();
 
   constructor(customer: Customer = null) {
     this.id = Util.uuid('O');
@@ -20,6 +20,18 @@ export class Order {
   }
 
   // PROPERTIES
+
+  get hasPaymentAvailable(): boolean {
+    return this.paymentAvailable !== null;
+  }
+
+  get paymentAvailable(): Payment | null {
+    return this.notRefundedPayments.first();
+  }
+
+  get notRefundedPayments(): Collection<Payment> {
+    return this.paymentCollection.filter(entity => entity.isNotRefunded);
+  }
 
   get customerName(): string {
     return this.customer.name;
@@ -67,7 +79,7 @@ export class Order {
   }
 
   get canRefund(): boolean {
-    return this.canRefundedItems.count() > 0;
+    return this.hasPaymentAvailable && this.canRefundedItems.count() > 0;
   }
 
   get isNoPaid(): boolean {
@@ -94,6 +106,8 @@ export class Order {
   // ACTION
 
   attachePayment(payment: Payment): Order {
+    this.paymentCollection.add(payment);
+    // TODO add check item amount and total of payment for partition payment
     this.notPaidItems
       .walk(entity => entity.attachePayment(payment));
 

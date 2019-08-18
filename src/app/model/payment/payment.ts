@@ -1,6 +1,8 @@
 import * as Util from '../../util/util';
 import {Order} from '../order/order';
 import {Model} from '../model';
+import {Collection} from '../collection';
+import {Refund} from '../entity/refund';
 
 export class Payment {
   id: string;
@@ -10,6 +12,7 @@ export class Payment {
   status: string;
   gateway: string;
   feeGateway = 0;
+  private refundCollection: Collection<Refund> = new Collection<Refund>();
 
   constructor(
     order: Order,
@@ -24,8 +27,8 @@ export class Payment {
     order.attachePayment(this);
   }
 
-  get refunded(): number {
-    return 0; // TODO implement Payment.refunded
+  get isNotRefunded(): boolean {
+    return this.total > this.totalRefund;
   }
 
   get orderId(): string {
@@ -34,6 +37,10 @@ export class Payment {
 
   get total(): number {
     return this.order.amount - this.feeGateway;
+  }
+
+  get totalRefund(): number {
+    return this.refundCollection.reduce((entity, acc) => acc + entity.total, 0);
   }
 
   get totalMarket(): number {
@@ -50,6 +57,14 @@ export class Payment {
 
   get captured(): boolean {
     return this.status === 'captured';
+  }
+
+  // ACTION
+
+  attacheRefund(refund: Refund): Payment {
+    this.refundCollection.add(refund);
+
+    return this;
   }
 
   capture(): void {

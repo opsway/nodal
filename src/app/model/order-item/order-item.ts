@@ -7,6 +7,7 @@ import {Entity} from '../entity/entity';
 import {Payment} from '../payment/payment';
 import {Collection} from '../collection';
 import {Invoice} from '../entity/invoice';
+import {Refund} from '../entity/refund';
 
 export class OrderItem implements Entity {
   static STATUS_ORDERED = 'ordered';
@@ -29,7 +30,7 @@ export class OrderItem implements Entity {
   order: Order;
   status: string;
   private invoice: Invoice = null;
-  private payments: Collection<Payment> = new Collection<Payment>();
+  private payment: Payment;
 
   constructor(
     price: number, item: Item, // SellerItem
@@ -49,6 +50,7 @@ export class OrderItem implements Entity {
     this.isReturned = false;
     this.isCanceled = false;
     this.status = null;
+    this.payment = null;
   }
 
   get isInvoiced(): boolean {
@@ -69,7 +71,7 @@ export class OrderItem implements Entity {
   }
 
   get canRefunded(): boolean {
-   return this.isPaid
+   return this.order.hasPaymentAvailable
      && (
        this.isReturned
        || this.isCanceled
@@ -88,7 +90,7 @@ export class OrderItem implements Entity {
   }
 
   get isPaid(): boolean {
-    return this.payments.count() > 0;
+    return this.payment !== null;
   }
 
   get isNew(): boolean {
@@ -159,13 +161,14 @@ export class OrderItem implements Entity {
   }
 
   attachePayment(payment: Payment): OrderItem {
-    this.payments.add(payment);
+    this.payment = payment;
     this.status = OrderItem.STATUS_PAID;
 
     return this;
   }
 
-  refund(): OrderItem {
+  refund(refund: Refund): OrderItem {
+    refund.increment(this.amount);
     this.status = OrderItem.STATUS_REFUNDED;
     this.isRefunded = true;
 

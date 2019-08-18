@@ -6,14 +6,14 @@ import {ConvertPipe} from '../../../util/convert.pipe';
 import {DateFormatPipe} from '../../../util/date-format.pipe';
 import {TableProvider} from '../table-provider';
 import {TableCellDef} from '../table-cell-def';
-import {Payment} from '../../../model/payment/payment';
+import {Refund} from '../../../model/entity/refund';
 
 @Component({
-  selector: 'app-payments-table',
-  templateUrl: 'payments-table.component.html',
+  selector: 'app-refunds-table',
+  templateUrl: 'refunds-table.component.html',
 })
-export class PaymentsTableComponent {
-  @Input() data: Payment[];
+export class RefundsTableComponent {
+  @Input() data: Refund[];
 
   get defaultColumns(): TableCellDef[] {
     return [
@@ -24,27 +24,18 @@ export class PaymentsTableComponent {
       TableProvider.cellDef('createdAt')
         .withPipe(new DateFormatPipe())
         .withHeader('DATE'),
-      TableProvider.cellDef('gateway')
+      TableProvider.cellDef('method')
         .withHeader('METHOD'),
       TableProvider.cellDef('total')
         .withPipe(new ConvertPipe())
-        .withHeader('TOTAL'),
-      TableProvider.cellDef('totalRefund')
-        .withPipe(new ConvertPipe())
-        .withHeader('Refunded'),
-      TableProvider.cellDef('feeGateway')
-        .withPipe(new ConvertPipe())
-        .withHeader('GW Fee'),
-      TableProvider.cellDef('settledAt')
-        .withPipe(new DateFormatPipe())
-        .withHeader('Settled at'),
+        .withHeader('Refunded TOTAL'),
     ];
   }
 
-  get provider(): TableProvider<Payment> {
+  get provider(): TableProvider<Refund> {
     const columns = this.defaultColumns;
 
-    return new TableProvider<Payment>(
+    return new TableProvider<Refund>(
       this.data,
       columns,
     );

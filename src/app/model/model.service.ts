@@ -1,6 +1,7 @@
 import {
   Injectable,
 } from '@angular/core';
+import {meta} from '../app.meta';
 import {PaymentService} from './payment/payment.service';
 import {OrderService} from './order/order.service';
 import {SellerService} from './member/seller/seller.service';
@@ -11,9 +12,8 @@ import {OrderItem} from './order-item/order-item';
 import {Item} from './entity/item';
 import {Order} from './order/order';
 import {Collection} from './collection';
-import {meta} from '../app.meta';
 import {Invoice} from './entity/invoice';
-import {Seller} from './member/seller/seller';
+import {Refund} from './entity/refund';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,7 @@ import {Seller} from './member/seller/seller';
 export class ModelService {
   private itemCollection: Collection<Item> = new Collection<Item>();
   private invoiceCollection: Collection<Invoice> = new Collection<Invoice>();
+  private refundCollection: Collection<Refund> = new Collection<Refund>();
 
   constructor(
     private orderItemService: OrderItemService,
@@ -89,6 +90,10 @@ export class ModelService {
     return this.paymentService;
   }
 
+  get refunds() {
+    return this.refundCollection;
+  }
+
   get orders(): Order[] {
     return this.orderService.all();
   }
@@ -143,10 +148,27 @@ export class ModelService {
     return orderItem.attacheInvoice(this.currentInvoice(orderItem));
   }
 
+  createRefund(order: Order): Refund {
+    const payment = order.paymentAvailable;
+    // TODO add handle not available payment
+    const refund = new Refund(payment);
+    // TODO add calculate balances of seller, customer and nodal
+    payment.attacheRefund(refund);
+
+    return this.refundCollection.add(refund);
+  }
+
   toRefundOrder(order: Order): Order {
-    order.canRefundedItems
-      .walk(entity => entity.refund());
+    const refund = this.createRefund(order);
+    order.canRefundedItems.walk(entity => entity.refund(refund));
+
     return order;
+  }
+
+  toRefundOrderItem(orderItem: OrderItem): OrderItem {
+    const refund = this.createRefund(orderItem.order);
+
+    return orderItem.refund(refund);
   }
 
   toInvoiceOrder(order: Order): Order {
