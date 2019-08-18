@@ -1,12 +1,8 @@
-<!--
-<div class="header is-center">
-  <p>Orders and items (you can add a new one or make a payment on the order)</p>
-</div>
--->
 <div class="content">
   <div class="container-fluid">
     <div class="row justify-content-between mb-3">
-      <h2>Orders</h2>
+      <h2>Orders ({{model.orders.length}})</h2>
+      <p class="h6">Orders and items (you can add a new one or make a payment on the order)</p>
       <app-dialog-order-create></app-dialog-order-create>
     </div>
     <div class="row justify-content-md-center mb-3">
@@ -55,7 +51,7 @@
                         type="button">refund</button>
               </div>
             </td>
-            <td>{{order.createdAt | date : 'yy/M/d h:mm:ss'}}</td>
+            <td>{{order.createdAt | dateFormat}}</td>
             <td>{{order.customerName}}</td>
             <td colspan="2" style="padding: 0" class="align-middle text-center">
               <table class="pure-table pure-table-horizontal text-center"
@@ -79,7 +75,7 @@
                       </div>
                     </td>
                     <td>
-                      <span>{{invoice.createdAt | date : 'yy/M/d h:mm'}}</span>
+                      <span>{{invoice.createdAt | dateFormat}}</span>
                       <div class="btn-group" role="group">
                         <button type="button"
                                 *ngIf="invoice.isSaved"

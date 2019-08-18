@@ -5,6 +5,7 @@ import {Model} from '../model';
 export class Payment {
   id: string;
   createdAt: Date;
+  settledAt: Date;
   order: Order;
   status: string;
   gateway: string;
@@ -16,10 +17,19 @@ export class Payment {
   ) {
     this.id = Util.uuid('P');
     this.createdAt = new Date();
+    this.settledAt = null;
     this.order = order;
     this.status = 'created';
     this.gateway = gateway;
     order.attachePayment(this);
+  }
+
+  get refunded(): number {
+    return 0; // TODO implement Payment.refunded
+  }
+
+  get orderId(): string {
+    return this.order.id;
   }
 
   get total(): number {

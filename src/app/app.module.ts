@@ -16,7 +16,7 @@ import {MenuComponent} from './ui/menu/menu.component';
 import {OrdersComponent} from './page/orders/orders.component';
 import {PaymentsComponent} from './page/payments/payments.component';
 import {ShareComponent} from './page/share/share.component';
-import { AutoFocusDirective } from './util/auto-focus/auto-focus.directive';
+import {AutoFocusDirective} from './util/auto-focus/auto-focus.directive';
 import {ConvertPipe} from './util/convert.pipe';
 import {PureTableComponent} from './ui/table/pure-table/pure-table.component';
 import {SellersComponent} from './page/sellers/sellers.component';
@@ -25,6 +25,8 @@ import {OrderCreateComponent} from './ui/dialog/order-create/order-create.compon
 import {OrderItemsTableComponent} from './ui/table/order-items-table/order-items-table.component';
 import {RefundsComponent} from './page/refunds/refunds.component';
 import {CustomersComponent} from './page/customers/customers.component';
+import {PaymentsTableComponent} from './ui/table/payments-table/payments-table.component';
+import {DateFormatPipe} from './util/date-format.pipe';
 
 @NgModule({
   declarations: [
@@ -43,6 +45,8 @@ import {CustomersComponent} from './page/customers/customers.component';
     AutoFocusDirective,
     RefundsComponent,
     CustomersComponent,
+    PaymentsTableComponent,
+    DateFormatPipe,
   ],
   imports: [
     BrowserModule,

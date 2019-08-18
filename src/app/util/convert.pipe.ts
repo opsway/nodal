@@ -13,7 +13,7 @@ const formatter = new Intl.NumberFormat(
   name: 'convert'
 })
 export class ConvertPipe implements PipeTransform {
-  transform(value: any, ...args: any[]): any {
+  transform(value: any): any {
     return formatter.format(value / Model.precisionOfPersist);
   }
 }
