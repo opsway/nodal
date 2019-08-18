@@ -106,7 +106,7 @@ export class OrderItem implements Entity {
   }
 
   get feeMarket(): number {
-    return Math.floor((Model.feeMarketPercent / 100) * this.amount) * (Model.feeMarketGST / 100 + 1);
+    return this.isRefunded ? 0 : Math.floor((Model.feeMarketPercent / 100) * this.amount) * (Model.feeMarketGST / 100 + 1);
   }
 
   get amountSeller(): number {
@@ -122,7 +122,7 @@ export class OrderItem implements Entity {
   }
 
   get total(): number {
-    return this.amount + this.amountShipping;
+    return this.isRefunded ? 0 : this.amount + this.amountShipping;
   }
 
   // ACTION
