@@ -1,3 +1,3 @@
 import { Customer } from '../member/customer/customer';
 
-export default new Customer('Jon');
+export default () => new Customer('Jon');
