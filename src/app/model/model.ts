@@ -1,7 +1,13 @@
 export class Model {
-  static precisionOfPersist = 100;
-  static feeMarketPercent = 7;
-  static feeMarketGST = 18;
-  static feeGatewayPercent = 2.1;
+  static readonly precisionOfPersist = 100;
+  static readonly paymentGateways = [
+    'paytm',
+    'razorpay',
+  ];
+  static readonly paymentGatewayFee = 2.1;
+  static readonly marketFee = 7;
+  static readonly marketFeeGST = 18;
+  static locale = 'en-US';
+  static currency = 'INR';
   static dateFormat = 'yy/M/d h:mm';
 }

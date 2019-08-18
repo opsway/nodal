@@ -5,7 +5,7 @@ import {
 import {DatePipe} from '@angular/common';
 import {Model} from '../model/model';
 
-const formatter = new DatePipe('en-US');
+const formatter = new DatePipe(Model.locale);
 
 @Pipe({
   name: 'dateFormat'

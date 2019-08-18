@@ -68,7 +68,7 @@ export class Payment {
   }
 
   capture(): void {
-    this.feeGateway = Math.floor((Model.feeGatewayPercent / 100) * this.amount);
+    this.feeGateway = Math.floor((Model.paymentGatewayFee / 100) * this.amount);
     this.status = 'captured';
   }
 }

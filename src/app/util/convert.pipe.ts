@@ -2,10 +2,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {Model} from '../model/model';
 
 const formatter = new Intl.NumberFormat(
-  'en-EN',
+  Model.locale,
   {
     style: 'currency',
-    currency: 'INR',
+    currency: Model.currency,
   },
 );
 
