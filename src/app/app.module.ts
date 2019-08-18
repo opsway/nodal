@@ -23,6 +23,8 @@ import {SellersComponent} from './page/sellers/sellers.component';
 import {NodalComponent} from './page/nodal/nodal.component';
 import {OrderCreateComponent} from './ui/dialog/order-create/order-create.component';
 import {OrderItemsTableComponent} from './ui/table/order-items-table/order-items-table.component';
+import {RefundsComponent} from './page/refunds/refunds.component';
+import {CustomersComponent} from './page/customers/customers.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +41,8 @@ import {OrderItemsTableComponent} from './ui/table/order-items-table/order-items
     OrderCreateComponent,
     OrderItemsTableComponent,
     AutoFocusDirective,
+    RefundsComponent,
+    CustomersComponent,
   ],
   imports: [
     BrowserModule,

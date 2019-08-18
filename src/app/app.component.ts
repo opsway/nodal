@@ -33,6 +33,14 @@ export class AppComponent {
       path: '/nodal',
     },
     {
+      title: 'Refunds',
+      path: '/refunds',
+    },
+    {
+      title: 'Customers',
+      path: '/customers',
+    },
+    {
       title: 'Share',
       path: '/share',
     },
