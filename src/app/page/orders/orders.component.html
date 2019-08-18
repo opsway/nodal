@@ -57,7 +57,7 @@
             </td>
             <td>{{order.createdAt | date : 'yy/M/d h:mm:ss'}}</td>
             <td>{{order.customerName}}</td>
-            <td colspan="2" class="align-middle text-center">
+            <td colspan="2" style="padding: 0" class="align-middle text-center">
               <table class="pure-table pure-table-horizontal text-center"
               *ngIf="model.invoicesByOrder(order).count() > 0">
                 <tbody>
