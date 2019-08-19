@@ -1,6 +1,6 @@
 import * as Util from '../../util/util';
 import { Entity } from './entity';
-import { Seller } from '../member/seller/seller';
+import { Seller } from './member/seller';
 import { Collection } from '../collection';
 import { OrderItem } from '../order-item/order-item';
 import { Order } from '../order/order';

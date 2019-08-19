@@ -6,7 +6,7 @@ import { ConvertPipe } from '../../../util/convert.pipe';
 import { DateFormatPipe } from '../../../util/date-format.pipe';
 import { TableProvider } from '../table-provider';
 import { TableCellDef } from '../table-cell-def';
-import { Payment } from '../../../model/payment/payment';
+import { Payment } from '../../../model/entity/payment';
 
 @Component({
   selector: 'app-payments-table',

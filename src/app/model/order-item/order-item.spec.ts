@@ -1,5 +1,5 @@
 import { Item } from '../entity/item';
-import { Seller } from '../member/seller/seller';
+import { Seller } from '../entity/member/seller';
 import { OrderItem } from './order-item';
 import * as Util from '../../util/util';
 

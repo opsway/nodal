@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { OrderItem } from './order-item';
 import { Item } from '../entity/item';
-import { Seller } from '../member/seller/seller';
+import { Seller } from '../entity/member/seller';
 import { Order } from '../order/order';
 
 @Injectable({

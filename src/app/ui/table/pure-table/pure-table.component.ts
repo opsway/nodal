@@ -10,7 +10,7 @@ import { OrderItem } from '../../../model/order-item/order-item';
   templateUrl: 'pure-table.component.html',
 })
 export class PureTableComponent {
-  @Input() provider: TableProvider<OrderItem>;
+  @Input() provider: TableProvider<any>;
   @Input() showHeader = true;
   @Input() showFooter = true;
 

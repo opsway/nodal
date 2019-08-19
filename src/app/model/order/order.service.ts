@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Order } from './order';
-import { Customer } from '../member/customer/customer';
+import { Customer } from '../entity/member/customer';
 import { OrderItem } from '../order-item/order-item';
 import { OrderItemService } from '../order-item/order-item.service';
 

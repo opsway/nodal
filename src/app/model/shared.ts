@@ -1,5 +1,5 @@
-import { Customer } from './member/customer/customer';
-import { Seller } from './member/seller/seller';
+import { Customer } from './entity/member/customer';
+import { Seller } from './entity/member/seller';
 
 export interface Shared {
   customers: Customer[];

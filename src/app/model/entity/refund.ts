@@ -1,6 +1,6 @@
 import * as Util from '../../util/util';
 import { Entity } from './entity';
-import { Payment } from '../payment/payment';
+import { Payment } from './payment';
 
 export class Refund implements Entity {
   id: string;
@@ -13,6 +13,10 @@ export class Refund implements Entity {
   ) {
     this.id = Util.uuid('R');
     this.createdAt = new Date();
+  }
+
+  get gateway(): string {
+    return this.payment.gateway;
   }
 
   get orderId(): string {

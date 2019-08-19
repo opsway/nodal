@@ -3,10 +3,10 @@
     <!--Payments-->
     <div class="row justify-content-between mb-3">
       <div class="col-sm">
-        <h2>Order Payments ({{model.payments.all().length}})</h2>
+        <h2>Order Payments ({{model.payments.count()}})</h2>
       </div>
       <div class="col-sm">
-        <p class="h6">All payments for orders with refunds and balance gateway</p>
+        <p class="decryption">All payments for orders with refunds and balance gateway</p>
       </div>
       <div class="col-sm"></div>
     </div>
@@ -31,8 +31,30 @@
       </div>
     </div>
     <!--Settlements-->
-    <!--TODO Settlements table-->
+    <div class="row justify-content-between mb-3">
+      <div class="col-sm">
+        <h2>Settlements ({{model.settlements.count()}}):</h2>
+      </div>
+      <div class="col-sm">
+        <app-create-settlement></app-create-settlement>
+      </div>
+    </div>
+    <div class="row justify-content-between mb-3">
+      <div class="col-sm">
+        <app-settlements-table
+          [data]="model.settlements.all()"
+        ></app-settlements-table>
+      </div>
+    </div>
     <!--balance gateway-->
-    <!--TODO balance gateway tables-->
+    <div class="row justify-content-between mb-3">
+      <div class="col-sm"
+           *ngFor="let method of model.paymentMethods"
+      >
+        <app-account-balances-table
+          [holder]="method"
+        ></app-account-balances-table>
+      </div>
+    </div>
   </div>
 </div>

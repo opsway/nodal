@@ -2,10 +2,7 @@ import {
   Injectable,
 } from '@angular/core';
 import { meta } from '../app.meta';
-import { PaymentService } from './payment/payment.service';
 import { OrderService } from './order/order.service';
-import { SellerService } from './member/seller/seller.service';
-import { CustomerService } from './member/customer/customer.service';
 import { Shared } from './shared';
 import { OrderItemService } from './order-item/order-item.service';
 import { OrderItem } from './order-item/order-item';
@@ -15,6 +12,11 @@ import { Collection } from './collection';
 import { Invoice } from './entity/invoice';
 import { Refund } from './entity/refund';
 import { Model } from './model';
+import { Settlement } from './entity/settlement';
+import { Payment } from './entity/payment';
+import { Seller } from './entity/member/seller';
+import { Customer } from './entity/member/customer';
+import { Transfer } from './entity/transfer';
 
 declare interface Action {
   name: string;
@@ -27,17 +29,24 @@ declare interface Action {
   providedIn: 'root'
 })
 export class ModelService {
+  private static NodalBank = 'Bank';
+  private static NodalGWFee = 'GW Fee';
+  private static NodalMFFee = 'MF Fee';
+  private customerCollection: Collection<Customer> = new Collection<Customer>();
+  private sellerCollection: Collection<Seller> = new Collection<Seller>();
   private itemCollection: Collection<Item> = new Collection<Item>();
   private invoiceCollection: Collection<Invoice> = new Collection<Invoice>();
   private refundCollection: Collection<Refund> = new Collection<Refund>();
-  private readonly paymentGateways: string[];
+  private paymentCollection: Collection<Payment> = new Collection<Payment>();
+  private settlementCollection: Collection<Settlement> = new Collection<Settlement>();
+  private transferCollection: Collection<Transfer> = new Collection<Transfer>();
+  private accountBalance: Map<string, number> = new Map();
+  readonly paymentGateways: string[];
 
   constructor(
     private orderItemService: OrderItemService,
-    private customerService: CustomerService,
-    private sellerService: SellerService,
     private orderService: OrderService,
-    private paymentService: PaymentService,
+   // private balanceService: BalanceService,
   ) {
     this.paymentGateways = Model.paymentGateways;
     this.load();
@@ -47,12 +56,60 @@ export class ModelService {
   }
 
   load(): void {
+    this.customerCollection.load([
+      'A',
+      'B',
+      'C',
+      'D',
+      'F',
+      'F',
+      'G',
+    ].map(name => new Customer(name)));
+
+    this.sellerCollection.load([
+      'TA',
+      'SAAN',
+      'RA',
+      'CFC',
+      'SWA',
+    ].map(name => new Seller(name)));
+
     this.itemCollection.load([
       new Item(),
       new Item(),
       new Item(),
       new Item(),
     ]);
+  }
+
+  get transfers() {
+    return this.transferCollection;
+  }
+
+  balanceByHolder(holder: string): number {
+    return this.accountBalance.get(holder) || 0;
+  }
+
+  createTransaction(holder: string, ref: string, amount: number, date: Date) {
+    console.log('createTransaction', holder, amount);
+    const balance = this.balanceByHolder(holder) + amount;
+    this.accountBalance.set(holder, balance);
+
+    return this.transferCollection.add(new Transfer(holder, ref, amount, balance, date));
+  }
+
+  transferPayment(payment: Payment): void {
+    this.createTransaction(payment.gateway, payment.id, payment.total, payment.createdAt);
+  }
+
+  transferRefund(refund: Refund) {
+    return this.createTransaction(refund.gateway, refund.id, -refund.total, refund.createdAt);
+  }
+
+  transferSettlement(settlement: Settlement): void {
+    this.createTransaction(settlement.gateway, settlement.id, -settlement.total, settlement.createdAt);
+    this.createTransaction(ModelService.NodalBank, settlement.id, settlement.amount, settlement.createdAt);
+    this.createTransaction(ModelService.NodalGWFee, settlement.id, settlement.fee, settlement.createdAt);
   }
 
   get paymentMethods(): string[] {
@@ -87,20 +144,49 @@ export class ModelService {
     return this.createInvoice(o);
   }
 
-  get customers(): CustomerService {
-    return this.customerService;
+  get settlements() {
+    return this.settlementCollection;
   }
 
-  get sellers(): SellerService {
-    return this.sellerService;
+  createSettlement(paymentMethod: string, date: Date): Settlement {
+    return this.settlementCollection.add(new Settlement(paymentMethod, date));
   }
 
-  get items(): Collection<Item> {
+  toSettlement(gateway: string, date: Date): void {
+    const payments = this.notCapturedPaymentsByGateway(gateway, date);
+    if (payments.count() > 0) {
+      const settlement = this.createSettlement(gateway, date);
+      payments.walk(entity => settlement.capture(entity));
+      console.log('createSettlement', settlement);
+      this.transferSettlement(settlement);
+    }
+    console.log('createSettlement not payments');
+  }
+
+  get customers() {
+    return this.customerCollection;
+  }
+
+  get sellers() {
+    return this.sellerCollection;
+  }
+
+  get items() {
     return this.itemCollection;
   }
 
   get payments() {
-    return this.paymentService;
+    return this.paymentCollection;
+  }
+
+  get notCapturedPayments() {
+    return this.payments.filter(entity => !entity.isCaptured);
+  }
+
+  notCapturedPaymentsByGateway(gateway: string, date: Date = new Date()) {
+    return this.notCapturedPayments
+      .filter(entity => entity.gateway === gateway
+        && entity.createdAt.getTime() <= date.getTime());
   }
 
   get refunds() {
@@ -135,8 +221,8 @@ export class ModelService {
       sellers: [],
     };
 
-    data.customers = this.customerService.all();
-    data.sellers = this.sellerService.all();
+    data.customers = this.customers.all();
+    data.sellers = this.sellers.all();
     // TODO export orders
     // TODO export order items
     // TODO export payments
@@ -194,8 +280,14 @@ export class ModelService {
     return actions;
   }
 
+  createPayment(order: Order, gateway: string, createdAt = new Date()): Payment {
+    return this.paymentCollection.add(new Payment(order, gateway, createdAt));
+  }
+
   toPay(order: Order, gateway: string): void {
-    this.paymentService.toPay(order, gateway);
+    const payment = this.createPayment(order, gateway, order.createdAt);
+    this.transferPayment(payment);
+    order.attachePayment(payment);
   }
 
   toInvoiceOrderItem(orderItem: OrderItem): OrderItem {
@@ -203,7 +295,7 @@ export class ModelService {
   }
 
   createRefund(order: Order): Refund {
-    const payment = order.paymentAvailable;
+    const payment = order.refundablePayment;
     // TODO add handle not available payment
     const refund = new Refund(payment);
     // TODO add calculate balances of seller, customer and nodal
@@ -212,17 +304,16 @@ export class ModelService {
     return this.refundCollection.add(refund);
   }
 
-  toRefundOrder(order: Order): Order {
+  toRefundOrder(order: Order): void {
     const refund = this.createRefund(order);
-    order.canRefundedItems.walk(entity => entity.refund(refund));
-
-    return order;
+    order.refund(refund);
+    this.transferRefund(refund);
   }
 
-  toRefundOrderItem(orderItem: OrderItem): OrderItem {
+  toRefundOrderItem(orderItem: OrderItem): void {
     const refund = this.createRefund(orderItem.order);
-
-    return orderItem.refund(refund);
+    orderItem.refund(refund);
+    this.transferRefund(refund);
   }
 
   toInvoiceOrder(order: Order): Order {
@@ -254,9 +345,9 @@ export class ModelService {
     qty: number,
     sellerId: string,
   ): OrderItem {
-    const customer = this.customerService.find(customerId);
+    const customer = this.customers.find(customerId);
     const item = this.items.find(itemId);
-    const seller = this.sellerService.find(sellerId);
+    const seller = this.sellers.find(sellerId);
     const cart = this.orderService.currentOrder();
     cart.customer = customer;
     console.log(`${cart.id} addOrderItem:`, customer, item, seller);
@@ -270,23 +361,30 @@ export class ModelService {
     ));
   }
 
+
+
   private flowEditNewOrder(): Order {
-    this.addOrderItem(
-      this.customerService.first().id,
+    const order = this.addOrderItem(
+      this.customers.first().id,
       200,
       this.items.first().id,
       50,
       2,
-      this.sellerService.all()[1].id,
-    );
-    return this.addOrderItem(
-      this.customerService.first().id,
-      200,
-      this.items.first().id,
-      50,
-      2,
-      this.sellerService.first().id,
+      this.sellers.first().id,
     ).order;
+
+    this.addOrderItem(
+      this.customers.first().id,
+      200,
+      this.items.first().id,
+      50,
+      2,
+      this.sellers.first().id,
+    );
+
+    order.createdAt = new Date('1985-10-05T06:00:00');
+
+    return order;
   }
 
   private flow(): void {
@@ -297,10 +395,10 @@ export class ModelService {
     // 1.2. Save order
     this.saveOrder();
     // 1.3. Pay Order
-    this.toPay(this.flowEditNewOrder().save(), 'RP');
+    this.toPay(this.flowEditNewOrder().save(), this.paymentMethods[0]);
     // 1.4. Create invoice for payed Order by item via Seller
     order = this.flowEditNewOrder().save();
-    this.toPay(order, 'RP');
+    this.toPay(order, this.paymentMethods[0]);
     this.toInvoiceOrder(order);
     // 1.5. Ship invoice
     // TODO add cases for statuses

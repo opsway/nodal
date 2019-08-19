@@ -24,14 +24,17 @@ export class AppComponent {
       title: 'Payments',
       path: '/payments',
     },
+    /*
     {
       title: 'Sellers',
       path: '/sellers',
     },
+*/
     {
       title: 'Nodal',
       path: '/nodal',
     },
+    /*
     {
       title: 'Refunds',
       path: '/refunds',
@@ -44,6 +47,7 @@ export class AppComponent {
       title: 'Share',
       path: '/share',
     },
+*/
   ];
 
   constructor(

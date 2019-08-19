@@ -1,10 +1,10 @@
 import * as Util from '../../util/util';
 import { Item } from '../entity/item';
-import { Seller } from '../member/seller/seller';
+import { Seller } from '../entity/member/seller';
 import { Order } from '../order/order';
 import { Model } from '../model';
 import { Entity } from '../entity/entity';
-import { Payment } from '../payment/payment';
+import { Payment } from '../entity/payment';
 import { Collection } from '../collection';
 import { Invoice } from '../entity/invoice';
 import { Refund } from '../entity/refund';
@@ -71,7 +71,7 @@ export class OrderItem implements Entity {
   }
 
   get canRefunded(): boolean {
-    return this.order.hasPaymentAvailable
+    return this.order.hasRefundablePayment
       && (
         this.isReturned
         || this.isCanceled
@@ -168,7 +168,7 @@ export class OrderItem implements Entity {
   }
 
   refund(refund: Refund): OrderItem {
-    refund.increment(this.amount);
+    refund.increment(this.total);
     this.status = OrderItem.STATUS_REFUNDED;
     this.isRefunded = true;
 

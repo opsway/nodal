@@ -3,7 +3,6 @@ import {
   OnInit,
 } from '@angular/core';
 import {
-  ModalDismissReasons,
   NgbModal,
 } from '@ng-bootstrap/ng-bootstrap';
 import {

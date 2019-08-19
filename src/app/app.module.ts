@@ -28,6 +28,9 @@ import { CustomersComponent } from './page/customers/customers.component';
 import { PaymentsTableComponent } from './ui/table/payments-table/payments-table.component';
 import { DateFormatPipe } from './util/date-format.pipe';
 import { RefundsTableComponent } from './ui/table/refunds-table/refunds-table.component';
+import { SettlementsTableComponent } from './ui/table/settlements-table/settlements-table.component';
+import { AccountBalancesTableComponent } from './ui/table/account-balances-table/account-balances-table.component';
+import { CreateSettlementComponent } from './ui/dialog/create-settlement/create-settlement.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +52,9 @@ import { RefundsTableComponent } from './ui/table/refunds-table/refunds-table.co
     PaymentsTableComponent,
     DateFormatPipe,
     RefundsTableComponent,
+    SettlementsTableComponent,
+    AccountBalancesTableComponent,
+    CreateSettlementComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,31 @@
+<table class="pure-table pure-table-horizontal text-center">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>DATE</th>
+      <th>Gateway</th>
+      <th>PAYMENTS (sum/count)</th>
+      <th>REFUNDS (sum/counts)</th>
+      <th>GW FEE SUM</th>
+      <th>SETTLED AMOUNT</th>
+      <th>REFERENCES</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of data; let i = index"
+        [class.pure-table-odd]="i % 2 === 0"
+    >
+        <td>{{row.id}}</td>
+        <td>{{row.createdAt | dateFormat}}</td>
+        <td>{{row.gateway}}</td>
+        <td>{{row.totalPayment | convert}} ({{row.countPayment}})</td>
+        <td>{{row.totalRefund | convert}} ({{row.countRefund}})</td>
+        <td>{{row.fee | convert}}</td>
+        <td>{{row.amount | convert}}</td>
+        <td>{{row.references}}</td>
+    </tr>
+    <tr *ngIf="data.length === 0">
+      <td colspan="8">empty</td>
+    </tr>
+  </tbody>
+</table>

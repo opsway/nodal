@@ -1,9 +1,10 @@
 import * as Util from '../../util/util';
 import { OrderItem } from '../order-item/order-item';
-import { Customer } from '../member/customer/customer';
-import { Payment } from '../payment/payment';
+import { Customer } from '../entity/member/customer';
+import { Payment } from '../entity/payment';
 import { Collection } from '../collection';
 import { Invoice } from '../entity/invoice';
+import { Refund } from '../entity/refund';
 
 export class Order {
   id: string;
@@ -21,16 +22,16 @@ export class Order {
 
   // PROPERTIES
 
-  get hasPaymentAvailable(): boolean {
-    return this.paymentAvailable !== null;
+  get hasRefundablePayment(): boolean {
+    return this.refundablePayment !== null;
   }
 
-  get paymentAvailable(): Payment | null {
-    return this.notRefundedPayments.first();
+  get refundablePayment(): Payment | null {
+    return this.refundablePayments.first();
   }
 
-  get notRefundedPayments(): Collection<Payment> {
-    return this.paymentCollection.filter(entity => entity.isNotRefunded);
+  get refundablePayments(): Collection<Payment> {
+    return this.paymentCollection.filter(entity => entity.isRefundable);
   }
 
   get customerName(): string {
@@ -39,6 +40,10 @@ export class Order {
 
   get items(): OrderItem[] {
     return this.itemCollection.all();
+  }
+
+  get amountPayable(): number {
+    return this.notPaidItems.reduce((entity, amount) => amount + entity.total, 0);
   }
 
   get amount(): number {
@@ -65,7 +70,7 @@ export class Order {
     return this.itemCollection.filter(entity => entity.canInvoiced);
   }
 
-  get canRefundedItems(): Collection<OrderItem> {
+  private get canRefundedItems(): Collection<OrderItem> {
     return this.itemCollection.filter(entity => entity.canRefunded);
   }
 
@@ -79,7 +84,7 @@ export class Order {
   }
 
   get canRefund(): boolean {
-    return this.hasPaymentAvailable && this.canRefundedItems.count() > 0;
+    return this.hasRefundablePayment && this.canRefundedItems.count() > 0;
   }
 
   get isNoPaid(): boolean {
@@ -128,5 +133,11 @@ export class Order {
     this.itemCollection.add(entity);
 
     return entity;
+  }
+
+  refund(refund: Refund): Order {
+    this.canRefundedItems
+      .walk(entity => entity.refund(refund));
+    return this;
   }
 }
