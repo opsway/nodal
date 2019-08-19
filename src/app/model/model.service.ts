@@ -101,16 +101,30 @@ export class ModelService {
   }
 
   transferRefund(refund: Refund): void {
+    // GW
     this.createTransaction(refund.gateway, refund.id, -refund.total, refund.createdAt);
-    const sellers = refund.orderItem.reduce((entity, acc) => {
-      if (acc.has(entity.sellerName)) {
-        acc.set(entity.sellerName, acc.get(entity.sellerName) + entity.amountSeller);
-      } else {
-        acc.set(entity.sellerName, entity.amountSeller);
-      }
 
-      return acc;
-    }, new Map());
+    // Market
+    const feeMarket = refund.orderItem
+      .filter(entity => entity.isInvoiced)
+      .reduce((entity, acc) => acc + entity.feeMarket, 0);
+
+    if (feeMarket > 0) {
+      this.createTransaction(ModelService.NodalMFFee, refund.id, -feeMarket, refund.createdAt);
+    }
+
+    // Seller
+    const sellers = refund.orderItem
+      .filter(entity => entity.isInvoiced)
+      .reduce((entity, acc) => {
+        if (acc.has(entity.sellerName)) {
+          acc.set(entity.sellerName, acc.get(entity.sellerName) + entity.amountSeller);
+        } else {
+          acc.set(entity.sellerName, entity.amountSeller);
+        }
+
+        return acc;
+      }, new Map());
 
     sellers.forEach((amount, sellerName) => {
       this.createTransaction(sellerName, refund.id, -amount, refund.createdAt);
