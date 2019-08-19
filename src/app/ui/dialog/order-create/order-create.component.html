@@ -18,7 +18,7 @@
 
             <div class="form-group col-sm">
               <label for="customerId">Customer</label>
-              <select name="customerId" id="customerId" formControlName="customerId" class="form-control" appAutoFocus>
+              <select name="customerId" id="customerId" formControlName="customerId" class="form-control" ngbAutofocus>
                 <option *ngFor="let it of model.customers.all()" [value]="it.id">{{it.name}}</option>
               </select>
             </div>
@@ -29,9 +29,23 @@
                      [min]="minDate" formControlName="date"
                      [ngClass]="{'is-invalid': form.get('date').invalid}"
               >
-              <div *ngIf="form.hasError('required', 'date')"
-                   class="invalid-feedback"
-              >Date is required</div>
+              <div class="invalid-feedback">
+                <div *ngIf="form.hasError('required', 'date')">Date is required</div>
+                <div *ngIf="form.hasError('min', 'date')">Enter a date greater than {{minDate}}</div>
+              </div>
+              <hr>
+
+<!--              <label for="date">Set action Date & Time</label>-->
+<!--              <div class="input-group">-->
+<!--                <input id="date" class="form-control" type="datetime-local"-->
+<!--                       [min]="minDate" formControlName="date"-->
+<!--                       [ngClass]="{'is-invalid': form.get('date').invalid}"-->
+<!--                       placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" required>  &lt;!&ndash;[(ngModel)]="dateP"&ndash;&gt;-->
+<!--                <div class="input-group-append">-->
+<!--                  <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>-->
+<!--                </div>-->
+<!--              </div>-->
+
             </div>
 
           </div>

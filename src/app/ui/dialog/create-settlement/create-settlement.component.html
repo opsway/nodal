@@ -5,7 +5,7 @@
   >
     <option *ngFor="let gateway of model.paymentGateways" value="{{gateway}}">{{gateway}}</option>
   </select>
-  <input type="date" class="form-control" [min]="dateMin" [max]="dateMax" [(ngModel)]="settlementDate">
+  <input type="datetime-local" class="form-control" [min]="dateMin" [max]="dateMax" [(ngModel)]="settlementDate">
   <div class="input-group-append">
     <button class="btn btn-primary" (click)="toSettlement()" type="button">
       <span>create settlement</span>

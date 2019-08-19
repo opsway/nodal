@@ -28,9 +28,9 @@ export class CreateSettlementComponent implements OnInit {
 
   ngOnInit() {
     this.paymentGateway = this.model.paymentMethods[0];
-    this.settlementDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-    // TODO this.dateMin = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-    // TODO this.dateMax = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    this.settlementDate = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
+    // TODO this.dateMin = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
+    // TODO this.dateMax = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
   }
 
   toSettlement(): boolean {

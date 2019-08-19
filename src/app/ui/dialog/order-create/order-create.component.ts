@@ -10,10 +10,14 @@ import {
   FormGroup, Validators,
 } from '@angular/forms';
 import { ModelService } from '../../../model/model.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-dialog-order-create',
   templateUrl: 'order-create.component.html',
+  providers: [
+    DatePipe,
+  ]
 })
 export class OrderCreateComponent implements OnInit {
   minDate: string;
@@ -24,18 +28,12 @@ export class OrderCreateComponent implements OnInit {
     private fb: FormBuilder,
     private modalService: NgbModal,
     public model: ModelService,
+    private datePipe: DatePipe,
   ) {
-  }
-  private toDateString(date: Date): string {
-    return (date.getFullYear().toString() + '-'
-      + ('0' + (date.getMonth() + 1)).slice(-2) + '-'
-      + ('0' + (date.getDate())).slice(-2))
-      + 'T' + date.toTimeString().slice(0, 5);
   }
 
   ngOnInit() {
-    // this.minDate = new Date().toISOString().slice(0, 16); // return a date offset from local time
-    this.minDate = this.toDateString(new Date()); // constructing the date string
+    this.minDate = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
 
     this.form = this.fb.group({
       orderId: [this.model.currentOrder.id, []],
