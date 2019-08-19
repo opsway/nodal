@@ -15,6 +15,7 @@ import { Payment } from './entity/payment';
 import { Seller } from './entity/member/seller';
 import { Customer } from './entity/member/customer';
 import { Transfer } from './entity/transfer';
+import { SellerSettlement } from './entity/seller-settlement';
 
 declare interface Action {
   name: string;
@@ -39,6 +40,7 @@ export class ModelService {
   private refundCollection: Collection<Refund> = new Collection<Refund>();
   private paymentCollection: Collection<Payment> = new Collection<Payment>();
   private settlementCollection: Collection<Settlement> = new Collection<Settlement>();
+  private sellerSettlementCollection: Collection<SellerSettlement> = new Collection<SellerSettlement>();
   private transferCollection: Collection<Transfer> = new Collection<Transfer>();
   private accountBalance: Map<string, number> = new Map();
   readonly paymentGateways: string[];
@@ -96,6 +98,11 @@ export class ModelService {
     this.createTransaction(ModelService.NodalShipping, invoice.id, invoice.amountShipping, invoice.createdAt);
     this.createTransaction(ModelService.NodalMFFee, invoice.id, invoice.totalFeeMarket, invoice.createdAt);
     this.createTransaction(invoice.seller.name, invoice.id, invoice.amountSeller, invoice.createdAt);
+  }
+
+  transferToSeller(settlement: SellerSettlement): void {
+    this.createTransaction(settlement.sellerName, settlement.id, -settlement.amount, settlement.createdAt);
+    this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.amount, settlement.createdAt);
   }
 
   transferPayment(payment: Payment): void {
@@ -373,6 +380,26 @@ export class ModelService {
     const refund = this.createRefund(this.orderCollection.find(orderItem.orderId));
     orderItem.refund(refund);
     this.transferRefund(refund);
+  }
+
+  catMakeSettlementToSeller(name: string): boolean {
+    return this.balanceByHolder(name) > 0;
+  }
+
+  makeSettlementToSeller(name: string): void {
+    const invoices = this.invoiceCollection
+      .filter(entity => entity.seller.name === name && !entity.isCaptured);
+
+    if (invoices.count() > 0) {
+
+      const settlement = this.sellerSettlementCollection.add(new SellerSettlement(name));
+      invoices.walk(entity => settlement.capture(entity));
+      if (settlement.amount !== this.balanceByHolder(name)) {
+        console.log('makeSettlementToSeller:', settlement.amount, this.balanceByHolder(name));
+        return; // TODO add alert
+      }
+      this.transferToSeller(settlement);
+    }
   }
 
   saveInvoice(invoice: Invoice): void {

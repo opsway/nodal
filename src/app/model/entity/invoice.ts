@@ -8,17 +8,21 @@ import { Order } from './order/order';
 export class Invoice implements Entity {
   static STATUS_CANCELED = 'canceled';
   static STATUS_SHIPPED = 'shipped';
+  static STATUS_CAPTURED = 'captured';
+  static STATUS_CREATED = 'created';
 
   id: string;
   createdAt: Date;
+  settledAt: Date;
   status: string;
 
   constructor(
     public seller: Seller,
     public items: Collection<OrderItem> = new Collection<OrderItem>(),
   ) {
-    this.id = Util.uuid('IV');
-    this.status = null;
+    this.id = Util.uuid('INV');
+    this.settledAt = null;
+    this.status = Invoice.STATUS_CREATED;
     this.createdAt = null;
   }
 
@@ -85,5 +89,9 @@ export class Invoice implements Entity {
     this.items.walk(entity => entity.cancel());
 
     return this;
+  }
+
+  get isCaptured(): boolean {
+    return this.status === Invoice.STATUS_CAPTURED;
   }
 }

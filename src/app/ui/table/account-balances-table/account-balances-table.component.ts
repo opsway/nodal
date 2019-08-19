@@ -14,6 +14,7 @@ import { ModelService } from '../../../model/model.service';
 })
 export class AccountBalancesTableComponent {
   @Input() holder: string;
+  @Input() hasSettlement = false;
 
   constructor(
     private model: ModelService,
