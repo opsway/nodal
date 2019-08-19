@@ -31,6 +31,7 @@ import { RefundsTableComponent } from './ui/table/refunds-table/refunds-table.co
 import { SettlementsTableComponent } from './ui/table/settlements-table/settlements-table.component';
 import { AccountBalancesTableComponent } from './ui/table/account-balances-table/account-balances-table.component';
 import { CreateSettlementComponent } from './ui/dialog/create-settlement/create-settlement.component';
+import { TimeAndDateComponent } from './ui/menu/time-and-date/time-and-date.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { CreateSettlementComponent } from './ui/dialog/create-settlement/create-
     SettlementsTableComponent,
     AccountBalancesTableComponent,
     CreateSettlementComponent,
+    TimeAndDateComponent,
   ],
   imports: [
     BrowserModule,
