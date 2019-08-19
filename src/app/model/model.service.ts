@@ -29,6 +29,7 @@ declare interface Action {
 export class ModelService {
   private static NodalBank = 'Bank';
   private static NodalGWFee = 'GW Fee';
+  private static NodalShipping = 'Shipping';
   private static NodalMFFee = 'MF Fee';
   private customerCollection: Collection<Customer> = new Collection<Customer>();
   private sellerCollection: Collection<Seller> = new Collection<Seller>();
@@ -46,7 +47,7 @@ export class ModelService {
     this.paymentGateways = Model.paymentGateways;
     this.load();
     if (meta.releaseNumber === 'local') {
-      //this.flow();
+      this.flow();
     }
   }
 
@@ -92,6 +93,7 @@ export class ModelService {
   }
 
   transferInvoice(invoice: Invoice): void {
+    this.createTransaction(ModelService.NodalShipping, invoice.id, invoice.amountShipping, invoice.createdAt);
     this.createTransaction(ModelService.NodalMFFee, invoice.id, invoice.totalFeeMarket, invoice.createdAt);
     this.createTransaction(invoice.seller.name, invoice.id, invoice.amountSeller, invoice.createdAt);
   }
@@ -111,6 +113,15 @@ export class ModelService {
 
     if (feeMarket > 0) {
       this.createTransaction(ModelService.NodalMFFee, refund.id, -feeMarket, refund.createdAt);
+    }
+
+    // Shipping
+    const shipping = refund.orderItem
+      .filter(entity => entity.isInvoiced)
+      .reduce((entity, acc) => acc + entity.amountShipping, 0);
+
+    if (shipping > 0) {
+      this.createTransaction(ModelService.NodalShipping, refund.id, -shipping, refund.createdAt);
     }
 
     // Seller
@@ -145,6 +156,7 @@ export class ModelService {
     return [
       ModelService.NodalBank,
       ModelService.NodalGWFee,
+      ModelService.NodalShipping,
       ModelService.NodalMFFee,
     ];
   }
@@ -419,23 +431,23 @@ export class ModelService {
   private flowEditNewOrder(): Order {
     const order = this.addOrderItem(
       this.customers.first().id,
-      200,
+      100,
       this.items.first().id,
-      50,
-      2,
+      20,
+      1,
       this.sellers.first().id,
     );
 
-    this.addOrderItem(
+/*    this.addOrderItem(
       this.customers.first().id,
-      200,
+      100,
       this.items.first().id,
-      50,
-      2,
+      20,
+      1,
       this.sellers.first().id,
-    );
+    );*/
 
-    order.createdAt = new Date('1985-10-05T06:00:00');
+    order.createdAt = new Date();
 
     return order;
   }

@@ -54,6 +54,10 @@ export class Invoice implements Entity {
     return this.items.reduce((entity, acc) => acc + entity.feeMarket, 0);
   }
 
+  get amountShipping(): number {
+    return this.items.reduce((entity, acc) => acc + entity.amountShipping, 0);
+  }
+
   get amountSeller(): number {
     return this.items.reduce((entity, acc) => acc + entity.amountSeller, 0);
   }
