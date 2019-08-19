@@ -21,7 +21,7 @@
         <td>{{row.totalPayment | convert}} ({{row.countPayment}})</td>
         <td>{{row.totalRefund | convert}} ({{row.countRefund}})</td>
         <td>{{row.fee | convert}}</td>
-        <td>{{row.amount | convert}}</td>
+        <td>{{row.total | convert}}</td>
         <td>{{row.references}}</td>
     </tr>
     <tr *ngIf="data.length === 0">
