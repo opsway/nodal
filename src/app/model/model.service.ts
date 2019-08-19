@@ -3,8 +3,7 @@ import {
 } from '@angular/core';
 import { meta } from '../app.meta';
 import { Shared } from './shared';
-import { OrderItemService } from './order-item/order-item.service';
-import { OrderItem } from './order-item/order-item';
+import { OrderItem } from './entity/order/order-item';
 import { Item } from './entity/item';
 import { Order } from './entity/order/order';
 import { Collection } from './collection';
@@ -44,7 +43,6 @@ export class ModelService {
   readonly paymentGateways: string[];
 
   constructor(
-    private orderItemService: OrderItemService,
   ) {
     this.paymentGateways = Model.paymentGateways;
     this.load();
@@ -331,7 +329,7 @@ export class ModelService {
   }
 
   toRefundOrderItem(orderItem: OrderItem): void {
-    const refund = this.createRefund(orderItem.order);
+    const refund = this.createRefund(this.orderCollection.find(orderItem.orderId));
     orderItem.refund(refund);
     this.transferRefund(refund);
   }
@@ -364,23 +362,23 @@ export class ModelService {
     priceShipping: number,
     qty: number,
     sellerId: string,
-  ): OrderItem {
+    createdAt: Date = new Date(),
+  ): Order {
     const customer = this.customers.find(customerId);
     const item = this.items.find(itemId);
     const seller = this.sellers.find(sellerId);
     const cart = this.currentOrder;
     cart.customer = customer;
-    console.log(`${cart.id} addOrderItem:`, customer, item, seller);
-    return cart.addItem(this.orderItemService.create(
+    cart.createdAt = createdAt;
+
+    return cart.addItem(
       price,
       item,
       priceShipping,
       qty,
       seller,
-      cart,
-    ));
+    );
   }
-
 
   private flowEditNewOrder(): Order {
     const order = this.addOrderItem(
@@ -390,7 +388,7 @@ export class ModelService {
       50,
       2,
       this.sellers.first().id,
-    ).order;
+    );
 
     this.addOrderItem(
       this.customers.first().id,

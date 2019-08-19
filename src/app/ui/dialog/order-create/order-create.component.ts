@@ -73,15 +73,15 @@ export class OrderCreateComponent implements OnInit {
 
   addOrderItem(): boolean {
     if (this.form.valid) {
-      const entity = this.model.addOrderItem(
+      this.model.addOrderItem(
         this.form.value.customerId,
         this.form.value.orderItem.price,
         this.form.value.orderItem.itemId,
         this.form.value.orderItem.shipping,
         this.form.value.orderItem.qty,
-        this.form.value.orderItem.sellerId
+        this.form.value.orderItem.sellerId,
+        new Date(this.form.value.date),
       );
-      entity.order.createdAt = new Date(this.form.value.date);
     } else {
       for (const inner in this.form.controls) {
         if (this.form.controls.hasOwnProperty(inner)) {

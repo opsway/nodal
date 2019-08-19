@@ -1,10 +1,11 @@
 import * as Util from '../../../util/util';
-import { OrderItem } from '../../order-item/order-item';
+import { OrderItem } from './order-item';
 import { Customer } from '../member/customer';
 import { Payment } from '../payment';
 import { Collection } from '../../collection';
-import { Invoice } from '../invoice';
 import { Refund } from '../refund';
+import { Item } from '../item';
+import { Seller } from '../member/seller';
 
 export class Order {
   id: string;
@@ -129,10 +130,23 @@ export class Order {
     return this;
   }
 
-  addItem(entity: OrderItem): OrderItem {
-    this.itemCollection.add(entity);
+  addItem(
+    price: number,
+    item: Item,
+    priceShipping: number,
+    qty: number,
+    seller: Seller,
+  ): Order {
+    this.itemCollection.add(new OrderItem(
+      price,
+      item,
+      priceShipping,
+      qty,
+      seller,
+      this.id,
+    ));
 
-    return entity;
+    return this;
   }
 
   refund(refund: Refund): Order {

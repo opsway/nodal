@@ -2,7 +2,7 @@ import * as Util from '../../util/util';
 import { Entity } from './entity';
 import { Seller } from './member/seller';
 import { Collection } from '../collection';
-import { OrderItem } from '../order-item/order-item';
+import { OrderItem } from './order/order-item';
 import { Order } from './order/order';
 
 export class Invoice implements Entity {
@@ -52,7 +52,7 @@ export class Invoice implements Entity {
 
   hasOrder(o: Order): boolean {
     return this.items
-      .filter(e => e.order.id === o.id)
+      .filter(e => e.orderId === o.id)
       .count() > 0;
   }
 

@@ -1,7 +1,7 @@
-import { Item } from '../entity/item';
-import { Seller } from '../entity/member/seller';
+import { Item } from '../item';
+import { Seller } from '../member/seller';
 import { OrderItem } from './order-item';
-import * as Util from '../../util/util';
+import * as Util from '../../../util/util';
 
 describe('OrderItem', () => {
   beforeEach(() => {

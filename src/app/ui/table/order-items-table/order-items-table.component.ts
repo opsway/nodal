@@ -3,7 +3,7 @@ import {
   Input,
 } from '@angular/core';
 import { TableProvider } from '../table-provider';
-import { OrderItem } from '../../../model/order-item/order-item';
+import { OrderItem } from '../../../model/entity/order/order-item';
 import { ConvertPipe } from '../../../util/convert.pipe';
 import { TableCellDef } from '../table-cell-def';
 import { Order } from '../../../model/entity/order/order';

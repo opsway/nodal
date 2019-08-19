@@ -1,13 +1,11 @@
-import * as Util from '../../util/util';
-import { Item } from '../entity/item';
-import { Seller } from '../entity/member/seller';
-import { Order } from '../entity/order/order';
-import { Model } from '../model';
-import { Entity } from '../entity/entity';
-import { Payment } from '../entity/payment';
-import { Collection } from '../collection';
-import { Invoice } from '../entity/invoice';
-import { Refund } from '../entity/refund';
+import * as Util from '../../../util/util';
+import { Item } from '../item';
+import { Seller } from '../member/seller';
+import { Model } from '../../model';
+import { Entity } from '../entity';
+import { Payment } from '../payment';
+import { Invoice } from '../invoice';
+import { Refund } from '../refund';
 
 export class OrderItem implements Entity {
   static STATUS_ORDERED = 'ordered';
@@ -27,7 +25,6 @@ export class OrderItem implements Entity {
   isRefunded: boolean;
   isReturned: boolean;
   isCanceled: boolean;
-  order: Order;
   status: string;
   private invoice: Invoice = null;
   private payment: Payment;
@@ -37,12 +34,11 @@ export class OrderItem implements Entity {
     priceShipping: number,
     qty: number,
     seller: Seller,
-    order: Order = null,
+    public orderId: string,
   ) {
     this.id = Util.uuid('OI');
     this.item = item;
     this.seller = seller;
-    this.order = order;
     this.qty = qty;
     this.price = price * Model.precisionOfPersist;
     this.priceShipping = priceShipping * Model.precisionOfPersist;
@@ -71,8 +67,7 @@ export class OrderItem implements Entity {
   }
 
   get canRefunded(): boolean {
-    return this.order.hasRefundablePayment
-      && (
+    return (
         this.isReturned
         || this.isCanceled
       )
@@ -83,10 +78,6 @@ export class OrderItem implements Entity {
     return this.isPaid
       && !this.isInvoiced
       && !this.isCanceled;
-  }
-
-  get isShipped(): boolean {
-    return this.invoice && this.invoice.isShipped;
   }
 
   get isPaid(): boolean {
