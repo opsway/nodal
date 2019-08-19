@@ -14,6 +14,7 @@ export class Invoice implements Entity {
   id: string;
   createdAt: Date;
   settledAt: Date;
+  settledMarketAt: Date;
   status: string;
 
   constructor(
@@ -22,6 +23,7 @@ export class Invoice implements Entity {
   ) {
     this.id = Util.uuid('INV');
     this.settledAt = null;
+    this.settledMarketAt = null;
     this.status = Invoice.STATUS_CREATED;
     this.createdAt = null;
   }
@@ -93,5 +95,9 @@ export class Invoice implements Entity {
 
   get isCaptured(): boolean {
     return this.status === Invoice.STATUS_CAPTURED;
+  }
+
+  get isMarketCaptured(): boolean {
+    return this.settledMarketAt !== null;
   }
 }

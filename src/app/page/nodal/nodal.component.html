@@ -1,6 +1,14 @@
 <div class="content">
   <div class="container-fluid">
     <!--Nodal balance -->
+    <div class="row justify-content-between mb-3">
+      <button type="button"
+              (click)="model.makeSettlementToMarket()"
+              [disabled]="!model.canMakeSettlementToMarket"
+              class="btn btn-primary"
+              title="refund"
+      >Create settlement to Market</button>
+    </div>
     <div class="row justify-content-between mb-3"
          *ngFor="let method of model.nodalAccounts"
     >

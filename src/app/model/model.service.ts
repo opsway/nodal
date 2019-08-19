@@ -16,6 +16,7 @@ import { Seller } from './entity/member/seller';
 import { Customer } from './entity/member/customer';
 import { Transfer } from './entity/transfer';
 import { SellerSettlement } from './entity/seller-settlement';
+import { MarketSettlement } from './entity/market-settlement';
 
 declare interface Action {
   name: string;
@@ -41,6 +42,7 @@ export class ModelService {
   private paymentCollection: Collection<Payment> = new Collection<Payment>();
   private settlementCollection: Collection<Settlement> = new Collection<Settlement>();
   private sellerSettlementCollection: Collection<SellerSettlement> = new Collection<SellerSettlement>();
+  private marketSettlementCollection: Collection<MarketSettlement> = new Collection<MarketSettlement>();
   private transferCollection: Collection<Transfer> = new Collection<Transfer>();
   private accountBalance: Map<string, number> = new Map();
   readonly paymentGateways: string[];
@@ -87,6 +89,9 @@ export class ModelService {
   }
 
   createTransaction(holder: string, ref: string, amount: number, date: Date) {
+    if (Math.abs(amount) === 0) {
+      return;
+    }
     console.log('createTransaction', holder, amount);
     const balance = this.balanceByHolder(holder) + amount;
     this.accountBalance.set(holder, balance);
@@ -103,6 +108,22 @@ export class ModelService {
   transferToSeller(settlement: SellerSettlement): void {
     this.createTransaction(settlement.sellerName, settlement.id, -settlement.amount, settlement.createdAt);
     this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.amount, settlement.createdAt);
+  }
+
+  transferToMarket(): void {
+    const invoices = this.invoiceCollection
+      .filter(entity => !entity.isMarketCaptured);
+
+    if (invoices.count() > 0) {
+      const GWFee = this.balanceByHolder(ModelService.NodalGWFee);
+      const settlement = this.marketSettlementCollection.add(new MarketSettlement(GWFee));
+      invoices.walk(entity => settlement.capture(entity));
+
+      this.createTransaction(ModelService.NodalGWFee, settlement.id, -GWFee, new Date());
+      this.createTransaction(ModelService.NodalMFFee, settlement.id, -settlement.totalFeeMarket, new Date());
+      this.createTransaction(ModelService.NodalShipping, settlement.id, -settlement.amountShipping, new Date());
+      this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.amount, new Date());
+    }
   }
 
   transferPayment(payment: Payment): void {
@@ -402,6 +423,14 @@ export class ModelService {
     }
   }
 
+  makeSettlementToMarket(): void {
+    this.transferToMarket();
+  }
+
+  canMakeSettlementToMarket(): boolean {
+    return true;
+  }
+
   saveInvoice(invoice: Invoice): void {
     invoice.save();
     this.transferInvoice(invoice);
@@ -465,14 +494,14 @@ export class ModelService {
       this.sellers.first().id,
     );
 
-/*    this.addOrderItem(
-      this.customers.first().id,
-      100,
-      this.items.first().id,
-      20,
-      1,
-      this.sellers.first().id,
-    );*/
+    /*    this.addOrderItem(
+          this.customers.first().id,
+          100,
+          this.items.first().id,
+          20,
+          1,
+          this.sellers.first().id,
+        );*/
 
     order.createdAt = new Date();
 
