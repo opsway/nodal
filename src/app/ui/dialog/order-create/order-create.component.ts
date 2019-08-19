@@ -63,7 +63,7 @@ export class OrderCreateComponent implements OnInit {
 
   checkDate() {
     return (group: FormGroup): {[key: string]: any} => {
-      const d = group.controls['date'];
+      const d = group.controls.date;
       const min = new Date(this.minDate);
       const test = new Date(d.value);
       return (min > test) ? {
