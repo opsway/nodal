@@ -26,9 +26,17 @@ export class OrderCreateComponent implements OnInit {
     public model: ModelService,
   ) {
   }
+  private toDateString(date: Date): string {
+    return (date.getFullYear().toString() + '-'
+      + ('0' + (date.getMonth() + 1)).slice(-2) + '-'
+      + ('0' + (date.getDate())).slice(-2))
+      + 'T' + date.toTimeString().slice(0, 5);
+  }
 
   ngOnInit() {
-    this.minDate = new Date().toISOString().split('T')[0];
+    // this.minDate = new Date().toISOString().slice(0, 16); // return a date offset from local time
+    this.minDate = this.toDateString(new Date()); // constructing the date string
+
     this.form = this.fb.group({
       orderId: [this.model.currentOrder.id, []],
       customerId: [this.model.customers.first().id, Validators.required],
