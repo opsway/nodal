@@ -31,9 +31,8 @@
               >
               <div class="invalid-feedback">
                 <div *ngIf="form.hasError('required', 'date')">Date is required</div>
-                <div *ngIf="form.hasError('min', 'date')">Enter a date greater than {{minDate}}</div>
+                <div *ngIf="form.hasError('checkDate', 'date')">{{form.errors?.checkDate}}</div>
               </div>
-              <hr>
 
 <!--              <label for="date">Set action Date & Time</label>-->
 <!--              <div class="input-group">-->
