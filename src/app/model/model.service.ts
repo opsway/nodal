@@ -46,7 +46,6 @@ export class ModelService {
   constructor(
     private orderItemService: OrderItemService,
     private orderService: OrderService,
-   // private balanceService: BalanceService,
   ) {
     this.paymentGateways = Model.paymentGateways;
     this.load();
@@ -110,10 +109,19 @@ export class ModelService {
     this.createTransaction(settlement.gateway, settlement.id, -settlement.total, settlement.createdAt);
     this.createTransaction(ModelService.NodalBank, settlement.id, settlement.amount, settlement.createdAt);
     this.createTransaction(ModelService.NodalGWFee, settlement.id, settlement.fee, settlement.createdAt);
+    this.createTransaction(ModelService.NodalMFFee, settlement.id, settlement.totalFeeMarket, settlement.createdAt);
   }
 
   get paymentMethods(): string[] {
     return this.paymentGateways;
+  }
+
+  get nodalAccounts(): string[] {
+    return [
+      ModelService.NodalBank,
+      ModelService.NodalGWFee,
+      ModelService.NodalMFFee,
+    ];
   }
 
   get currentOrder(): Order {
@@ -360,7 +368,6 @@ export class ModelService {
       cart,
     ));
   }
-
 
 
   private flowEditNewOrder(): Order {

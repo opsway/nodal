@@ -18,7 +18,7 @@ export class Settlement implements Entity {
   }
 
   get total(): number {
-    return  this.amount + this.fee;
+    return this.amount + this.fee;
   }
 
   get references(): string {
@@ -39,6 +39,10 @@ export class Settlement implements Entity {
 
   get countRefund(): number {
     return this.paymentCollection.reduce((entity, acc) => acc + entity.countRefund, 0);
+  }
+
+  get totalFeeMarket(): number {
+    return this.paymentCollection.reduce((entity, acc) => acc + entity.feeMarket, 0);
   }
 
   capture(payment: Payment): Settlement {
