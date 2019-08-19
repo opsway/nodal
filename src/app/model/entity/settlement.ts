@@ -41,10 +41,6 @@ export class Settlement implements Entity {
     return this.paymentCollection.reduce((entity, acc) => acc + entity.countRefund, 0);
   }
 
-  get totalFeeMarket(): number {
-    return this.paymentCollection.reduce((entity, acc) => acc + entity.feeMarket, 0);
-  }
-
   capture(payment: Payment): Settlement {
     const feeGateway = Math.floor((Model.paymentGatewayFee / 100) * payment.totalSettlement);
     this.amount += payment.totalSettlement - feeGateway;

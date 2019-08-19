@@ -106,7 +106,6 @@ export class ModelService {
     this.createTransaction(settlement.gateway, settlement.id, -settlement.total, settlement.createdAt);
     this.createTransaction(ModelService.NodalBank, settlement.id, settlement.amount, settlement.createdAt);
     this.createTransaction(ModelService.NodalGWFee, settlement.id, settlement.fee, settlement.createdAt);
-    this.createTransaction(ModelService.NodalMFFee, settlement.id, settlement.totalFeeMarket, settlement.createdAt);
   }
 
   get paymentMethods(): string[] {
@@ -340,7 +339,10 @@ export class ModelService {
     });
     this.invoiceCollection
       .filter(entity => entity.isDraft)
-      .walk(entity => entity.save());
+      .walk(entity => {
+        entity.save();
+        this.createTransaction(ModelService.NodalMFFee, entity.id, entity.totalFeeMarket, entity.createdAt);
+      });
 
     return order;
   }
