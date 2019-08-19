@@ -30,7 +30,7 @@ export class CreateSettlementComponent implements OnInit {
     this.paymentGateway = this.model.paymentMethods[0];
     this.settlementDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     // TODO this.dateMin = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-    this.dateMax = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    // TODO this.dateMax = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
   }
 
   toSettlement(): boolean {
