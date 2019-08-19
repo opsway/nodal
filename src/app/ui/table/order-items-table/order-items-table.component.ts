@@ -6,7 +6,7 @@ import { TableProvider } from '../table-provider';
 import { OrderItem } from '../../../model/order-item/order-item';
 import { ConvertPipe } from '../../../util/convert.pipe';
 import { TableCellDef } from '../table-cell-def';
-import { Order } from '../../../model/order/order';
+import { Order } from '../../../model/entity/order/order';
 
 @Component({
   selector: 'app-order-items-table',

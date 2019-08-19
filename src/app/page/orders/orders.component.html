@@ -1,7 +1,7 @@
 <div class="content">
   <div class="container-fluid">
     <div class="row justify-content-between mb-3">
-      <h2>Orders ({{model.orders.length}})</h2>
+      <h2>Orders ({{model.orders.count()}})</h2>
       <p class="decryption">Orders and items (you can add a new one or make a payment on the order)</p>
       <app-dialog-order-create></app-dialog-order-create>
     </div>
@@ -29,7 +29,7 @@
         </tr>
       </thead>
         <tbody>
-          <tr *ngFor="let order of model.orders">
+          <tr *ngFor="let order of model.orders.all()">
             <td class="text-center align-middle">
               <span>{{order.id}}</span>
               <div class="btn-group-vertical btn-group-sm" role="group">
@@ -130,7 +130,7 @@
               </table>
             </td>
           </tr>
-          <tr *ngIf="model.orders.length === 0">
+          <tr *ngIf="model.orders.count() === 0">
             <td colspan="14"
                 class="align-middle text-center"
             >empty</td>

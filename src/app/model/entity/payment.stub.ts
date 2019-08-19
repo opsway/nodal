@@ -1,4 +1,4 @@
-import order from './order.stub';
+import order from './order/order.stub';
 import { Payment } from './payment';
 
 export default () => new Payment(order(), 'GW');

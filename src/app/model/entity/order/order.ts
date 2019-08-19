@@ -1,10 +1,10 @@
-import * as Util from '../../util/util';
-import { OrderItem } from '../order-item/order-item';
-import { Customer } from '../entity/member/customer';
-import { Payment } from '../entity/payment';
-import { Collection } from '../collection';
-import { Invoice } from '../entity/invoice';
-import { Refund } from '../entity/refund';
+import * as Util from '../../../util/util';
+import { OrderItem } from '../../order-item/order-item';
+import { Customer } from '../member/customer';
+import { Payment } from '../payment';
+import { Collection } from '../../collection';
+import { Invoice } from '../invoice';
+import { Refund } from '../refund';
 
 export class Order {
   id: string;

@@ -1,7 +1,7 @@
 import * as Util from '../../util/util';
 import { Item } from '../entity/item';
 import { Seller } from '../entity/member/seller';
-import { Order } from '../order/order';
+import { Order } from '../entity/order/order';
 import { Model } from '../model';
 import { Entity } from '../entity/entity';
 import { Payment } from '../entity/payment';

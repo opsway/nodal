@@ -2,12 +2,11 @@ import {
   Injectable,
 } from '@angular/core';
 import { meta } from '../app.meta';
-import { OrderService } from './order/order.service';
 import { Shared } from './shared';
 import { OrderItemService } from './order-item/order-item.service';
 import { OrderItem } from './order-item/order-item';
 import { Item } from './entity/item';
-import { Order } from './order/order';
+import { Order } from './entity/order/order';
 import { Collection } from './collection';
 import { Invoice } from './entity/invoice';
 import { Refund } from './entity/refund';
@@ -34,6 +33,7 @@ export class ModelService {
   private static NodalMFFee = 'MF Fee';
   private customerCollection: Collection<Customer> = new Collection<Customer>();
   private sellerCollection: Collection<Seller> = new Collection<Seller>();
+  private orderCollection: Collection<Order> = new Collection<Order>();
   private itemCollection: Collection<Item> = new Collection<Item>();
   private invoiceCollection: Collection<Invoice> = new Collection<Invoice>();
   private refundCollection: Collection<Refund> = new Collection<Refund>();
@@ -45,7 +45,6 @@ export class ModelService {
 
   constructor(
     private orderItemService: OrderItemService,
-    private orderService: OrderService,
   ) {
     this.paymentGateways = Model.paymentGateways;
     this.load();
@@ -125,7 +124,13 @@ export class ModelService {
   }
 
   get currentOrder(): Order {
-    return this.orderService.currentOrder();
+    const match = this.orderCollection
+      .filter(entity => entity.isNew).first();
+    if (match) {
+      return match;
+    }
+
+    return this.createOrder();
   }
 
   invoicesByOrder(o: Order): Collection<Invoice> {
@@ -201,8 +206,15 @@ export class ModelService {
     return this.refundCollection;
   }
 
-  get orders(): Order[] {
-    return this.orderService.all();
+  get orders() {
+    return this.orderCollection
+      .filter(entity => entity.isSaved);
+  }
+
+  createOrder(customer: Customer = null): Order {
+    const order = new Order(customer);
+
+    return this.orderCollection.add(order);
   }
 
   import(content: string): boolean {
@@ -336,9 +348,9 @@ export class ModelService {
   }
 
   saveOrder(): boolean {
-    const cart = this.orderService.currentOrder();
-    if (cart.save().isSaved) {
-      this.orderService.create(cart.customer);
+    const order = this.currentOrder;
+    if (order.save().isSaved) {
+      this.createOrder(order.customer);
       return true;
     }
 
@@ -356,7 +368,7 @@ export class ModelService {
     const customer = this.customers.find(customerId);
     const item = this.items.find(itemId);
     const seller = this.sellers.find(sellerId);
-    const cart = this.orderService.currentOrder();
+    const cart = this.currentOrder;
     cart.customer = customer;
     console.log(`${cart.id} addOrderItem:`, customer, item, seller);
     return cart.addItem(this.orderItemService.create(

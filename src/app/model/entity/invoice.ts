@@ -3,7 +3,7 @@ import { Entity } from './entity';
 import { Seller } from './member/seller';
 import { Collection } from '../collection';
 import { OrderItem } from '../order-item/order-item';
-import { Order } from '../order/order';
+import { Order } from './order/order';
 
 export class Invoice implements Entity {
   static STATUS_CANCELED = 'canceled';

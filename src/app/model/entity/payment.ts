@@ -1,5 +1,5 @@
 import * as Util from '../../util/util';
-import { Order } from '../order/order';
+import { Order } from './order/order';
 import { Model } from '../model';
 import { Collection } from '../collection';
 import { Refund } from './refund';
