@@ -67,7 +67,7 @@ export class OrderCreateComponent implements OnInit {
       const min = new Date(this.minDate);
       const test = new Date(d.value);
       return (min > test) ? {
-        checkDate: `Date should be greater than ${this.datePipe.transform(this.minDate, 'yyyy-MM-dd HH:gsmm')}`
+        checkDate: `Date should be greater than ${this.datePipe.transform(this.minDate, 'yyyy-MM-dd HH:mm')}`
       } : {};
     };
   }
