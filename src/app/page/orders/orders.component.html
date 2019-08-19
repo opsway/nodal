@@ -74,7 +74,7 @@
                       <div class="btn-group" role="group">
                         <button type="button"
                                 *ngIf="invoice.isSaved"
-                                (click)="invoice.save()"
+                                (click)="model.saveInvoice(invoice)"
                                 class="btn btn-sm btn-success"
                                 title="add to invoice"
                         >save</button>

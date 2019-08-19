@@ -1,11 +1,14 @@
 import * as Util from '../../util/util';
 import { Entity } from './entity';
 import { Payment } from './payment';
+import { Collection } from '../collection';
+import { OrderItem } from './order/order-item';
 
 export class Refund implements Entity {
   id: string;
   createdAt: Date;
   status: string;
+  orderItem: Collection<OrderItem> = new Collection<OrderItem>();
 
   constructor(
     public payment: Payment,
@@ -27,7 +30,14 @@ export class Refund implements Entity {
     return this.payment.gateway;
   }
 
-  increment(amount: number): Refund {
+  attacheOrderItem(orderItem: OrderItem): this {
+    this.increment(orderItem.total)
+      .orderItem.add(orderItem);
+
+    return this;
+  }
+
+  private increment(amount: number): this {
     this.total += amount;
 
     return this;

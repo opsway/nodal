@@ -10,5 +10,14 @@
         ></app-account-balances-table>
       </div>
     </div>
+    <div class="row justify-content-between mb-3">
+      <div class="col-sm"
+           *ngFor="let seller of model.sellers.all()"
+      >
+        <app-account-balances-table
+          [holder]="seller.name"
+        ></app-account-balances-table>
+      </div>
+    </div>
   </div>
 </div>

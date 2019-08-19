@@ -54,6 +54,10 @@ export class Invoice implements Entity {
     return this.items.reduce((entity, acc) => acc + entity.feeMarket, 0);
   }
 
+  get amountSeller(): number {
+    return this.items.reduce((entity, acc) => acc + entity.amountSeller, 0);
+  }
+
   hasOrder(o: Order): boolean {
     return this.items
       .filter(e => e.orderId === o.id)
@@ -62,7 +66,6 @@ export class Invoice implements Entity {
 
   save(): Invoice {
     this.createdAt = new Date();
-
     return this;
   }
 

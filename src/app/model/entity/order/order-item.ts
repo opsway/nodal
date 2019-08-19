@@ -97,7 +97,7 @@ export class OrderItem implements Entity {
   }
 
   get feeMarket(): number {
-    return this.isRefunded ? 0 : Math.floor((Model.marketFee / 100) * this.amount) * (Model.marketFeeGST / 100 + 1);
+    return Math.floor((Model.marketFee / 100) * this.amount) * (Model.marketFeeGST / 100 + 1);
   }
 
   get amountSeller(): number {
@@ -159,7 +159,7 @@ export class OrderItem implements Entity {
   }
 
   refund(refund: Refund): OrderItem {
-    refund.increment(this.total);
+    refund.attacheOrderItem(this);
     this.status = OrderItem.STATUS_REFUNDED;
     this.isRefunded = true;
 

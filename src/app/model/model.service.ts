@@ -42,12 +42,11 @@ export class ModelService {
   private accountBalance: Map<string, number> = new Map();
   readonly paymentGateways: string[];
 
-  constructor(
-  ) {
+  constructor() {
     this.paymentGateways = Model.paymentGateways;
     this.load();
     if (meta.releaseNumber === 'local') {
-      this.flow();
+      //this.flow();
     }
   }
 
@@ -66,8 +65,6 @@ export class ModelService {
       'TA',
       'SAAN',
       'RA',
-      'CFC',
-      'SWA',
     ].map(name => new Seller(name)));
 
     this.itemCollection.load([
@@ -94,12 +91,30 @@ export class ModelService {
     return this.transferCollection.add(new Transfer(holder, ref, amount, balance, date));
   }
 
+  transferInvoice(invoice: Invoice): void {
+    this.createTransaction(ModelService.NodalMFFee, invoice.id, invoice.totalFeeMarket, invoice.createdAt);
+    this.createTransaction(invoice.seller.name, invoice.id, invoice.amountSeller, invoice.createdAt);
+  }
+
   transferPayment(payment: Payment): void {
     this.createTransaction(payment.gateway, payment.id, payment.total, payment.createdAt);
   }
 
-  transferRefund(refund: Refund) {
-    return this.createTransaction(refund.gateway, refund.id, -refund.total, refund.createdAt);
+  transferRefund(refund: Refund): void {
+    this.createTransaction(refund.gateway, refund.id, -refund.total, refund.createdAt);
+    const sellers = refund.orderItem.reduce((entity, acc) => {
+      if (acc.has(entity.sellerName)) {
+        acc.set(entity.sellerName, acc.get(entity.sellerName) + entity.amountSeller);
+      } else {
+        acc.set(entity.sellerName, entity.amountSeller);
+      }
+
+      return acc;
+    }, new Map());
+
+    sellers.forEach((amount, sellerName) => {
+      this.createTransaction(sellerName, refund.id, -amount, refund.createdAt);
+    });
   }
 
   transferSettlement(settlement: Settlement): void {
@@ -307,8 +322,9 @@ export class ModelService {
     order.attachePayment(payment);
   }
 
-  toInvoiceOrderItem(orderItem: OrderItem): OrderItem {
-    return orderItem.attacheInvoice(this.currentInvoice(orderItem));
+  toInvoiceOrderItem(orderItem: OrderItem): void {
+    const invoice = this.currentInvoice(orderItem);
+    orderItem.attacheInvoice(invoice);
   }
 
   createRefund(order: Order): Refund {
@@ -333,15 +349,19 @@ export class ModelService {
     this.transferRefund(refund);
   }
 
+  saveInvoice(invoice: Invoice): void {
+    invoice.save();
+    this.transferInvoice(invoice);
+  }
+
   toInvoiceOrder(order: Order): Order {
     order.items.forEach(item => {
       this.toInvoiceOrderItem(item);
     });
     this.invoiceCollection
-      .filter(entity => entity.isDraft)
-      .walk(entity => {
-        entity.save();
-        this.createTransaction(ModelService.NodalMFFee, entity.id, entity.totalFeeMarket, entity.createdAt);
+      .filter(invoice => invoice.isDraft)
+      .walk(invoice => {
+        this.saveInvoice(invoice);
       });
 
     return order;
