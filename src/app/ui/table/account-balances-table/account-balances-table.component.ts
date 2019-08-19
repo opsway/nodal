@@ -17,7 +17,7 @@ export class AccountBalancesTableComponent {
   @Input() hasSettlement = false;
 
   constructor(
-    private model: ModelService,
+    public model: ModelService,
   ) {
   }
 
