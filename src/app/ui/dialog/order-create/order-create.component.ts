@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { ModelService } from '../../../model/model.service';
 import { DatePipe } from '@angular/common';
+import { VirtualDateService } from '../../../util/virtual-date.service';
 
 @Component({
   selector: 'app-dialog-order-create',
@@ -20,7 +21,6 @@ import { DatePipe } from '@angular/common';
   ]
 })
 export class OrderCreateComponent implements OnInit {
-  minDate: string;
   form: FormGroup;
   closeResult: string;
 
@@ -29,8 +29,8 @@ export class OrderCreateComponent implements OnInit {
     private modalService: NgbModal,
     public model: ModelService,
     private datePipe: DatePipe,
+    private dateService: VirtualDateService
   ) {
-    this.minDate = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
   }
 
   ngOnInit() {
@@ -38,9 +38,9 @@ export class OrderCreateComponent implements OnInit {
     this.form = this.fb.group({
       orderId: [this.model.currentOrder.id, []],
       customerId: [this.model.customers.first().id, Validators.required],
-      date: [this.minDate, [
+      date: [ this.dateService.getValue(), [
         Validators.required,
-        this.validateDate
+        // this.validateDate
       ]],
       orderItem: this.fb.group({
         sellerId: [this.model.sellers.first().id, Validators.required],
@@ -58,30 +58,36 @@ export class OrderCreateComponent implements OnInit {
           Validators.min(0),
         ]],
       })
-    }, {validator: this.checkDate()});
+    }, {
+      // validator: this.checkDate()
+    });
   }
 
-  checkDate() {
-    return (group: FormGroup): {[key: string]: any} => {
-      const d = group.controls.date;
-      const min = new Date(this.minDate);
-      const test = new Date(d.value);
-      return (min > test) ? {
-        checkDate: `Date should be greater than ${this.datePipe.transform(this.minDate, 'yyyy-MM-dd HH:mm')}`
-      } : {};
-    };
-  }
-  validateDate = (c: FormControl) => {
-    const min = new Date(this.minDate);
-    const test = new Date(c.value);
-    return (min > test) ? {
-      checkDate: {
-        valid: false
-      }
-    } : null;
-  }
+  // checkDate() {
+  //   return (group: FormGroup): {[key: string]: any} => {
+  //     const d = group.controls.date;
+  //     const min = new Date(this.minDate);
+  //     const test = new Date(d.value);
+  //     return (min > test) ? {
+  //       checkDate: `Date should be greater than ${this.datePipe.transform(this.minDate, 'yyyy-MM-dd HH:mm')}`
+  //     } : {};
+  //   };
+  // }
+  // validateDate = (c: FormControl) => {
+  //   const min = new Date(this.minDate);
+  //   const test = new Date(c.value);
+  //   return (min > test) ? {
+  //     checkDate: {
+  //       valid: false
+  //     }
+  //   } : null;
+  // }
 
   open(content) {
+    this.form.patchValue({
+      date: this.dateService.getValue()
+    });
+
     this.modalService.open(content, {
       centered: true,
       size: 'xl',

@@ -26,24 +26,14 @@
             <div class="form-group col-sm">
               <label for="date">Date</label>
               <input type="datetime-local" id="date" class="form-control"
-                     [min]="minDate" formControlName="date"
+                     formControlName="date"
                      [ngClass]="{'is-invalid': form.get('date').invalid}"
               >
+<!--              [min]="minDate"-->
               <div class="invalid-feedback">
                 <div *ngIf="form.hasError('required', 'date')">Date is required</div>
-                <div *ngIf="form.hasError('checkDate', 'date')">{{form.errors?.checkDate}}</div>
+<!--                <div *ngIf="form.hasError('checkDate', 'date')">{{form.errors?.checkDate}}</div>-->
               </div>
-
-<!--              <label for="date">Set action Date & Time</label>-->
-<!--              <div class="input-group">-->
-<!--                <input id="date" class="form-control" type="datetime-local"-->
-<!--                       [min]="minDate" formControlName="date"-->
-<!--                       [ngClass]="{'is-invalid': form.get('date').invalid}"-->
-<!--                       placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" required>  &lt;!&ndash;[(ngModel)]="dateP"&ndash;&gt;-->
-<!--                <div class="input-group-append">-->
-<!--                  <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>-->
-<!--                </div>-->
-<!--              </div>-->
 
             </div>
 
