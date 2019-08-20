@@ -167,6 +167,7 @@ export class Order {
       }
 
       return acc;
-    }, new Map<string, InvoiceItems>()).values());
+    }, new Map<string, InvoiceItems>()).values())
+      .filter((value => value.items.length > 0));
   }
 }
