@@ -32,6 +32,7 @@ import { SettlementsTableComponent } from './ui/table/settlements-table/settleme
 import { AccountBalancesTableComponent } from './ui/table/account-balances-table/account-balances-table.component';
 import { CreateSettlementComponent } from './ui/dialog/create-settlement/create-settlement.component';
 import { TimeAndDateComponent } from './ui/menu/time-and-date/time-and-date.component';
+import { OrderModule } from 'ngx-order-pipe';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { TimeAndDateComponent } from './ui/menu/time-and-date/time-and-date.comp
     FormsModule,
     ReactiveFormsModule,
     NgbModule,
+    OrderModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -10,7 +10,12 @@
       <thead>
         <tr>
           <th rowspan="2" class="align-middle text-center">Order No#</th>
-          <th rowspan="2" class="align-middle text-center">Date</th>
+          <th rowspan="2" class="align-middle text-center"
+              [class.active]="order === 'createdAt'"
+              (click)="setOrder('createdAt')"
+          >
+            Date <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+          </th>
           <th rowspan="2" class="align-middle text-center">Customer</th>
           <th colspan="2" class="align-middle text-center">Invoices</th>
           <th colspan="8" class="align-middle text-center">Items</th>
@@ -29,7 +34,7 @@
         </tr>
       </thead>
         <tbody>
-          <tr *ngFor="let order of model.orders.all()">
+          <tr *ngFor="let order of model.orders.all() | orderBy: order:reverse">
             <td class="text-center align-middle">
               <span>{{order.id}}</span>
               <div class="btn-group-vertical btn-group-sm" role="group">

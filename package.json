@@ -24,6 +24,7 @@
     "@angular/router": "~8.2.0",
     "@ng-bootstrap/ng-bootstrap": "^5.1.0",
     "bootstrap": "^4.3.1",
+    "ngx-order-pipe": "^2.0.3",
     "purecss": "^1.0.1",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
