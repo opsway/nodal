@@ -74,8 +74,8 @@ export class Invoice implements Entity {
       .count() > 0;
   }
 
-  save(): Invoice {
-    this.createdAt = new Date();
+  save(date: Date = new Date()): Invoice {
+    this.createdAt = date;
     return this;
   }
 

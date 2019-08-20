@@ -6,16 +6,15 @@ import { OrderItem } from './order/order-item';
 
 export class Refund implements Entity {
   id: string;
-  createdAt: Date;
   status: string;
   orderItem: Collection<OrderItem> = new Collection<OrderItem>();
 
   constructor(
     public payment: Payment,
+    public createdAt: Date,
     public total: number = 0,
   ) {
     this.id = Util.uuid('R');
-    this.createdAt = new Date();
   }
 
   get gateway(): string {

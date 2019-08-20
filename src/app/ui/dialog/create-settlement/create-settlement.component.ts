@@ -17,9 +17,6 @@ import { VirtualDateService } from '../../../util/virtual-date.service';
 })
 export class CreateSettlementComponent implements OnInit {
   paymentGateway: string;
-  settlementDate: string;
-  dateMin: string;
-  dateMax: string;
 
   constructor(
     private datePipe: DatePipe,
@@ -30,13 +27,11 @@ export class CreateSettlementComponent implements OnInit {
 
   ngOnInit() {
     this.paymentGateway = this.model.paymentMethods[0];
-    this.settlementDate = this.dateService.getValue();
-    // TODO this.dateMin = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
-    // TODO this.dateMax = this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm');
+
   }
 
   toSettlement(): boolean {
-    this.model.toSettlement(this.paymentGateway, new Date(this.settlementDate));
+    this.model.toSettlement(this.paymentGateway, this.dateService.getDate());
     return false;
   }
 }

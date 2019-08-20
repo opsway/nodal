@@ -17,6 +17,7 @@ import { Customer } from './entity/member/customer';
 import { Transfer } from './entity/transfer';
 import { SellerSettlement } from './entity/seller-settlement';
 import { MarketSettlement } from './entity/market-settlement';
+import { VirtualDateService } from '../util/virtual-date.service';
 
 declare interface Action {
   name: string;
@@ -47,7 +48,9 @@ export class ModelService {
   private accountBalance: Map<string, number> = new Map();
   readonly paymentGateways: string[];
 
-  constructor() {
+  constructor(
+    private dateService: VirtualDateService,
+  ) {
     this.paymentGateways = Model.paymentGateways;
     this.load();
     if (meta.releaseNumber === 'local') {
@@ -88,7 +91,7 @@ export class ModelService {
     return this.accountBalance.get(holder) || 0;
   }
 
-  createTransaction(holder: string, ref: string, amount: number, date: Date) {
+  createTransaction(holder: string, ref: string, amount: number, date: Date = this.dateService.getDate()) {
     if (Math.abs(amount) === 0) {
       return;
     }
@@ -119,10 +122,10 @@ export class ModelService {
       const settlement = this.marketSettlementCollection.add(new MarketSettlement(GWFee));
       invoices.walk(entity => settlement.capture(entity));
 
-      this.createTransaction(ModelService.NodalGWFee, settlement.id, -GWFee, new Date());
-      this.createTransaction(ModelService.NodalMFFee, settlement.id, -settlement.totalFeeMarket, new Date());
-      this.createTransaction(ModelService.NodalShipping, settlement.id, -settlement.amountShipping, new Date());
-      this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.amount, new Date());
+      this.createTransaction(ModelService.NodalGWFee, settlement.id, -GWFee);
+      this.createTransaction(ModelService.NodalMFFee, settlement.id, -settlement.totalFeeMarket);
+      this.createTransaction(ModelService.NodalShipping, settlement.id, -settlement.amountShipping);
+      this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.amount);
     }
   }
 
@@ -232,6 +235,7 @@ export class ModelService {
   }
 
   toSettlement(gateway: string, date: Date): void {
+    // TODO dateMin / dateMax;
     const payments = this.notCapturedPaymentsByGateway(gateway, date);
     if (payments.count() > 0) {
       const settlement = this.createSettlement(gateway, date);
@@ -371,7 +375,7 @@ export class ModelService {
   }
 
   toPay(order: Order, gateway: string): void {
-    const payment = this.createPayment(order, gateway, order.createdAt);
+    const payment = this.createPayment(order, gateway, this.dateService.getDate());
     this.transferPayment(payment);
     order.attachePayment(payment);
   }
@@ -384,7 +388,7 @@ export class ModelService {
   createRefund(order: Order): Refund {
     const payment = order.refundablePayment;
     // TODO add handle not available payment
-    const refund = new Refund(payment);
+    const refund = new Refund(payment, this.dateService.getDate());
     // TODO add calculate balances of seller, customer and nodal
     payment.attacheRefund(refund);
 
@@ -432,7 +436,7 @@ export class ModelService {
   }
 
   saveInvoice(invoice: Invoice): void {
-    invoice.save();
+    invoice.save(this.dateService.getDate());
     this.transferInvoice(invoice);
   }
 

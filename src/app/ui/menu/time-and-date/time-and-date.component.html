@@ -1,5 +1,6 @@
 <form class="form-inline">
   <div *ngIf="!now" (click)="now=setVirtualDate()" class="pr-3">Saved real date & time</div>
+  <!--todo +/- D H m-->
   <div class="form-group">
     <input id="date" class="form-control form-control-sm" type="datetime-local"
            placeholder="yyyy-mm-dd HH:mm:ss" name="date" required
