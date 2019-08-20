@@ -139,11 +139,15 @@ a.pure-button-primary {
   color: #6FBEF3;
 }
 
-.home-menu li a:hover,
-.home-menu li a:focus {
-  background: none;
-  border: none;
-  color: #AECFE5;
+.home-menu li {
+  a, span{
+    &:hover,
+    &:focus {
+      background: none;
+      border: none;
+      color: #AECFE5;
+    }
+  }
 }
 
 
