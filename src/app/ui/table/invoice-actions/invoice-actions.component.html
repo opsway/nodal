@@ -1,0 +1,21 @@
+<div class="btn-group" role="group"
+     *ngIf="model.invoicesByOrder(order).count() > 0">
+  <button type="button"
+          *ngIf="invoice?.canShipped"
+          (click)="invoice.ship()"
+          class="btn btn-sm btn-success"
+          title="ship invoice"
+  >SH</button>
+  <button type="button"
+          *ngIf="invoice?.canCanceled"
+          (click)="invoice.cancel()"
+          class="btn btn-sm btn-primary"
+          title="cancel invoice"
+  >CA</button>
+  <button type="button"
+          *ngIf="invoice?.isSaved"
+          (click)="model.saveInvoice(invoice)"
+          class="btn btn-sm btn-success"
+          title="add to invoice"
+  >save</button>
+</div>

@@ -33,6 +33,8 @@ import { AccountBalancesTableComponent } from './ui/table/account-balances-table
 import { CreateSettlementComponent } from './ui/dialog/create-settlement/create-settlement.component';
 import { TimeAndDateComponent } from './ui/menu/time-and-date/time-and-date.component';
 import { OrderModule } from 'ngx-order-pipe';
+import { ItemStatusActionsComponent } from './ui/table/item-status-actions/item-status-actions.component';
+import { InvoiceActionsComponent } from './ui/table/invoice-actions/invoice-actions.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,8 @@ import { OrderModule } from 'ngx-order-pipe';
     AccountBalancesTableComponent,
     CreateSettlementComponent,
     TimeAndDateComponent,
+    ItemStatusActionsComponent,
+    InvoiceActionsComponent,
   ],
   imports: [
     BrowserModule,

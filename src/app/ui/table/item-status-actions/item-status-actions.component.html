@@ -1,0 +1,27 @@
+<span>{{item.status}}</span>
+<div class="btn-group" role="group">
+  <button type="button"
+          *ngIf="item.canInvoiced"
+          (click)="model.toInvoiceOrderItem(item)"
+          class="btn btn-sm btn-success"
+          title="add to invoice"
+  >IN</button>
+  <button type="button"
+          *ngIf="item.canCanceled"
+          (click)="item.cancel()"
+          class="btn btn-sm btn-primary"
+          title="cancel item"
+  >CA</button>
+  <button type="button"
+          *ngIf="item.canReturned"
+          (click)="item.return()"
+          class="btn btn-sm btn-secondary"
+          title="create RMA"
+  >RM</button>
+  <button type="button"
+          *ngIf="item.canRefunded"
+          (click)="model.toRefundOrderItem(item)"
+          class="btn btn-sm btn-danger"
+          title="refund"
+  >RF</button>
+</div>
