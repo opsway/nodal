@@ -156,8 +156,8 @@ export class Order {
     return this;
   }
 
-  get groupByInvoiceItems(): Map<string, InvoiceItems> {
-    return this.itemCollection.reduce((entity, acc) => {
+  get groupByInvoiceItems(): InvoiceItems[] {
+    return Array.from(this.itemCollection.reduce((entity, acc) => {
       const id = entity.invoice ? entity.invoice.id : '';
 
       if (acc.has(id)) {
@@ -167,6 +167,6 @@ export class Order {
       }
 
       return acc;
-    }, new Map());
+    }, new Map()).values());
   }
 }
