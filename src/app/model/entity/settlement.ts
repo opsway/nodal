@@ -7,7 +7,7 @@ import { Collection } from '../collection';
 export class Settlement implements Entity {
   id: string;
   fee = 0;
-  total = 0;
+  amount = 0;
   references: string[] = [];
   totalPayment = 0;
   countPayment = 0;
@@ -22,13 +22,13 @@ export class Settlement implements Entity {
     this.id = Util.uuid('ST_GW_');
   }
 
-  get amount(): number {
-    return this.total + this.fee;
+  get total(): number {
+    return this.amount + this.fee;
   }
 
   capture(payment: Payment): Settlement {
     const feeGateway = Math.floor((Model.paymentGatewayFee / 100) * payment.totalSettlement);
-    this.total += payment.totalSettlement - feeGateway;
+    this.amount += payment.totalSettlement - feeGateway;
     this.fee += feeGateway;
     payment.capture(feeGateway, this.createdAt);
     this.paymentCollection.add(payment);
