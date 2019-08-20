@@ -2,9 +2,9 @@
   <a class="pure-menu-heading" routerLink="/">{{heading}} {{meta.releaseNumber}}</a>
   <ul class="pure-menu-list">
     <li class="pure-menu-item">
-      <a href="#" class="pure-menu-link">
+      <span class="pure-menu-link">
         <app-time-and-date></app-time-and-date>
-      </a>
+      </span>
     </li>
     <li class="pure-menu-item"
         [class.pure-menu-selected]="router.isActive(item.path, true)"
