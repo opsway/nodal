@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { Menu } from './ui/menu/menu';
 import {
   ActivatedRoute,
@@ -13,7 +13,7 @@ import { ModelService } from './model/model.service';
     'app.component.scss',
   ]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Nodal Acc';
   menu: Menu[] = [
     {
@@ -42,12 +42,12 @@ export class AppComponent {
     {
       title: 'Customers',
       path: '/customers',
-    },
+    }, */
     {
       title: 'Share',
       path: '/share',
     },
-*/
+
   ];
 
   constructor(
@@ -58,6 +58,11 @@ export class AppComponent {
 
   }
 
-  // this.route.routeConfig.component.name
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe(queryParams => {
+        const modelData  = queryParams.get('model');
+        this.model.import(modelData);
+    });
+  }
 
 }

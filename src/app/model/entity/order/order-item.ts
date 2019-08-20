@@ -6,8 +6,11 @@ import { Entity } from '../entity';
 import { Payment } from '../payment';
 import { Invoice } from '../invoice';
 import { Refund } from '../refund';
+import {Serialize, SerializeProperty, Serializable} from '@delete21/ts-serializer';
+import {Customer} from '../member/customer';
 
-export class OrderItem implements Entity {
+@Serialize({})
+export class OrderItem extends Serializable implements Entity {
   static STATUS_ORDERED = 'ordered';
   static STATUS_PAID = 'paid';
   static STATUS_INVOICED = 'invoiced';
@@ -15,12 +18,21 @@ export class OrderItem implements Entity {
   static STATUS_REFUNDED = 'refunded';
   static STATUS_CANCELED = 'canceled';
   static STATUS_SHIPPED = 'shipped';
-
+  @SerializeProperty({})
   id: string;
+  @SerializeProperty({
+    type: Item
+  })
   item: Item;
+  @SerializeProperty({})
   qty: number;
+  @SerializeProperty({})
   price: number;
+  @SerializeProperty({})
   priceShipping: number;
+  @SerializeProperty({
+    type: Seller
+  })
   seller: Seller;
   isRefunded: boolean;
   isReturned: boolean;
@@ -36,6 +48,7 @@ export class OrderItem implements Entity {
     seller: Seller,
     public orderId: string,
   ) {
+    super();
     this.id = Util.uuid('OI');
     this.item = item;
     this.seller = seller;

@@ -7,15 +7,23 @@ import { Refund } from '../refund';
 import { Item } from '../item';
 import { Seller } from '../member/seller';
 import { InvoiceItems } from '../../aggregate/invoice-items';
+import {Serialize, SerializeProperty, Serializable} from '@delete21/ts-serializer';
 
-export class Order {
-  id: string;
-  createdAt: Date;
+@Serialize({})
+export class Order extends Serializable {
+  @SerializeProperty({})
+  public id: string;
+  @SerializeProperty({})
+  public createdAt: Date;
+  @SerializeProperty({
+          type: Customer
+  })
   customer: Customer;
   private itemCollection: Collection<OrderItem>;
   private paymentCollection: Collection<Payment> = new Collection<Payment>();
 
   constructor(customer: Customer = null) {
+    super();
     this.id = Util.uuid('O');
     this.createdAt = new Date();
     this.customer = customer;

@@ -1,23 +1,21 @@
-import {
-  Injectable,
-} from '@angular/core';
-import { meta } from '../app.meta';
-import { Shared } from './shared';
-import { OrderItem } from './entity/order/order-item';
-import { Item } from './entity/item';
-import { Order } from './entity/order/order';
-import { Collection } from './collection';
-import { Invoice } from './entity/invoice';
-import { Refund } from './entity/refund';
-import { Model } from './model';
-import { Settlement } from './entity/settlement';
-import { Payment } from './entity/payment';
-import { Seller } from './entity/member/seller';
-import { Customer } from './entity/member/customer';
-import { Transfer } from './entity/transfer';
-import { SellerSettlement } from './entity/seller-settlement';
-import { MarketSettlement } from './entity/market-settlement';
-import { VirtualDateService } from '../util/virtual-date.service';
+import {Injectable,} from '@angular/core';
+import {Shared} from './shared';
+import {OrderItem} from './entity/order/order-item';
+import {Item} from './entity/item';
+import {Order} from './entity/order/order';
+import {Collection} from './collection';
+import {Invoice} from './entity/invoice';
+import {Refund} from './entity/refund';
+import {Model} from './model';
+import {Settlement} from './entity/settlement';
+import {Payment} from './entity/payment';
+import {Seller} from './entity/member/seller';
+import {Customer} from './entity/member/customer';
+import {Transfer} from './entity/transfer';
+import {SellerSettlement} from './entity/seller-settlement';
+import {MarketSettlement} from './entity/market-settlement';
+import {VirtualDateService} from '../util/virtual-date.service';
+import {trimTrailingNulls} from '@angular/compiler/src/render3/view/util';
 
 declare interface Action {
   name: string;
@@ -46,6 +44,7 @@ export class ModelService {
   private marketSettlementCollection: Collection<MarketSettlement> = new Collection<MarketSettlement>();
   private transferCollection: Collection<Transfer> = new Collection<Transfer>();
   private accountBalance: Map<string, number> = new Map();
+  private eventStream = [];
   readonly paymentGateways: string[];
 
   constructor(
@@ -53,9 +52,9 @@ export class ModelService {
   ) {
     this.paymentGateways = Model.paymentGateways;
     this.load();
-    if (meta.releaseNumber === 'local') {
-      this.flow();
-    }
+    // if (meta.releaseNumber === 'local') {
+    //  this.flow();
+    // }
   }
 
   load(): void {
@@ -283,7 +282,6 @@ export class ModelService {
 
   createOrder(customer: Customer = null): Order {
     const order = new Order(customer);
-
     return this.orderCollection.add(order);
   }
 
@@ -294,39 +292,42 @@ export class ModelService {
     } catch (e) {
       return false;
     }
+    for (const i in data) {
+      const action = data[i].name;
+      const date = data[i].date;
+      const params = data[i].params;
+      switch (action) {
+        case 'createOrder':
+          const customer = new Customer('ff');
+          customer.deserialize(params.customer);
+          this.dateService.getDate();
+          // todo date handling
+          const order = this.createOrder(customer);
 
-    // TODO import data.customers
-    // TODO import data.sellers
-    // TODO import orders
-    // TODO import order items
-    // TODO import payments
-    console.log(data); // TODO import model
+          params.items.slice(1).split('|').forEach(itemData => {
+            const orderItem = new OrderItem(100,
+                  new Item(),
+                  50,
+                  1,
+                  new Seller('bar'),
+                  'O1');
+            orderItem.deserialize(JSON.parse(itemData));
+            console.log(itemData);
+            order.addItem(orderItem.price / 100, orderItem.item, orderItem.priceShipping / 100, orderItem.qty, orderItem.seller);
+          });
+
+          order.save();
+          break;
+
+      }
+    }
 
     return true;
   }
 
   export(): string {
-    const data: Shared = {
-      customers: [],
-      sellers: [],
-    };
-
-    data.customers = this.customers.all();
-    data.sellers = this.sellers.all();
-    // TODO export orders
-    // TODO export order items
-    // TODO export payments
-
-    const content = JSON.stringify(data);
-
-    return `${window.location.origin}/${btoa(content)}`;
-  }
-
-  share(): void {
-    // this.flow(); // FIXME remove it
-    const url = this.export();
-    console.log(url);
-    window.location.href = url;
+    const content = JSON.stringify(this.eventStream);
+    return `${window.location.origin}/#/?model=${btoa(content)}`;
   }
 
   orderActions(order: Order): Action[] {
@@ -456,6 +457,14 @@ export class ModelService {
   saveOrder(): boolean {
     const order = this.currentOrder;
     if (order.save().isSaved) {
+      this.eventStream.push({
+        name: 'createOrder', date: this.dateService.getValue(), params: {
+          customer: order.customer.serialize(), items: order.items.reduce((current, item) => {
+            return current + '|' + JSON.stringify(item.serialize());
+          }, '')
+        }
+      });
+      console.log(this.eventStream);
       this.createOrder(order.customer);
       return true;
     }

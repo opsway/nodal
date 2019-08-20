@@ -27,6 +27,7 @@
     "ngx-order-pipe": "^2.0.3",
     "purecss": "^1.0.1",
     "rxjs": "~6.4.0",
+    "@delete21/ts-serializer": "^2.2.1",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },

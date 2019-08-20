@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: 'share.component.html',
 })
 export class ShareComponent implements OnInit {
+  private link: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -18,14 +19,6 @@ export class ShareComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
-      const data = params.get('data');
-      console.log('ShareComponent:', data);
-      if (data === 'share') {
-        this.model.share();
-      } else {
-        this.model.import(data);
-      }
-    });
+    this.link = this.model.export();
   }
 }
