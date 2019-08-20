@@ -417,7 +417,7 @@ export class ModelService {
 
     if (invoices.count() > 0) {
 
-      const settlement = this.sellerSettlementCollection.add(new SellerSettlement(name));
+      const settlement = this.sellerSettlementCollection.add(new SellerSettlement(name, this.dateService.getDate()));
       invoices.walk(entity => settlement.capture(entity));
       if (settlement.amount !== this.balanceByHolder(name)) {
         console.log('makeSettlementToSeller:', settlement.amount, this.balanceByHolder(name));
