@@ -4,7 +4,7 @@ import { Invoice } from '../../../model/entity/invoice';
 import { Order } from '../../../model/entity/order/order';
 
 @Component({
-  selector: 'invoice-actions',
+  selector: 'app-invoice-actions',
   templateUrl: './invoice-actions.component.html',
 })
 export class InvoiceActionsComponent implements OnInit {

@@ -74,7 +74,7 @@
               <td [attr.rowspan]="group.items.length"
                   class="text-center align-middle">
                 <span>{{group.invoice?.createdAt | dateFormat}}</span>
-                <invoice-actions [order]="order" [invoice]="group.invoice"></invoice-actions>
+                <app-invoice-actions [order]="order" [invoice]="group.invoice"></app-invoice-actions>
               </td>
 
               <!--First Order Item row-->
@@ -87,7 +87,7 @@
                 <td>{{item.total | convert}}</td>
                 <td>{{item.feeMarket | convert}}</td>
                 <td>
-                  <item-status-actions [item]="item"></item-status-actions>
+                  <app-item-status-actions [item]="item"></app-item-status-actions>
                 </td>
               </ng-container>
               <!--End First Order Item row-->
@@ -108,7 +108,7 @@
             <td>{{item.total | convert}}</td>
             <td>{{item.feeMarket | convert}}</td>
             <td>
-              <item-status-actions [item]="item"></item-status-actions>
+              <app-item-status-actions [item]="item"></app-item-status-actions>
             </td>
           </tr>
           <!--End First Invoice - Next Order Item row-->
@@ -123,7 +123,7 @@
               <td [attr.rowspan]="group.items.length"
                   class="text-center align-middle">
                 {{group.invoice?.createdAt | dateFormat}}
-                <invoice-actions [order]="order" [invoice]="group.invoice"></invoice-actions>
+                <app-invoice-actions [order]="order" [invoice]="group.invoice"></app-invoice-actions>
               </td>
 
               <!--Next Invoice - First Order Item row-->
@@ -136,7 +136,7 @@
                 <td>{{item.total | convert}}</td>
                 <td>{{item.feeMarket | convert}}</td>
                 <td>
-                  <item-status-actions [item]="item"></item-status-actions>
+                  <app-item-status-actions [item]="item"></app-item-status-actions>
                 </td>
               </ng-container>
               <!--End Next Invoice - First Order Item row-->
@@ -154,7 +154,7 @@
               <td>{{item.total | convert}}</td>
               <td>{{item.feeMarket | convert}}</td>
               <td>
-                <item-status-actions [item]="item"></item-status-actions>
+                <app-item-status-actions [item]="item"></app-item-status-actions>
               </td>
             </tr>
             <!--End Next Invoice - Next Order Item row-->
