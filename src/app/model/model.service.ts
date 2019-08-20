@@ -125,7 +125,7 @@ export class ModelService {
       this.createTransaction(ModelService.NodalGWFee, settlement.id, -GWFee);
       this.createTransaction(ModelService.NodalMFFee, settlement.id, -settlement.totalFeeMarket);
       this.createTransaction(ModelService.NodalShipping, settlement.id, -settlement.amountShipping);
-      this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.amount);
+      this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.total);
     }
   }
 
@@ -175,7 +175,7 @@ export class ModelService {
 
   transferSettlement(settlement: Settlement): void {
     this.createTransaction(settlement.gateway, settlement.id, -settlement.total, settlement.createdAt);
-    this.createTransaction(ModelService.NodalBank, settlement.id, settlement.amount, settlement.createdAt);
+    this.createTransaction(ModelService.NodalBank, settlement.id, settlement.total, settlement.createdAt);
     this.createTransaction(ModelService.NodalGWFee, settlement.id, settlement.fee, settlement.createdAt);
   }
 
