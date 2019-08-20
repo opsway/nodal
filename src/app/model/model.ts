@@ -9,5 +9,5 @@ export class Model {
   static readonly marketFeeGST = 18;
   static locale = 'en-US';
   static currency = 'INR';
-  static dateFormat = 'dd-MM-yyyy hh:mm';
+  static dateFormat = 'dd-MM-yyyy HH:mm';
 }
