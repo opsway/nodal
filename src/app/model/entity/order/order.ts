@@ -167,6 +167,6 @@ export class Order {
       }
 
       return acc;
-    }, new Map()).values());
+    }, new Map<string, InvoiceItems>()).values());
   }
 }
