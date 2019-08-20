@@ -8,7 +8,7 @@ import { Invoice } from '../invoice';
 import { Refund } from '../refund';
 import { Customer } from '../member/customer';
 
-const orderFabrica = (numItems, isCustomer) => {
+const orderFabric = (numItems, isCustomer = true) => {
   const order = isCustomer ? new Order(new Customer('Aleksei')) : new Order();
   for (let i = 0; i < numItems; i++) {
     order.addItem(
@@ -46,7 +46,7 @@ describe('OrderItem', () => {
   });
 
   it('should create an instance', () => {
-    const order = orderFabrica(1, true);
+    const order = orderFabric(1);
     expect(order).toBeTruthy();
     expect(order.amount).toEqual(10000);
     expect(order.amountShipping).toEqual(5000);
@@ -60,7 +60,7 @@ describe('OrderItem', () => {
   });
 
   it('should create an instance', () => {
-    const order = orderFabrica(0, true);
+    const order = orderFabric(0);
     expect(order).toBeTruthy();
     expect(order.amount).toEqual(0);
     expect(order.amountShipping).toEqual(0);
@@ -74,7 +74,7 @@ describe('OrderItem', () => {
   });
 
   it('test for simple ordering', () => {
-    const order = orderFabrica(4, false);
+    const order = orderFabric(4, false);
     const orderItem1 = order.items[0];
     const orderItem2 = order.items[1];
     const orderItem3 = order.items[2];
