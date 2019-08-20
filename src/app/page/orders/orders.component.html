@@ -7,7 +7,7 @@
     </div>
     <div class="row justify-content-md-center mb-3">
       <table class="pure-table pure-table-horizontal">
-      <thead>
+        <thead>
         <tr>
           <th rowspan="2" class="align-middle text-center">Order No#</th>
           <th rowspan="2" class="align-middle text-center"
@@ -32,10 +32,216 @@
           <th class="align-middle text-center">total fee</th>
           <th class="align-middle text-center">status</th>
         </tr>
-      </thead>
+        </thead>
         <tbody>
-          <tr *ngFor="let order of model.orders.all() | orderBy: order:reverse">
-            <td class="text-center align-middle">
+        <tr *ngFor="let order of model.orders.all() | orderBy: order:reverse">
+          <td class="text-center align-middle">
+            <span>{{order.id}}</span>
+            <div class="btn-group-vertical btn-group-sm" role="group">
+              <button class="btn btn-sm btn-{{action.color}}"
+                      [title]="action.title"
+                      *ngFor="let action of model.orderActions(order)"
+                      (click)="action.handler()"
+                      type="button"
+
+              >{{action.name}}</button>
+            </div>
+          </td>
+          <td>{{order.createdAt | dateFormat}}</td>
+          <td>{{order.customerName}}</td>
+          <td colspan="2" style="padding: 0" class="align-middle text-center">
+            <table class="pure-table pure-table-horizontal text-center"
+                   *ngIf="model.invoicesByOrder(order).count() > 0"
+            >
+              <tbody>
+              <tr *ngFor="let invoice of model.invoicesByOrder(order).all(); let i = index"
+                  [class.pure-table-odd]="i % 2 === 0"
+              >
+                <td>
+                  <span>{{invoice.id}}</span>
+                  <div class="btn-group" role="group">
+                    <button type="button"
+                            *ngIf="invoice.canShipped"
+                            (click)="invoice.ship()"
+                            class="btn btn-sm btn-success"
+                            title="ship invoice"
+                    >SH
+                    </button>
+                    <button type="button"
+                            *ngIf="invoice.canCanceled"
+                            (click)="invoice.cancel()"
+                            class="btn btn-sm btn-primary"
+                            title="cancel invoice"
+                    >CA
+                    </button>
+                  </div>
+                </td>
+                <td>
+                  <span>{{invoice.createdAt | dateFormat}}</span>
+                  <div class="btn-group" role="group">
+                    <button type="button"
+                            *ngIf="invoice.isSaved"
+                            (click)="model.saveInvoice(invoice)"
+                            class="btn btn-sm btn-success"
+                            title="add to invoice"
+                    >save
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </td>
+          <td colspan="7" style="padding: 0" class="align-middle text-center">
+            <app-order-items-table
+              [isNested]="true"
+              [data]="order"
+            ></app-order-items-table>
+          </td>
+          <td style="padding: 0" class="align-middle text-center">
+            <table class="pure-table pure-table-horizontal text-center">
+              <tbody>
+              <tr *ngFor="let item of order.items; let i = index"
+                  [class.pure-table-odd]="i % 2 === 0"
+              >
+                <td>
+                  <span>{{item.status}}</span>
+                  <div class="btn-group" role="group">
+                    <button type="button"
+                            *ngIf="item.canInvoiced"
+                            (click)="model.toInvoiceOrderItem(item)"
+                            class="btn btn-sm btn-success"
+                            title="add to invoice"
+                    >IN
+                    </button>
+                    <button type="button"
+                            *ngIf="item.canCanceled"
+                            (click)="item.cancel()"
+                            class="btn btn-sm btn-primary"
+                            title="cancel item"
+                    >CA
+                    </button>
+                    <button type="button"
+                            *ngIf="item.canReturned"
+                            (click)="item.return()"
+                            class="btn btn-sm btn-secondary"
+                            title="create RMA"
+                    >RM
+                    </button>
+                    <button type="button"
+                            *ngIf="item.canRefunded"
+                            (click)="model.toRefundOrderItem(item)"
+                            class="btn btn-sm btn-danger"
+                            title="refund"
+                    >RF
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr *ngIf="model.orders.count() === 0">
+          <td colspan="14"
+              class="align-middle text-center"
+          >empty
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <table class="table table-bordered">
+        <thead class="thead-light">
+        <tr>
+          <th scope="col" rowspan="2">Order No#</th>
+<!--          <th scope="col" rowspan="2">Date</th>-->
+<!--          <th scope="col" rowspan="2">Customer</th>-->
+
+          <th scope="colgroup" colspan="1">Invoices</th>
+          <th scope="colgroup" colspan="1">Items</th>
+        </tr>
+        <tr>
+          <th scope="col">No#</th>
+<!--          <th scope="col">Date</th>-->
+
+          <th scope="col">Seller</th>
+<!--          <th scope="col">SKU</th>-->
+<!--          <th scope="col">price</th>-->
+<!--          <th scope="col">qty</th>-->
+<!--          <th scope="col">total shipping</th>-->
+<!--          <th scope="col">total price</th>-->
+<!--          <th scope="col">total fee</th>-->
+<!--          <th scope="col">status</th>-->
+
+        </tr>
+        </thead>
+        <ng-container *ngFor="let order of model.orders.all()">
+          <tr>
+            <td [rowSpan]="order.items.length">{{order.id}}</td>
+
+            <ng-container *ngFor="let group of order.groupByInvoiceItems.slice(0,1)">
+              <td [attr.rowspan]="group.items.length">{{group.invoice?.id}}</td>
+
+              <ng-container *ngFor="let item of group.items.slice(0,1)">
+                <td>{{item?.id}}</td>
+              </ng-container>
+
+            </ng-container>
+          </tr>
+
+          <tr *ngFor="let item of order.groupByInvoiceItems.slice(0,1).shift().items.slice(1)">
+              <td>{{item?.id}}</td>
+          </tr>
+
+          <ng-container *ngFor="let group of order.groupByInvoiceItems.slice(1)">
+            <tr>
+              <td>{{group.invoice?.id}}</td>
+              <ng-container *ngFor="let item of group.items.slice(0,1)">
+                <td>{{item?.id}}</td>
+              </ng-container>
+            </tr>
+
+            <tr *ngFor="let item of group.items.slice(1)">
+              <td>{{item?.id}}</td>
+            </tr>
+          </ng-container>
+
+        </ng-container>
+      </table>
+
+      <!--<table class="table table-bordered table-striped table-hover">
+        <thead class="thead-light">
+        <tr>
+          <th scope="col" rowspan="2">Order No#</th>
+          <th scope="col" rowspan="2">Date</th>
+          <th scope="col" rowspan="2">Customer</th>
+
+          <th scope="colgroup" colspan="2">Invoices</th>
+          <th scope="colgroup" colspan="8">Items</th>
+        </tr>
+        <tr>
+          <th scope="col">No#</th>
+          <th scope="col">Date</th>
+
+          <th scope="col">Seller</th>
+          <th scope="col">SKU</th>
+          <th scope="col">price</th>
+          <th scope="col">qty</th>
+          <th scope="col">total shipping</th>
+          <th scope="col">total price</th>
+          <th scope="col">total fee</th>
+          <th scope="col">status</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <ng-container *ngFor="let order of model.orders.all() | orderBy: order:reverse">
+
+          &lt;!&ndash; Start Order row &ndash;&gt;
+          <tr>
+            <th scope="rowgroup" [attr.rowspan]="order.items.length"
+                class="text-center align-middle">
               <span>{{order.id}}</span>
               <div class="btn-group-vertical btn-group-sm" role="group">
                 <button class="btn btn-sm btn-{{action.color}}"
@@ -46,102 +252,98 @@
 
                 >{{action.name}}</button>
               </div>
-            </td>
-            <td>{{order.createdAt | dateFormat}}</td>
-            <td>{{order.customerName}}</td>
-            <td colspan="2" style="padding: 0" class="align-middle text-center">
-              <table class="pure-table pure-table-horizontal text-center"
-                     *ngIf="model.invoicesByOrder(order).count() > 0"
-              >
-                <tbody>
-                  <tr *ngFor="let invoice of model.invoicesByOrder(order).all(); let i = index"
-                      [class.pure-table-odd]="i % 2 === 0"
-                  >
-                    <td>
-                      <span>{{invoice.id}}</span>
-                      <div class="btn-group" role="group">
-                        <button type="button"
-                                *ngIf="invoice.canShipped"
-                                (click)="invoice.ship()"
-                                class="btn btn-sm btn-success"
-                                title="ship invoice"
-                        >SH</button>
-                        <button type="button"
-                                *ngIf="invoice.canCanceled"
-                                (click)="invoice.cancel()"
-                                class="btn btn-sm btn-primary"
-                                title="cancel invoice"
-                        >CA</button>
-                      </div>
-                    </td>
-                    <td>
-                      <span>{{invoice.createdAt | dateFormat}}</span>
-                      <div class="btn-group" role="group">
-                        <button type="button"
-                                *ngIf="invoice.isSaved"
-                                (click)="model.saveInvoice(invoice)"
-                                class="btn btn-sm btn-success"
-                                title="add to invoice"
-                        >save</button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-            <td colspan="7" style="padding: 0" class="align-middle text-center">
-              <app-order-items-table
-                [isNested]="true"
-                [data]="order"
-              ></app-order-items-table>
-            </td>
-            <td style="padding: 0" class="align-middle text-center">
-              <table class="pure-table pure-table-horizontal text-center">
-                <tbody>
-                  <tr *ngFor="let item of order.items; let i = index"
-                      [class.pure-table-odd]="i % 2 === 0"
-                  >
-                    <td>
-                      <span>{{item.status}}</span>
-                      <div class="btn-group" role="group">
-                        <button type="button"
-                                *ngIf="item.canInvoiced"
-                                (click)="model.toInvoiceOrderItem(item)"
-                                class="btn btn-sm btn-success"
-                                title="add to invoice"
-                        >IN</button>
-                        <button type="button"
-                                *ngIf="item.canCanceled"
-                                (click)="item.cancel()"
-                                class="btn btn-sm btn-primary"
-                                title="cancel item"
-                        >CA</button>
-                        <button type="button"
-                                *ngIf="item.canReturned"
-                                (click)="item.return()"
-                                class="btn btn-sm btn-secondary"
-                                title="create RMA"
-                        >RM</button>
-                        <button type="button"
-                                *ngIf="item.canRefunded"
-                                (click)="model.toRefundOrderItem(item)"
-                                class="btn btn-sm btn-danger"
-                                title="refund"
-                        >RF</button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
+            </th>
+
+            <td [attr.rowspan]="order.items.length">{{order.createdAt | dateFormat}}</td>
+            <td [attr.rowspan]="order.items.length">{{order.customerName}}</td>
+
+            &lt;!&ndash;First Invoice row&ndash;&gt;
+            <ng-container *ngFor="let group of order.groupByInvoiceItems.slice(0,1)">
+              <th scope="row"
+                  [rowSpan]="group.items.length"
+              >{{group.invoice?.id}}</th>
+              <td [rowSpan]="group.items.length">{{group.invoice?.createdAt | dateFormat}}</td>
+
+              &lt;!&ndash;First Order Item row&ndash;&gt;
+              <ng-container *ngFor="let item of group.items.slice(0,1)">
+                <td>{{item.sellerName}}</td>
+                <td>{{item.sku}}</td>
+                <td>{{item.price | convert}}</td>
+                <td>{{item.qty}}</td>
+                <td>{{item.amountShipping | convert}}</td>
+                <td>{{item.total | convert}}</td>
+                <td>{{item.feeMarket | convert}}</td>
+                <td>TA</td>
+              </ng-container>
+              &lt;!&ndash;End First Order Item row&ndash;&gt;
+
+            </ng-container>
+            &lt;!&ndash;End Order Item row&ndash;&gt;
+
           </tr>
-          <tr *ngIf="model.orders.count() === 0">
-            <td colspan="14"
-                class="align-middle text-center"
-            >empty</td>
+
+          &lt;!&ndash;First Invoice - Next Order Item row&ndash;&gt;
+          <tr *ngFor="let item of order.groupByInvoiceItems.slice(0,1).items; let itemIndex = index">
+
+            <td colspan="8">{{itemIndex}}</td>
+&lt;!&ndash;          <tr *ngFor="let item of order.groupByInvoiceItems.slice(0,1).slice(1)">&ndash;&gt;
+&lt;!&ndash;            <ng-container *ngIf="itemIndex !== 0">&ndash;&gt;
+&lt;!&ndash;              <td>{{item.sellerName}}</td>&ndash;&gt;
+&lt;!&ndash;              <td>{{item.sku}}</td>&ndash;&gt;
+&lt;!&ndash;              <td>{{item.price | convert}}</td>&ndash;&gt;
+&lt;!&ndash;              <td>{{item.qty}}</td>&ndash;&gt;
+&lt;!&ndash;              <td>{{item.amountShipping | convert}}</td>&ndash;&gt;
+&lt;!&ndash;              <td>{{item.total | convert}}</td>&ndash;&gt;
+&lt;!&ndash;              <td>{{item.feeMarket | convert}}</td>&ndash;&gt;
+&lt;!&ndash;              <td>TA</td>&ndash;&gt;
+&lt;!&ndash;            </ng-container>&ndash;&gt;
           </tr>
+          &lt;!&ndash;End First Invoice - Next Order Item row&ndash;&gt;
+
+          &lt;!&ndash;Next Invoice row&ndash;&gt;
+          <ng-container *ngFor="let group of order.groupByInvoiceItems.slice(1)">
+            <tr>
+              <th scope="row"
+                  [rowSpan]="group.items.length"
+              >{{group.invoice?.id}}</th>
+              <td [rowSpan]="group.items.length">{{group.invoice?.createdAt | dateFormat}}</td>
+
+              &lt;!&ndash;Next Invoice - First Order Item row&ndash;&gt;
+              <ng-container *ngFor="let item of group.items.slice(0,1)">
+                <td>{{item.sellerName}}</td>
+                <td>{{item.sku}}</td>
+                <td>{{item.price | convert}}</td>
+                <td>{{item.qty}}</td>
+                <td>{{item.amountShipping | convert}}</td>
+                <td>{{item.total | convert}}</td>
+                <td>{{item.feeMarket | convert}}</td>
+                <td>TA</td>
+              </ng-container>
+
+            </tr>
+
+            &lt;!&ndash;Next Invoice - Next Order Item row&ndash;&gt;
+            <tr *ngFor="let item of group.items.slice(1)">
+              <td>{{item.sellerName}}</td>
+              <td>{{item.sku}}</td>
+              <td>{{item.price | convert}}</td>
+              <td>{{item.qty}}</td>
+              <td>{{item.amountShipping | convert}}</td>
+              <td>{{item.total | convert}}</td>
+              <td>{{item.feeMarket | convert}}</td>
+              <td>TA</td>
+            </tr>
+            &lt;!&ndash;End Next Invoice - Next Order Item row&ndash;&gt;
+
+          </ng-container>
+
+        &lt;!&ndash;End Order Item row&ndash;&gt;
+        </ng-container>
+
         </tbody>
-      </table>
+      </table>-->
+
+
     </div>
   </div>
 </div>
