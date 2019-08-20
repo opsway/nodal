@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: 'share.component.html',
 })
 export class ShareComponent implements OnInit {
-  private link: string;
+  public link: string;
 
   constructor(
     private route: ActivatedRoute,

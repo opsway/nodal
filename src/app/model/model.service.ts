@@ -1,4 +1,4 @@
-import {Injectable,} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Shared} from './shared';
 import {OrderItem} from './entity/order/order-item';
 import {Item} from './entity/item';
@@ -293,6 +293,9 @@ export class ModelService {
       return false;
     }
     for (const i in data) {
+      if (!data.hasOwnProperty(i)) {
+        continue;
+      }
       const action = data[i].name;
       const date = data[i].date;
       const params = data[i].params;
