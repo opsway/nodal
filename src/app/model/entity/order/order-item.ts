@@ -26,7 +26,7 @@ export class OrderItem implements Entity {
   isReturned: boolean;
   isCanceled: boolean;
   status: string;
-  private invoice: Invoice = null;
+  readonly invoice: Invoice = null;
   private payment: Payment;
 
   constructor(
