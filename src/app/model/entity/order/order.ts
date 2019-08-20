@@ -6,6 +6,7 @@ import { Collection } from '../../collection';
 import { Refund } from '../refund';
 import { Item } from '../item';
 import { Seller } from '../member/seller';
+import { InvoiceItems } from '../../aggregate/invoice-items';
 
 export class Order {
   id: string;
@@ -153,5 +154,19 @@ export class Order {
     this.canRefundedItems
       .walk(entity => entity.refund(refund));
     return this;
+  }
+
+  get groupByInvoiceItems(): Map<string, InvoiceItems> {
+    return this.itemCollection.reduce((entity, acc) => {
+      const id = entity.invoice ? entity.invoice.id : '';
+
+      if (acc.has(id)) {
+        acc.get(id).items.push(entity);
+      } else {
+        acc.set(id, new InvoiceItems(entity.invoice));
+      }
+
+      return acc;
+    }, new Map());
   }
 }
