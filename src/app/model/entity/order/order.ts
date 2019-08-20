@@ -7,7 +7,11 @@ import { Refund } from '../refund';
 import { Item } from '../item';
 import { Seller } from '../member/seller';
 import { InvoiceItems } from '../../aggregate/invoice-items';
-import {Serialize, SerializeProperty, Serializable} from '@delete21/ts-serializer';
+import {
+  Serialize,
+  SerializeProperty,
+  Serializable,
+} from '@delete21/ts-serializer';
 
 @Serialize({})
 export class Order extends Serializable {
@@ -16,7 +20,7 @@ export class Order extends Serializable {
   @SerializeProperty({})
   public createdAt: Date;
   @SerializeProperty({
-          type: Customer
+    type: Customer
   })
   customer: Customer;
   private itemCollection: Collection<OrderItem>;

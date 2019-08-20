@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModelService } from '../../../model/model.service';
-import { OrderItem } from '../../../model/entity/order/order-item';
 
 @Component({
   selector: 'app-item-status-actions',
@@ -8,9 +7,11 @@ import { OrderItem } from '../../../model/entity/order/order-item';
 })
 export class ItemStatusActionsComponent implements OnInit {
   @Input() item;
+
   constructor(
     public model: ModelService,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
   }

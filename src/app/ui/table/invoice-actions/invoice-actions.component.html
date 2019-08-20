@@ -1,5 +1,6 @@
 <div class="btn-group" role="group"
-     *ngIf="model.invoicesByOrder(order).count() > 0">
+     *ngIf="model.invoicesByOrder(order).count() > 0"
+>
   <button type="button"
           *ngIf="invoice?.canShipped"
           (click)="invoice.ship()"

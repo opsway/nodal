@@ -10,9 +10,11 @@ import { Order } from '../../../model/entity/order/order';
 export class InvoiceActionsComponent implements OnInit {
   @Input() invoice: Invoice;
   @Input() order: Order;
+
   constructor(
     public model: ModelService,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
   }

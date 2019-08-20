@@ -38,7 +38,7 @@ export class OrderCreateComponent implements OnInit {
     this.form = this.fb.group({
       orderId: [this.model.currentOrder.id, []],
       customerId: [this.model.customers.first().id, Validators.required],
-      date: [ this.dateService.getValue(), [
+      date: [this.dateService.getValue(), [
         Validators.required,
         // this.validateDate
       ]],

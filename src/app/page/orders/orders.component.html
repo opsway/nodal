@@ -24,9 +24,9 @@
         <tr>
           <th scope="col">No#</th>
           <th scope="col"
-            [class.active]="order === 'createdAt'"
-            (click)="setOrder('invoice.createdAt')"
-            >
+              [class.active]="order === 'createdAt'"
+              (click)="setOrder('invoice.createdAt')"
+          >
             Date <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
           </th>
 
@@ -46,9 +46,11 @@
         <!-- Start Order row -->
         <ng-container *ngFor="let order of model.orders.all() | orderBy: order:reverse">
           <tr
-            class="text-center align-middle">
+            class="text-center align-middle"
+          >
             <td [rowSpan]="order.items.length"
-                class="text-center align-middle">
+                class="text-center align-middle"
+            >
               {{order.id}}
               <div class="btn-group-vertical btn-group-sm" role="group">
                 <button class="btn btn-sm btn-{{action.color}}"
@@ -61,18 +63,22 @@
               </div>
             </td>
             <td [rowSpan]="order.items.length"
-                class="text-center align-middle">{{order.createdAt | dateFormat}}</td>
+                class="text-center align-middle"
+            >{{order.createdAt | dateFormat}}</td>
             <td [rowSpan]="order.items.length"
-                class="text-center align-middle">{{order.customerName}}</td>
+                class="text-center align-middle"
+            >{{order.customerName}}</td>
 
             <!--First Invoice row-->
             <ng-container *ngFor="let group of order.groupByInvoiceItems.slice(0,1)">
               <td [attr.rowspan]="group.items.length"
-                  class="text-center align-middle">
+                  class="text-center align-middle"
+              >
                 <span>{{group.invoice?.id}}</span>
               </td>
               <td [attr.rowspan]="group.items.length"
-                  class="text-center align-middle">
+                  class="text-center align-middle"
+              >
                 <span>{{group.invoice?.createdAt | dateFormat}}</span>
                 <app-invoice-actions [order]="order" [invoice]="group.invoice"></app-invoice-actions>
               </td>
@@ -99,7 +105,8 @@
 
           <!--First Invoice - Next Order Item row-->
           <tr *ngFor="let item of order.groupByInvoiceItems.slice(0,1).shift().items.slice(1)"
-              class="text-center align-middle">
+              class="text-center align-middle"
+          >
             <td>{{item.sellerName}}</td>
             <td>{{item.sku}}</td>
             <td>{{item.price | convert}}</td>
@@ -117,11 +124,13 @@
           <ng-container *ngFor="let group of order.groupByInvoiceItems.slice(1)">
             <tr class="text-center align-middle">
               <td [rowSpan]="group.items.length"
-                  class="text-center align-middle">
+                  class="text-center align-middle"
+              >
                 {{group.invoice?.id}}
               </td>
               <td [attr.rowspan]="group.items.length"
-                  class="text-center align-middle">
+                  class="text-center align-middle"
+              >
                 {{group.invoice?.createdAt | dateFormat}}
                 <app-invoice-actions [order]="order" [invoice]="group.invoice"></app-invoice-actions>
               </td>
@@ -145,7 +154,8 @@
 
             <!--Next Invoice - Next Order Item row-->
             <tr *ngFor="let item of group.items.slice(1)"
-                class="text-center align-middle">
+                class="text-center align-middle"
+            >
               <td>{{item.sellerName}}</td>
               <td>{{item.sku}}</td>
               <td>{{item.price | convert}}</td>

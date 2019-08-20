@@ -12,6 +12,7 @@ export class TimeAndDateComponent implements OnInit {
   now: string;
   nowDate: string;
   nowTime: string;
+
   constructor(
     private datePipe: DatePipe,
   ) {
@@ -29,9 +30,11 @@ export class TimeAndDateComponent implements OnInit {
     this.nowTime = date[1];
   }
 
-  setVirtualDate = () => this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm:ss');
+  setVirtualDate() {
+    return this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm:ss');
+  }
 
-  updateVirtualDate = () => {
+  updateVirtualDate() {
     const diff = Date.now() - (new Date(`${this.nowDate}T${this.nowTime}`)).getTime();
     localStorage.setItem('virtual_date_diff', `${diff || 0}`);
   }

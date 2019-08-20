@@ -6,8 +6,11 @@ import { Entity } from '../entity';
 import { Payment } from '../payment';
 import { Invoice } from '../invoice';
 import { Refund } from '../refund';
-import {Serialize, SerializeProperty, Serializable} from '@delete21/ts-serializer';
-import {Customer} from '../member/customer';
+import {
+  Serialize,
+  SerializeProperty,
+  Serializable,
+} from '@delete21/ts-serializer';
 
 @Serialize({})
 export class OrderItem extends Serializable implements Entity {

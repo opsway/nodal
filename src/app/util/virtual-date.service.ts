@@ -11,7 +11,9 @@ export class VirtualDateService {
       + ('0' + (date.getDate())).slice(-2))
       + 'T' + date.toTimeString().slice(0, 8);
   }
-  constructor() { }
+
+  constructor() {
+  }
 
   getDate = (): Date => new Date(Date.now() - parseInt(localStorage.getItem('virtual_date_diff'), 10));
 

@@ -29,10 +29,8 @@
                      formControlName="date"
                      [ngClass]="{'is-invalid': form.get('date').invalid}"
               >
-<!--              [min]="minDate"-->
               <div class="invalid-feedback">
                 <div *ngIf="form.hasError('required', 'date')">Date is required</div>
-<!--                <div *ngIf="form.hasError('checkDate', 'date')">{{form.errors?.checkDate}}</div>-->
               </div>
 
             </div>

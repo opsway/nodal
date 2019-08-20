@@ -17,7 +17,8 @@
            type="date"
            [(ngModel)]="nowDate"
            [ngModelOptions]="{standalone: true}"
-           (blur)="updateVirtualDate()"/>
+           (blur)="updateVirtualDate()"
+    />
   </div>
   <div class="form-group">
     <input class="form-control form-control-sm"
@@ -25,6 +26,7 @@
            type="time"
            [(ngModel)]="nowTime"
            [ngModelOptions]="{standalone: true}"
-           (blur)="updateVirtualDate()"/>
+           (blur)="updateVirtualDate()"
+    />
   </div>
 </form>

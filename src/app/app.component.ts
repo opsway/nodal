@@ -1,4 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {
+  Component,
+  OnInit,
+} from '@angular/core';
 import { Menu } from './ui/menu/menu';
 import {
   ActivatedRoute,
@@ -60,8 +63,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(queryParams => {
-        const modelData  = queryParams.get('model');
-        this.model.import(modelData);
+      const modelData = queryParams.get('model');
+      this.model.import(modelData);
     });
   }
 

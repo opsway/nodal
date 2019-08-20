@@ -1,5 +1,9 @@
 import * as Util from '../../../util/util';
-import {Serialize, SerializeProperty, Serializable} from '@delete21/ts-serializer';
+import {
+  Serialize,
+  SerializeProperty,
+  Serializable,
+} from '@delete21/ts-serializer';
 
 @Serialize({})
 export class Seller extends Serializable {

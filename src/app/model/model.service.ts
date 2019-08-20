@@ -1,21 +1,21 @@
-import {Injectable} from '@angular/core';
-import {Shared} from './shared';
-import {OrderItem} from './entity/order/order-item';
-import {Item} from './entity/item';
-import {Order} from './entity/order/order';
-import {Collection} from './collection';
-import {Invoice} from './entity/invoice';
-import {Refund} from './entity/refund';
-import {Model} from './model';
-import {Settlement} from './entity/settlement';
-import {Payment} from './entity/payment';
-import {Seller} from './entity/member/seller';
-import {Customer} from './entity/member/customer';
-import {Transfer} from './entity/transfer';
-import {SellerSettlement} from './entity/seller-settlement';
-import {MarketSettlement} from './entity/market-settlement';
-import {VirtualDateService} from '../util/virtual-date.service';
-import {trimTrailingNulls} from '@angular/compiler/src/render3/view/util';
+import {
+  Injectable,
+} from '@angular/core';
+import { OrderItem } from './entity/order/order-item';
+import { Item } from './entity/item';
+import { Order } from './entity/order/order';
+import { Collection } from './collection';
+import { Invoice } from './entity/invoice';
+import { Refund } from './entity/refund';
+import { Model } from './model';
+import { Settlement } from './entity/settlement';
+import { Payment } from './entity/payment';
+import { Seller } from './entity/member/seller';
+import { Customer } from './entity/member/customer';
+import { Transfer } from './entity/transfer';
+import { SellerSettlement } from './entity/seller-settlement';
+import { MarketSettlement } from './entity/market-settlement';
+import { VirtualDateService } from '../util/virtual-date.service';
 
 declare interface Action {
   name: string;
@@ -309,11 +309,11 @@ export class ModelService {
 
           params.items.slice(1).split('|').forEach(itemData => {
             const orderItem = new OrderItem(100,
-                  new Item(),
-                  50,
-                  1,
-                  new Seller('bar'),
-                  'O1');
+              new Item(),
+              50,
+              1,
+              new Seller('bar'),
+              'O1');
             orderItem.deserialize(JSON.parse(itemData));
             console.log(itemData);
             order.addItem(orderItem.price / 100, orderItem.item, orderItem.priceShipping / 100, orderItem.qty, orderItem.seller);

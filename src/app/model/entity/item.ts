@@ -1,6 +1,10 @@
 import * as Util from '../../util/util';
 import { Entity } from './entity';
-import {Serialize, SerializeProperty, Serializable} from '@delete21/ts-serializer';
+import {
+  Serialize,
+  SerializeProperty,
+  Serializable,
+} from '@delete21/ts-serializer';
 
 @Serialize({})
 export class Item extends Serializable implements Entity {
