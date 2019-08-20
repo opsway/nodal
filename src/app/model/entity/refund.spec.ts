@@ -3,6 +3,6 @@ import payment from './payment.stub';
 
 describe('Refund', () => {
   it('should create an instance', () => {
-    expect(new Refund(payment())).toBeTruthy();
+    expect(new Refund(payment(), new Date())).toBeTruthy();
   });
 });
