@@ -138,4 +138,10 @@ describe('OrderItem', () => {
 
     expect(order.total).toEqual(0);
   });
+
+  it('should group items by Invoice', () => {
+    const actual = orderFabric(2).groupByInvoiceItems;
+    expect(actual.length).toEqual(1);
+    expect(actual.shift().items.length).toEqual(2);
+  });
 });

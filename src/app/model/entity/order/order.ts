@@ -163,7 +163,7 @@ export class Order {
       if (acc.has(id)) {
         acc.get(id).items.push(entity);
       } else {
-        acc.set(id, new InvoiceItems(entity.invoice));
+        acc.set(id, new InvoiceItems(entity.invoice, [entity]));
       }
 
       return acc;
