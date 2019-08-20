@@ -15,11 +15,14 @@ describe('OrderItem', () => {
       50,
       1,
       new Seller('bar'),
+      'O1'
     );
     expect(entity).toBeTruthy();
     expect(entity.amount).toEqual(10000);
     expect(entity.feeMarket).toEqual(826);
     expect(entity.amountSeller).toEqual(9174);
+    expect(entity.sku).toEqual('SKU1');
+    expect(entity.sellerName).toEqual('bar');
     expect(entity.id).toEqual('OI1');
   });
 });
