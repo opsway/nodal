@@ -20,9 +20,9 @@ export class TimeAndDateComponent implements OnInit {
     this.updateVirtualDate();
   }
 
-  private setVirtualDate = () => this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm:ss');
+  setVirtualDate = () => this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm:ss');
 
-  private updateVirtualDate = () => {
+  updateVirtualDate = () => {
     const diff = Date.now() - (new Date(this.now)).getTime();
     localStorage.setItem('virtual_date_diff', `${diff || 0}`);
   }
