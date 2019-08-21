@@ -170,7 +170,7 @@ export class ModelService {
     invoices.walk( entity => {
       console.log(entity);
       console.log(entity.createdAt.getTime(), date.getTime());
-    })
+    });
     if (invoices.count() > 0) {
       const GWFee = this.balanceByHolder(ModelService.NodalGWFee);
       const settlement = this.marketSettlementCollection.add(new MarketSettlement(
@@ -669,7 +669,7 @@ export class ModelService {
   ) {
     this.doSellerSettlement(seller.name);
     this.doGatewaySettlement(gateway, date);
-    //this.doMarketSettlement(date);
+    this.doMarketSettlement(date);
   }
 
   flow(date: Date): void {
