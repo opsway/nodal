@@ -6,11 +6,11 @@ import { Invoice } from '../invoice';
 export class SellerSettlement implements Entity {
   id: string;
   amount = 0;
+  references: string[] = [];
 
   constructor(
     public sellerName: string,
     public createdAt: Date = new Date(),
-    private invoiceCollection: Collection<Invoice> = new Collection<Invoice>(),
   ) {
     this.id = Util.uuid('ST_SL_');
   }
@@ -19,13 +19,9 @@ export class SellerSettlement implements Entity {
     return this.amount;
   }
 
-  get references(): string {
-    return this.invoiceCollection.map(entity => entity.id).join(', ');
-  }
-
   capture(invoice: Invoice): this {
     this.amount += invoice.amountSeller;
-    this.invoiceCollection.add(invoice);
+    this.references.push(invoice.id);
 
     return this;
   }

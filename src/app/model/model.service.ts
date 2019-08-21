@@ -168,13 +168,13 @@ export class ModelService {
     this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.amount, settlement.createdAt);
   }
 
-  transferToMarket(): void {
+  transferToMarket(date: Date = new Date()): void {
     const invoices = this.invoiceCollection
-      .filter(entity => !entity.isMarketCaptured);
+      .filter(entity => !entity.isMarketCaptured); // TODO add filter by date
 
     if (invoices.count() > 0) {
       const GWFee = this.balanceByHolder(ModelService.NodalGWFee);
-      const settlement = this.marketSettlementCollection.add(new MarketSettlement(GWFee));
+      const settlement = this.marketSettlementCollection.add(new MarketSettlement(date));
       invoices.walk(entity => settlement.capture(entity));
 
       this.createTransaction(ModelService.NodalGWFee, settlement.id, -GWFee);
@@ -182,8 +182,7 @@ export class ModelService {
       this.createTransaction(ModelService.NodalShipping, settlement.id, -settlement.amountShipping);
       this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.total);
 
-      const total = settlement.totalFeeMarket + settlement.amountShipping;
-      this.logEvent(`Market settlement: (${invoices.map(e => e.id).join(' ')})`, total);
+      this.logEvent(`Market settlement: ${settlement.id} (${settlement.references.join(' ')})`, settlement.total);
     }
   }
 
@@ -196,7 +195,7 @@ export class ModelService {
     this.createTransaction(refund.gateway, refund.id, -refund.total, refund.createdAt);
 
     // Market
-    const feeMarket = refund.orderItem
+    const feeMarket = refund.orderItems
       .filter(entity => entity.isInvoiced)
       .reduce((entity, acc) => acc + entity.feeMarket, 0);
 
@@ -205,7 +204,7 @@ export class ModelService {
     }
 
     // Shipping
-    const shipping = refund.orderItem
+    const shipping = refund.orderItems
       .filter(entity => entity.isInvoiced)
       .reduce((entity, acc) => acc + entity.amountShipping, 0);
 
@@ -214,7 +213,7 @@ export class ModelService {
     }
 
     // Seller
-    const sellers = refund.orderItem
+    const sellers = refund.orderItems
       .filter(entity => entity.isInvoiced)
       .reduce((entity, acc) => {
         if (acc.has(entity.sellerName)) {
@@ -233,8 +232,8 @@ export class ModelService {
   }
 
   transferSettlement(settlement: GatewaySettlement): void {
-    this.createTransaction(settlement.gateway, settlement.id, -settlement.total, settlement.createdAt);
-    this.createTransaction(ModelService.NodalBank, settlement.id, settlement.total, settlement.createdAt);
+    this.createTransaction(settlement.gateway, settlement.id, -settlement.amount, settlement.createdAt);
+    this.createTransaction(ModelService.NodalBank, settlement.id, settlement.amount, settlement.createdAt);
     this.createTransaction(ModelService.NodalGWFee, settlement.id, settlement.fee, settlement.createdAt);
   }
 
@@ -285,13 +284,15 @@ export class ModelService {
   }
 
   toSettlement(gateway: string, date: Date): void {
-    // TODO dateMin / dateMax;
     const payments = this.notCapturedPaymentsByGateway(gateway, date);
-    if (payments.count() > 0) {
-      const settlement = this.createSettlement(gateway, date);
-      payments.walk(entity => settlement.capture(entity));
+    const refunds = this.notCapturedRefundsByGateway(gateway, date);
+    const amount = payments.reduce((entity, acc) => acc + entity.amount, 0) - refunds.reduce((entity, acc) => acc + entity.total, 0);
+    if (payments.count() + refunds.count() > 0 && amount > 0) {
+      const settlement = this.createSettlement(gateway, date)
+        .withPayment(payments)
+        .withRefund(refunds);
       this.transferSettlement(settlement);
-      this.logEvent(`Gateway settlement: (${settlement.references.join(' ')})`, settlement.total);
+      this.logEvent(`Gateway settlement: ${settlement.id} (${settlement.references.join(' ')})`, settlement.amount);
     }
   }
 
@@ -323,6 +324,16 @@ export class ModelService {
 
   get refunds() {
     return this.refundCollection;
+  }
+
+  get notCapturedRefunds() {
+    return this.refunds.filter(entity => !entity.isCaptured);
+  }
+
+  notCapturedRefundsByGateway(gateway: string, date: Date = new Date()) {
+    return this.notCapturedRefunds
+      .filter(entity => entity.gateway === gateway
+        && entity.createdAt.getTime() <= date.getTime());
   }
 
   get orders() {
@@ -472,10 +483,8 @@ export class ModelService {
 
   createRefund(order: Order): Refund {
     const payment = order.refundablePayment;
-    // TODO add handle not available payment
     const refund = new Refund(payment, this.dateService.getDate());
-    // TODO add calculate balances of seller, customer and nodal
-    payment.attacheRefund(refund);
+    payment.refund(refund);
 
     return this.refundCollection.add(refund);
   }
@@ -509,7 +518,7 @@ export class ModelService {
         return; // TODO add alert
       }
       this.transferToSeller(settlement);
-      this.logEvent(`Seller settlement: ${settlement.id}`, settlement.total);
+      this.logEvent(`Seller settlement: ${settlement.id} (${settlement.references.join(' ')})`, settlement.total);
     }
   }
 
@@ -517,7 +526,7 @@ export class ModelService {
     this.transferToMarket();
   }
 
-  canMakeSettlementToMarket(): boolean {
+  get canMakeSettlementToMarket(): boolean {
     return true;
   }
 
@@ -614,7 +623,6 @@ export class ModelService {
     this.toInvoiceOrder(order);
     // Ship invoice;
     this.invoiceCollection.first().ship();
-    this.toSettlement(gateway, new Date());
 
     return order;
   }
@@ -624,23 +632,14 @@ export class ModelService {
     gateway: string = this.paymentMethods[0],
     date: Date = new Date(),
   ) {
-    // Seller GatewaySettlement;
-    this.toSettlement(gateway, date);
-    // Seller GatewaySettlement;
     this.makeSettlementToSeller(sellerName);
-    // Market GatewaySettlement;
+    this.toSettlement(gateway, date);
     this.makeSettlementToMarket();
   }
 
   private flow(): void {
     const A = this.flowShipOrder([
       {price: 100, shipping: 20},
-    ]).save();
-    this.flowSettlement();
-    this.toRefundOrder(A.return());
-
-    this.flowShipOrder([
-      {price: 100, shipping: 20, qty: 2},
     ]).save();
     this.flowSettlement();
   }

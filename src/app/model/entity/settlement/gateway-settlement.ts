@@ -1,42 +1,53 @@
 import * as Util from '../../../util/util';
 import { Entity } from '../entity';
-import { Model } from '../../model';
 import { Payment } from '../payment';
 import { Collection } from '../../collection';
+import { Refund } from '../refund';
+import { Model } from '../../model';
 
 export class GatewaySettlement implements Entity {
   id: string;
   fee = 0;
-  amount = 0;
-  references: string[] = [];
   totalPayment = 0;
   countPayment = 0;
   totalRefund = 0;
   countRefund = 0;
+  references: string[] = [];
 
   constructor(
     public gateway: string,
     public createdAt: Date = new Date(),
-    private paymentCollection: Collection<Payment> = new Collection<Payment>(),
   ) {
     this.id = Util.uuid('ST_GW_');
   }
 
-  get total(): number {
-    return this.amount + this.fee;
+  get amount(): number {
+    return this.totalPayment - this.totalRefund;
   }
 
-  capture(payment: Payment): this {
-    const feeGateway = Math.floor((Model.paymentGatewayFee / 100) * payment.totalSettlement);
-    this.amount += payment.totalSettlement - feeGateway;
-    this.fee += feeGateway;
-    payment.capture(feeGateway, this.createdAt);
-    this.paymentCollection.add(payment);
-    this.references = this.paymentCollection.map(entity => entity.id);
-    this.totalPayment = this.paymentCollection.reduce((entity, acc) => acc + entity.total, 0);
-    this.countPayment = this.paymentCollection.count();
-    this.totalRefund = this.paymentCollection.reduce((entity, acc) => acc + entity.totalRefund, 0);
-    this.countRefund = this.paymentCollection.reduce((entity, acc) => acc + entity.countRefund, 0);
+  private static calcFee(amoint: number): number {
+    return Math.floor((Model.paymentGatewayFee / 100) * amoint);
+  }
+
+  withPayment(payments: Collection<Payment>): this {
+    payments.walk(entity => {
+      entity.capture(GatewaySettlement.calcFee(entity.amount), this.createdAt);
+      this.countPayment++;
+      this.totalPayment += entity.amount;
+      this.references.push(entity.id);
+      this.fee += entity.feeGateway;
+    });
+
+    return this;
+  }
+
+  withRefund(refunds: Collection<Refund>): this {
+    refunds.walk(entity => {
+      this.countRefund++;
+      this.totalRefund += entity.total;
+      this.references.push(entity.id);
+      entity.capture(this.createdAt);
+    });
 
     return this;
   }

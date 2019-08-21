@@ -1,9 +1,6 @@
 import * as Util from '../../util/util';
 import { Order } from './order/order';
-import { Model } from '../model';
-import { Collection } from '../collection';
 import { Refund } from './refund';
-import { GatewaySettlement } from './settlement/gateway-settlement';
 
 export class Payment {
   static STATUS_CAPTURED = 'captured';
@@ -13,8 +10,8 @@ export class Payment {
   settledAt: Date;
   status: string;
   amount = 0;
+  totalRefund = 0;
   feeGateway = 0;
-  private refundCollection: Collection<Refund> = new Collection<Refund>();
 
   constructor(
     public order: Order,
@@ -39,34 +36,19 @@ export class Payment {
     return this.amount - this.feeGateway;
   }
 
-  get totalSettlement(): number {
-    return this.amount - this.totalRefund;
-  }
-
-  get totalRefund(): number {
-    return this.refundCollection.reduce((entity, acc) => acc + entity.total, 0);
-  }
-
-  get countRefund(): number {
-    return this.refundCollection.count();
-  }
-
-  get totalMarket(): number {
-    return this.order.feeMarket - this.feeGateway;
-  }
-
   get feeMarket(): number {
     return this.order.feeMarket;
   }
 
   get isCaptured(): boolean {
-    return this.status === Payment.STATUS_CAPTURED;
+    return this.settledAt !== null;
   }
 
   // ACTION
 
-  attacheRefund(refund: Refund): Payment {
-    this.refundCollection.add(refund);
+  refund(refund: Refund): Payment {
+    this.totalRefund += refund.total;
+    this.amount -= refund.total;
 
     return this;
   }
@@ -75,6 +57,7 @@ export class Payment {
     this.feeGateway = feeGateway;
     this.settledAt = settlementDate;
     this.status = Payment.STATUS_CAPTURED;
+
     return this;
   }
 }

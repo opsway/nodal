@@ -6,8 +6,9 @@ import { OrderItem } from './order/order-item';
 
 export class Refund implements Entity {
   id: string;
+  settledAt: Date = null;
   status: string;
-  orderItem: Collection<OrderItem> = new Collection<OrderItem>();
+  orderItems: Collection<OrderItem> = new Collection<OrderItem>();
 
   constructor(
     public payment: Payment,
@@ -15,6 +16,10 @@ export class Refund implements Entity {
     public total: number = 0,
   ) {
     this.id = Util.uuid('R');
+  }
+
+  get isCaptured(): boolean {
+    return this.settledAt !== null;
   }
 
   get gateway(): string {
@@ -31,13 +36,19 @@ export class Refund implements Entity {
 
   attacheOrderItem(orderItem: OrderItem): this {
     this.increment(orderItem.total)
-      .orderItem.add(orderItem);
+      .orderItems.add(orderItem);
 
     return this;
   }
 
   private increment(amount: number): this {
     this.total += amount;
+
+    return this;
+  }
+
+  capture(settlementDate: Date): this {
+    this.settledAt = settlementDate;
 
     return this;
   }

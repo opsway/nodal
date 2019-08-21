@@ -24,15 +24,14 @@ class Order {
   +Customer **customer**
 }
 
-class OrderItem
-
-class Item
-
-class Payment
-
 Customer "1" -- "0..N" Order
 Order "1" -- "N..1" OrderItem
 Order "1" -- "N..1" Payment
+Payment "1" -- "0..N" Refund
 OrderItem "1..N" -- "1" Item
-OrderItem "0..N" -- "1" Seller
+OrderItem "1..N" -- "1" Seller
+OrderItem "1..N" -- "1" Invoice
+Payment "1..N" -- "1" GatewaySettlement
+Invoice "1..N" -- "1" SellerSettlement
+Invoice "1..N" -- "1" MarketSettlement
 @enduml

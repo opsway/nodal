@@ -5,32 +5,24 @@ import { Invoice } from '../invoice';
 
 export class MarketSettlement implements Entity {
   id: string;
-  amount = 0;
   amountShipping = 0;
   totalFeeMarket = 0;
+  references: string[] = [];
 
   constructor(
-    public feeGW: number,
     public createdAt: Date = new Date(),
-    private invoiceCollection: Collection<Invoice> = new Collection<Invoice>(),
   ) {
     this.id = Util.uuid('ST_M_');
-    this.amount -= feeGW;
   }
 
   get total(): number {
-    return this.amount;
-  }
-
-  get references(): string {
-    return this.invoiceCollection.map(entity => entity.id).join(', ');
+    return this.amountShipping + this.totalFeeMarket;
   }
 
   capture(invoice: Invoice): this {
     this.amountShipping += invoice.amountShipping;
     this.totalFeeMarket += invoice.totalFeeMarket;
-    this.amount += invoice.amountShipping + invoice.totalFeeMarket;
-    this.invoiceCollection.add(invoice);
+    this.references.push(invoice.id);
 
     return this;
   }
