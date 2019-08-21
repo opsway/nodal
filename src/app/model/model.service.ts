@@ -36,6 +36,7 @@ export class ModelService {
   private static NodalGWFee = 'GW Fee';
   private static NodalShipping = 'Shipping';
   private static NodalMFFee = 'MF Fee';
+  private static NodalMarket = 'Market';
   private customerCollection: Collection<Customer> = new Collection<Customer>();
   private sellerCollection: Collection<Seller> = new Collection<Seller>();
   private orderCollection: Collection<Order> = new Collection<Order>();
@@ -57,6 +58,7 @@ export class ModelService {
     ModelService.NodalShipping,
     ModelService.NodalMFFee,
     ModelService.NodalGWFee,
+    ModelService.NodalMarket,
   ];
 
   constructor(
@@ -169,6 +171,7 @@ export class ModelService {
       this.createTransaction(ModelService.NodalMFFee, settlement.id, -settlement.totalFeeMarket, date);
       this.createTransaction(ModelService.NodalShipping, settlement.id, -settlement.amountShipping, date);
       this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.total, date);
+      this.createTransaction(ModelService.NodalMarket, settlement.id, settlement.total, date);
 
       this.logEvent(
         settlement.createdAt,
@@ -229,7 +232,7 @@ export class ModelService {
 
   gatewayTransfer(settlement: GatewaySettlement): void {
     this.createTransaction(settlement.gateway, settlement.id, -settlement.amount, settlement.createdAt);
-    this.createTransaction(ModelService.NodalBank, settlement.id, settlement.total, settlement.createdAt);
+    this.createTransaction(ModelService.NodalBank, settlement.id, settlement.amount, settlement.createdAt);
     this.createTransaction(ModelService.NodalGWFee, settlement.id, settlement.fee, settlement.createdAt);
   }
 
