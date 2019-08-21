@@ -36,6 +36,10 @@ export class Order extends Serializable {
 
   // PROPERTIES
 
+  get references() {
+    return this.itemCollection.map(entity => entity.id);
+  }
+
   get hasRefundablePayment(): boolean {
     return this.refundablePayment !== null;
   }

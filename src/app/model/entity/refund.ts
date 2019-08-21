@@ -18,6 +18,10 @@ export class Refund implements Entity {
     this.id = Util.uuid('R');
   }
 
+  get references() {
+    return this.orderItems.map(entity => entity.id);
+  }
+
   get isCaptured(): boolean {
     return this.settledAt !== null;
   }

@@ -237,7 +237,7 @@ export class ModelService {
     });
     this.logEvent(
       refund.createdAt,
-      `Refund: ${refund.id}`,
+      `Refund: ${refund.id} (${refund.references.join(' ')})`,
       refund.total,
     );
   }
@@ -498,7 +498,7 @@ export class ModelService {
     order.attachePayment(payment);
     this.logEvent(
       order.createdAt,
-      `Pay: ${order.id}`,
+      `Pay: ${payment.id} (${order.id}: ${order.references.join(' ')})`,
       order.total,
     );
   }
@@ -564,7 +564,7 @@ export class ModelService {
     this.transferInvoice(invoice);
     this.logEvent(
       invoice.createdAt,
-      `Invoice: ${invoice.id}`,
+      `Invoice: ${invoice.id} (${invoice.references.join(' ')})`,
       invoice.total,
     );
   }

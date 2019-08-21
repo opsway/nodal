@@ -30,6 +30,10 @@ export class Invoice implements Entity {
     this.createdAt = null;
   }
 
+  get references() {
+    return this.items.map(entity => entity.id);
+  }
+
   get isDraft(): boolean {
     return this.createdAt === null;
   }
