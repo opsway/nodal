@@ -598,12 +598,12 @@ export class ModelService {
   ): Order {
     items.forEach(value => {
       this.addOrderItem(
-        this.customers.getRandom().id,
+        this.customers.first().id,
         value.price,
-        this.items.getRandom().id,
+        this.items.first().id,
         value.shipping || 0,
         value.qty || 1,
-        this.sellers.getRandom().id,
+        this.sellers.first().id,
       );
     });
 
@@ -628,7 +628,7 @@ export class ModelService {
   }
 
   private flowSettlement(
-    sellerName: string = this.sellers.getRandom().name,
+    sellerName: string = this.sellers.first().name,
     gateway: string = this.paymentMethods[0],
     date: Date = this.dateService.getDate(),
   ) {
@@ -639,11 +639,7 @@ export class ModelService {
 
   private flow(): void {
     const A = this.flowShipOrder([
-      {
-        price: this.items.getRandomInt(1000),
-        shipping: this.items.getRandomInt(100),
-        qty: this.items.getRandomInt(10)
-      },
+      {price: 100, shipping: 20},
     ]).save();
     this.flowSettlement();
   }
