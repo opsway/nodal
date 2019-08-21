@@ -88,6 +88,14 @@ export class Order extends Serializable {
     return this.itemCollection.filter(entity => entity.canRefunded);
   }
 
+  private get canCanceledItems(): Collection<OrderItem> {
+    return this.itemCollection.filter(entity => entity.canCanceled);
+  }
+
+  private get canReturnedItems(): Collection<OrderItem> {
+    return this.itemCollection.filter(entity => entity.canReturned);
+  }
+
   get newItems(): Collection<OrderItem> {
     return this.itemCollection.filter(entity => entity.isNew);
   }
@@ -99,6 +107,14 @@ export class Order extends Serializable {
 
   get canRefund(): boolean {
     return this.hasRefundablePayment && this.canRefundedItems.count() > 0;
+  }
+
+  get canCanceled(): boolean {
+    return this.hasRefundablePayment && this.canCanceledItems.count() > 0;
+  }
+
+  get canReturned(): boolean {
+    return this.hasRefundablePayment && this.canReturnedItems.count() > 0;
   }
 
   get isNoPaid(): boolean {
@@ -165,6 +181,20 @@ export class Order extends Serializable {
   refund(refund: Refund): Order {
     this.canRefundedItems
       .walk(entity => entity.refund(refund));
+    return this;
+  }
+
+  cancel(): Order {
+    this.canCanceledItems
+      .walk(entity => entity.cancel());
+
+    return this;
+  }
+
+  return(): Order {
+    this.canReturnedItems
+      .walk(entity => entity.return());
+
     return this;
   }
 

@@ -360,6 +360,28 @@ export class ModelService {
       });
     }
 
+    if (order.canCanceled) {
+      actions.push({
+        name: 'cancel',
+        title: 'cancel order',
+        color: 'info',
+        handler: () => {
+          order.cancel();
+        },
+      });
+    }
+
+    if (order.canReturned) {
+      actions.push({
+        name: 'return',
+        title: 'create RMA',
+        color: 'secondary',
+        handler: () => {
+          order.return();
+        },
+      });
+    }
+
     if (order.canRefund) {
       actions.push({
         name: 'refund',
