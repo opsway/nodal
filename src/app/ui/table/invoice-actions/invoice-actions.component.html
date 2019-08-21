@@ -14,7 +14,7 @@
           title="cancel invoice"
   >CA</button>
   <button type="button"
-          *ngIf="invoice?.isSaved"
+          *ngIf="invoice?.isDraft"
           (click)="model.saveInvoice(invoice)"
           class="btn btn-sm btn-success"
           title="add to invoice"

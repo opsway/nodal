@@ -158,10 +158,19 @@ export class ModelService {
     this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.amount, settlement.createdAt);
   }
 
-  transferToMarket(date: Date): void {
-    const invoices = this.invoiceCollection
-      .filter(entity => !entity.isMarketCaptured); // TODO add filter by date
+  marketNotCapturedInvoices(date: Date) {
+    return this.invoiceCollection
+      .filter(entity => !entity.isMarketCaptured)
+      .filter(entity => entity.canMarketCaptured)
+      .filter(entity => entity.createdAt.getTime() <= date.getTime());
+  }
 
+  transferToMarket(date: Date): void {
+    const invoices = this.marketNotCapturedInvoices(date);
+    invoices.walk( entity => {
+      console.log(entity);
+      console.log(entity.createdAt.getTime(), date.getTime());
+    })
     if (invoices.count() > 0) {
       const GWFee = this.balanceByHolder(ModelService.NodalGWFee);
       const settlement = this.marketSettlementCollection.add(new MarketSettlement(
@@ -299,7 +308,14 @@ export class ModelService {
         `Gateway settlement: ${settlement.id} (${settlement.references.join(' ')})`,
         settlement.total,
       );
-
+    } else {
+      console.log(
+        'Error:',
+        gateway,
+        date,
+        payments.count() + refunds.count(),
+        amount,
+      );
     }
   }
 
@@ -540,7 +556,7 @@ export class ModelService {
   }
 
   canMarketSettlement(date: Date): boolean {
-    return true;
+    return this.marketNotCapturedInvoices(date).count() > 0;
   }
 
   saveInvoice(invoice: Invoice): void {
@@ -653,7 +669,7 @@ export class ModelService {
   ) {
     this.doSellerSettlement(seller.name);
     this.doGatewaySettlement(gateway, date);
-    this.doMarketSettlement(date);
+    //this.doMarketSettlement(date);
   }
 
   flow(date: Date): void {

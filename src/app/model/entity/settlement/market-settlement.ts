@@ -23,6 +23,7 @@ export class MarketSettlement implements Entity {
     this.amountShipping += invoice.amountShipping;
     this.totalFeeMarket += invoice.totalFeeMarket;
     this.references.push(invoice.id);
+    invoice.captureMarket(this.createdAt);
 
     return this;
   }

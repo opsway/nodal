@@ -22,6 +22,7 @@ export class SellerSettlement implements Entity {
   capture(invoice: Invoice): this {
     this.amount += invoice.amountSeller;
     this.references.push(invoice.id);
+    invoice.captureSeller(this.createdAt);
 
     return this;
   }

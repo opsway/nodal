@@ -15,6 +15,7 @@ export class Invoice implements Entity {
   createdAt: Date;
   settledAt: Date;
   settledMarketAt: Date;
+  settledSellerAt: Date;
   status: string;
 
   constructor(
@@ -24,12 +25,18 @@ export class Invoice implements Entity {
     this.id = Util.uuid('INV');
     this.settledAt = null;
     this.settledMarketAt = null;
+    this.settledSellerAt = null;
     this.status = Invoice.STATUS_CREATED;
     this.createdAt = null;
   }
 
   get isDraft(): boolean {
     return this.createdAt === null;
+  }
+
+  get canMarketCaptured(): boolean {
+    return !this.isCanceled
+      && !this.isMarketCaptured;
   }
 
   get canCanceled(): boolean {
@@ -50,10 +57,6 @@ export class Invoice implements Entity {
 
   get isCanceled(): boolean {
     return this.status === Invoice.STATUS_CANCELED;
-  }
-
-  get isSaved(): boolean {
-    return this.createdAt === null;
   }
 
   get totalFeeMarket(): number {
@@ -97,8 +100,20 @@ export class Invoice implements Entity {
     return this;
   }
 
+  captureSeller(date: Date): this {
+    this.settledSellerAt = date;
+
+    return this;
+  }
+
+  captureMarket(date: Date): this {
+    this.settledMarketAt = date;
+
+    return this;
+  }
+
   get isCaptured(): boolean {
-    return this.status === Invoice.STATUS_CAPTURED;
+    return this.settledSellerAt !== null;
   }
 
   get isMarketCaptured(): boolean {
