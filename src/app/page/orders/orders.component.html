@@ -10,12 +10,7 @@
         <thead class="thead-light text-center align-middle">
         <tr>
           <th scope="col" rowspan="2">Order No#</th>
-          <th rowspan="2" class="align-middle text-center"
-              [class.active]="order === 'createdAt'"
-              (click)="setOrder('createdAt')"
-          >
-            Date <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
-          </th>
+          <th rowspan="2" class="align-middle text-center">Date</th>
           <th scope="col" rowspan="2">Customer</th>
 
           <th scope="colgroup" colspan="2">Invoices</th>
@@ -23,12 +18,7 @@
         </tr>
         <tr>
           <th scope="col">No#</th>
-          <th scope="col"
-              [class.active]="order === 'createdAt'"
-              (click)="setOrder('invoice.createdAt')"
-          >
-            Date <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
-          </th>
+          <th scope="col">Date</th>
 
           <th scope="col">Seller</th>
           <th scope="col">SKU</th>
@@ -44,7 +34,7 @@
         <tbody>
 
         <!-- Start Order row -->
-        <ng-container *ngFor="let order of model.orders.all() | orderBy: order:reverse">
+        <ng-container *ngFor="let order of model.orders.all() | orderBy: orderType:orderReverse">
           <tr
             class="text-center align-middle"
           >
@@ -70,7 +60,7 @@
             >{{order.customerName}}</td>
 
             <!--First Invoice row-->
-            <ng-container *ngFor="let group of order.groupByInvoiceItems.slice(0,1)">
+            <ng-container *ngFor="let group of getSortedGroup(order).slice(0,1)">
               <td [attr.rowspan]="group.items.length"
                   class="text-center align-middle"
               >
@@ -104,7 +94,7 @@
           </tr>
 
           <!--First Invoice - Next Order Item row-->
-          <tr *ngFor="let item of order.groupByInvoiceItems.slice(0,1).shift().items.slice(1)"
+          <tr *ngFor="let item of getSortedGroup(order).slice(0,1).shift().items.slice(1)"
               class="text-center align-middle"
           >
             <td>{{item.sellerName}}</td>
@@ -121,7 +111,7 @@
           <!--End First Invoice - Next Order Item row-->
 
           <!--Next Invoice row-->
-          <ng-container *ngFor="let group of order.groupByInvoiceItems.slice(1)">
+          <ng-container *ngFor="let group of getSortedGroup(order).slice(1)">
             <tr class="text-center align-middle">
               <td [rowSpan]="group.items.length"
                   class="text-center align-middle"
