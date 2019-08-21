@@ -179,7 +179,7 @@ export class ModelService {
       ));
       invoices.walk(entity => settlement.capture(entity));
 
-      this.createTransaction(ModelService.NodalGWFee, settlement.id, -GWFee);
+      this.createTransaction(ModelService.NodalGWFee, settlement.id, -GWFee, date);
       this.createTransaction(ModelService.NodalMFFee, settlement.id, -settlement.totalFeeMarket, date);
       this.createTransaction(ModelService.NodalShipping, settlement.id, -settlement.amountShipping, date);
       this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.total, date);
