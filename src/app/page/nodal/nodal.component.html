@@ -3,13 +3,13 @@
     <!--Nodal balance -->
     <div class="row justify-content-between mb-3">
       <button type="button"
-              (click)="model.makeSettlementToMarket()"
-              [disabled]="!model.canMakeSettlementToMarket"
+              (click)="marketSettlement()"
+              [disabled]="!canMarketSettlement"
               class="btn btn-primary"
       >Create settlement to Market</button>
     </div>
     <div class="row justify-content-between mb-3"
-         *ngFor="let method of model.nodalAccounts"
+         *ngFor="let method of nodalAccounts"
     >
       <div class="col-sm">
         <app-account-balances-table
@@ -19,7 +19,7 @@
     </div>
     <div class="row justify-content-between mb-3">
       <div class="col-sm"
-           *ngFor="let seller of model.sellers.all()"
+           *ngFor="let seller of sellers"
       >
         <app-account-balances-table
           [holder]="seller.name"

@@ -275,16 +275,16 @@ export class ModelService {
     return this.settlementCollection;
   }
 
-  createSettlement(paymentMethod: string, date: Date): GatewaySettlement {
-    return this.settlementCollection.add(new GatewaySettlement(paymentMethod, date));
+  catGatewaySettlement(gateway: string, date: Date): boolean {
+    return true; // TODO implement catGatewaySettlement
   }
 
-  toSettlement(gateway: string, date: Date): void {
+  doGatewaySettlement(gateway: string, date: Date): void {
     const payments = this.notCapturedPaymentsByGateway(gateway, date);
     const refunds = this.notCapturedRefundsByGateway(gateway, date);
     const amount = payments.reduce((entity, acc) => acc + entity.amount, 0) - refunds.reduce((entity, acc) => acc + entity.total, 0);
     if (payments.count() + refunds.count() > 0 && amount > 0) {
-      const settlement = this.createSettlement(gateway, date)
+      const settlement = this.settlementCollection.add(new GatewaySettlement(gateway, date))
         .withPayment(payments)
         .withRefund(refunds);
       this.gatewayTransfer(settlement);
@@ -506,16 +506,15 @@ export class ModelService {
     this.transferRefund(refund);
   }
 
-  catMakeSettlementToSeller(name: string): boolean {
+  canSellerSettlement(name: string): boolean {
     return this.balanceByHolder(name) > 0;
   }
 
-  makeSettlementToSeller(name: string): void {
+  doSellerSettlement(name: string): void {
     const invoices = this.invoiceCollection
       .filter(entity => entity.seller.name === name && !entity.isCaptured);
 
     if (invoices.count() > 0) {
-
       const settlement = this.sellerSettlementCollection.add(new SellerSettlement(name, this.dateService.getDate()));
       invoices.walk(entity => settlement.capture(entity));
       if (settlement.amount !== this.balanceByHolder(name)) {
@@ -531,11 +530,11 @@ export class ModelService {
     }
   }
 
-  makeSettlementToMarket(date: Date): void {
+  doMarketSettlement(date: Date): void {
     this.transferToMarket(date);
   }
 
-  get canMakeSettlementToMarket(): boolean {
+  canMarketSettlement(date: Date): boolean {
     return true;
   }
 
@@ -647,11 +646,11 @@ export class ModelService {
     sellerName: string = this.sellers.first().name,
     gateway: string = this.paymentMethods[0],
   ) {
-    this.makeSettlementToSeller(sellerName);
+    this.doSellerSettlement(sellerName);
     date.setTime(date.getTime() + 60 * 60 * 1000);
-    this.toSettlement(gateway, date);
+    this.doGatewaySettlement(gateway, date);
     date.setTime(date.getTime() + 60 * 60 * 1000);
-    this.makeSettlementToMarket(date);
+    this.doMarketSettlement(date);
   }
 
   flow(date: Date): void {
@@ -665,16 +664,16 @@ export class ModelService {
     this.flowSettlement(date);
 
     this.toRefundOrder(A.return());
+    /*
+        date.setTime(date.getTime() + 60 * 60 * 1000);
+        console.log('2', date);
+        this.flowShipOrder(
+          date,
+          [
+            {price: 100, shipping: 20},
+          ]).save();
 
-    date.setTime(date.getTime() + 60 * 60 * 1000);
-    console.log('2', date);
-    this.flowShipOrder(
-      date,
-      [
-        {price: 100, shipping: 20},
-      ]).save();
-
-    date.setTime(date.getTime() + 60 * 60 * 1000);
-    this.flowSettlement(date);
+        date.setTime(date.getTime() + 60 * 60 * 1000);
+        this.flowSettlement(date);*/
   }
 }

@@ -3,10 +3,12 @@
     [(ngModel)]="paymentGateway"
     class="custom-select"
   >
-    <option *ngFor="let gateway of model.paymentGateways" value="{{gateway}}">{{gateway}}</option>
+    <option *ngFor="let gateway of paymentGateways" value="{{gateway}}">{{gateway}}</option>
   </select>
   <div class="input-group-append">
-    <button class="btn btn-primary" (click)="toSettlement()" type="button">
+    <button class="btn btn-primary"
+            [disabled]="!catSettlement"
+            (click)="doSettlement()" type="button">
       <span>create settlement</span>
     </button>
   </div>

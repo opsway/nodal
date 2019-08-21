@@ -20,18 +20,25 @@ export class CreateSettlementComponent implements OnInit {
 
   constructor(
     private datePipe: DatePipe,
-    public model: ModelService,
+    private model: ModelService,
     private dateService: VirtualDateService,
   ) {
   }
 
   ngOnInit() {
-    this.paymentGateway = this.model.paymentMethods[0];
-
+    this.paymentGateway = this.model.paymentGateways[0];
   }
 
-  toSettlement(): boolean {
-    this.model.toSettlement(this.paymentGateway, this.dateService.getDate());
+  get paymentGateways() {
+    return this.model.paymentGateways;
+  }
+
+  get catSettlement() {
+    return this.model.catGatewaySettlement(this.paymentGateway, this.dateService.getDate());
+  }
+
+  doSettlement(): boolean {
+    this.model.doGatewaySettlement(this.paymentGateway, this.dateService.getDate());
     return false;
   }
 }

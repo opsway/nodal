@@ -1,8 +1,8 @@
 <h2>{{holder | uppercase}}: ({{count}}) {{balance | convert}}</h2>
 <button type="button"
         *ngIf="hasSettlement"
-        (click)="model.makeSettlementToSeller(holder)"
-        [disabled]="!model.catMakeSettlementToSeller(holder)"
+        (click)="model.doSellerSettlement(holder)"
+        [disabled]="!model.canSellerSettlement(holder)"
         class="btn btn-sm btn-primary"
         title="refund"
 >create settlement</button>
