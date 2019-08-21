@@ -102,17 +102,23 @@ export class Invoice implements Entity {
 
   captureSeller(date: Date): this {
     this.settledSellerAt = date;
+    if (this.isMarketCaptured) {
+      this.status = Invoice.STATUS_CAPTURED;
+    }
 
     return this;
   }
 
   captureMarket(date: Date): this {
     this.settledMarketAt = date;
+    if (this.isSellerCaptured) {
+      this.status = Invoice.STATUS_CAPTURED;
+    }
 
     return this;
   }
 
-  get isCaptured(): boolean {
+  get isSellerCaptured(): boolean {
     return this.settledSellerAt !== null;
   }
 
