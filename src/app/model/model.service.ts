@@ -534,7 +534,7 @@ export class ModelService {
 
   doSellerSettlement(name: string): void {
     const invoices = this.invoiceCollection
-      .filter(entity => entity.seller.name === name && !entity.isCaptured);
+      .filter(entity => entity.seller.name === name && !entity.isSellerCaptured);
 
     if (invoices.count() > 0) {
       const settlement = this.sellerSettlementCollection.add(new SellerSettlement(name, this.dateService.getDate()));
