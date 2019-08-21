@@ -21,7 +21,7 @@ export class TimeAndDateComponent implements OnInit {
   ngOnInit() {
     this.now = this.setVirtualDate();
     this.update();
-    this.updateVirtualDate();
+    this.updateVirtualDate(); // TODO checks virtual date from local storage
   }
 
   update() {

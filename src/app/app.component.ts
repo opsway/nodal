@@ -1,13 +1,14 @@
 import {
   Component,
+  isDevMode,
   OnInit,
 } from '@angular/core';
 import { Menu } from './ui/menu/menu';
 import {
   ActivatedRoute,
-  Router,
 } from '@angular/router';
 import { ModelService } from './model/model.service';
+import { VirtualDateService } from './util/virtual-date.service';
 
 @Component({
   selector: 'app-root',
@@ -56,12 +57,15 @@ export class AppComponent implements OnInit {
   constructor(
     private model: ModelService,
     private route: ActivatedRoute,
-    private router: Router,
+    private dateService: VirtualDateService,
   ) {
 
   }
 
   ngOnInit(): void {
+    if (isDevMode()) {
+      this.model.flow(this.dateService.getDate());
+    }
     this.route.queryParamMap.subscribe(queryParams => {
       const modelData = queryParams.get('model');
       this.model.import(modelData);

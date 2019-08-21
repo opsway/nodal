@@ -2,7 +2,8 @@ import {
   Component,
 } from '@angular/core';
 import { ModelService } from '../../model/model.service';
-import { OrderPipe } from 'ngx-order-pipe';
+import { Order } from '../../model/entity/order/order';
+import { VirtualDateService } from '../../util/virtual-date.service';
 
 @Component({
   selector: 'app-orders',
@@ -14,8 +15,12 @@ export class OrdersComponent {
 
   constructor(
     public model: ModelService,
-    private orderPipe: OrderPipe,
+    private dateService: VirtualDateService,
   ) {
+  }
+
+  orderActions(order: Order) {
+    return this.model.orderActions(order, this.dateService.getDate());
   }
 
   setOrder(value: string) {

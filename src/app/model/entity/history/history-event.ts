@@ -5,7 +5,7 @@ export class HistoryEvent {
     public action: string,
     public total: number,
     public accounts: Account[],
-    public createdAt: Date = new Date(),
+    public createdAt: Date,
   ) {
   }
 }

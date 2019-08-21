@@ -1,6 +1,5 @@
 import {
   Injectable,
-  isDevMode,
 } from '@angular/core';
 import { OrderItem } from './entity/order/order-item';
 import { Item } from './entity/item';
@@ -65,17 +64,6 @@ export class ModelService {
   ) {
     this.paymentGateways = Model.paymentGateways;
     this.load();
-    if (isDevMode()) {
-      this.flow();
-    }
-  }
-
-  get accounts() {
-    return [
-      ...this.sellers.map(entity => entity.name),
-      ...this.paymentGateways,
-      ...this.nodalAccounts,
-    ];
   }
 
   get accountBalances(): Account[] {
@@ -104,12 +92,12 @@ export class ModelService {
     ];
   }
 
-  private logEvent(action: string, total: number): void {
+  private logEvent(date: Date, action: string, total: number): void {
     this.history.add(new History(new HistoryEvent(
       action,
       total,
       this.accountBalances,
-      this.dateService.getDate(),
+      date,
     )));
   }
 
@@ -168,7 +156,7 @@ export class ModelService {
     this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.amount, settlement.createdAt);
   }
 
-  transferToMarket(date: Date = new Date()): void {
+  transferToMarket(date: Date): void {
     const invoices = this.invoiceCollection
       .filter(entity => !entity.isMarketCaptured); // TODO add filter by date
 
@@ -178,11 +166,15 @@ export class ModelService {
       invoices.walk(entity => settlement.capture(entity));
 
       this.createTransaction(ModelService.NodalGWFee, settlement.id, -GWFee);
-      this.createTransaction(ModelService.NodalMFFee, settlement.id, -settlement.totalFeeMarket);
-      this.createTransaction(ModelService.NodalShipping, settlement.id, -settlement.amountShipping);
-      this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.total);
+      this.createTransaction(ModelService.NodalMFFee, settlement.id, -settlement.totalFeeMarket, date);
+      this.createTransaction(ModelService.NodalShipping, settlement.id, -settlement.amountShipping, date);
+      this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.total, date);
 
-      this.logEvent(`Market settlement: ${settlement.id} (${settlement.references.join(' ')})`, settlement.total);
+      this.logEvent(
+        settlement.createdAt,
+        `Market settlement: ${settlement.id} (${settlement.references.join(' ')})`,
+        settlement.total,
+      );
     }
   }
 
@@ -228,7 +220,11 @@ export class ModelService {
     sellers.forEach((amount, sellerName) => {
       this.createTransaction(sellerName, refund.id, -amount, refund.createdAt);
     });
-    this.logEvent(`Refund: ${refund.id}`, refund.total);
+    this.logEvent(
+      refund.createdAt,
+      `Refund: ${refund.id}`,
+      refund.total,
+    );
   }
 
   gatewayTransfer(settlement: GatewaySettlement): void {
@@ -292,7 +288,12 @@ export class ModelService {
         .withPayment(payments)
         .withRefund(refunds);
       this.gatewayTransfer(settlement);
-      this.logEvent(`Gateway settlement: ${settlement.id} (${settlement.references.join(' ')})`, settlement.total);
+      this.logEvent(
+        settlement.createdAt,
+        `Gateway settlement: ${settlement.id} (${settlement.references.join(' ')})`,
+        settlement.total,
+      );
+
     }
   }
 
@@ -386,7 +387,7 @@ export class ModelService {
         case 'toPay':
           // todo date handling
           order = this.orders.find(params.order_id);
-          this.toPay(order, params.gw);
+          this.toPay(order, params.gw, date);
           break;
       }
     }
@@ -399,7 +400,7 @@ export class ModelService {
     return `${window.location.origin}${window.location.pathname}#/?model=${btoa(content)}`;
   }
 
-  orderActions(order: Order): Action[] {
+  orderActions(order: Order, data: Date): Action[] {
     const actions = [];
 
     if (order.isNoPaid) {
@@ -409,7 +410,7 @@ export class ModelService {
           title: `pay by ${gateway}`,
           color: 'primary',
           handler: () => {
-            this.toPay(order, gateway);
+            this.toPay(order, gateway, data);
           },
         };
       }));
@@ -466,14 +467,18 @@ export class ModelService {
     return this.paymentCollection.add(new Payment(order, gateway, createdAt));
   }
 
-  toPay(order: Order, gateway: string): void {
+  toPay(order: Order, gateway: string, data: Date): void {
     this.eventStream.push({
       name: 'toPay', date: this.dateService.getValue(), params: {order_id: order.id, gw: gateway}
     });
-    const payment = this.createPayment(order, gateway, this.dateService.getDate());
+    const payment = this.createPayment(order, gateway, data);
     this.transferPayment(payment);
     order.attachePayment(payment);
-    this.logEvent(`Pay: ${order.id}`, order.total);
+    this.logEvent(
+      order.createdAt,
+      `Pay: ${order.id}`,
+      order.total,
+    );
   }
 
   toInvoiceOrderItem(orderItem: OrderItem): void {
@@ -518,12 +523,16 @@ export class ModelService {
         return; // TODO add alert
       }
       this.transferToSeller(settlement);
-      this.logEvent(`Seller settlement: ${settlement.id} (${settlement.references.join(' ')})`, settlement.total);
+      this.logEvent(
+        settlement.createdAt,
+        `Seller settlement: ${settlement.id} (${settlement.references.join(' ')})`,
+        settlement.total,
+      );
     }
   }
 
-  makeSettlementToMarket(): void {
-    this.transferToMarket();
+  makeSettlementToMarket(date: Date): void {
+    this.transferToMarket(date);
   }
 
   get canMakeSettlementToMarket(): boolean {
@@ -533,7 +542,11 @@ export class ModelService {
   saveInvoice(invoice: Invoice): void {
     invoice.save(this.dateService.getDate());
     this.transferInvoice(invoice);
-    this.logEvent(`Invoice: ${invoice.id}`, invoice.total);
+    this.logEvent(
+      invoice.createdAt,
+      `Invoice: ${invoice.id}`,
+      invoice.total,
+    );
   }
 
   toInvoiceOrder(order: Order): Order {
@@ -593,8 +606,8 @@ export class ModelService {
   }
 
   private flowEditNewOrder(
+    date: Date,
     items: Array<{ price: number, shipping?: number, qty?: number }>,
-    date: Date = this.dateService.getDate(),
   ): Order {
     items.forEach(value => {
       this.addOrderItem(
@@ -604,21 +617,23 @@ export class ModelService {
         value.shipping || 0,
         value.qty || 1,
         this.sellers.first().id,
+        date,
       );
     });
 
+    console.log(date);
     return this.currentOrder.withDate(date);
   }
 
   private flowShipOrder(
+    date: Date,
     items: Array<{ price: number, shipping?: number, qty?: number }>,
     gateway: string = this.paymentMethods[0],
-    date: Date = this.dateService.getDate(),
   ): Order {
     // Edit new Order and Save order
-    const order: Order = this.flowEditNewOrder(items).withDate(date).save();
+    const order: Order = this.flowEditNewOrder(date, items).save();
     // Pay Order
-    this.toPay(order, gateway);
+    this.toPay(order, gateway, date);
     // Create invoice for payed Order by item via Seller
     this.toInvoiceOrder(order);
     // Ship invoice;
@@ -627,27 +642,39 @@ export class ModelService {
     return order;
   }
 
-  private flowSettlement(
+  flowSettlement(
+    date: Date,
     sellerName: string = this.sellers.first().name,
     gateway: string = this.paymentMethods[0],
-    date: Date = this.dateService.getDate(),
   ) {
     this.makeSettlementToSeller(sellerName);
+    date.setTime(date.getTime() + 60 * 60 * 1000);
     this.toSettlement(gateway, date);
-    this.makeSettlementToMarket();
+    date.setTime(date.getTime() + 60 * 60 * 1000);
+    this.makeSettlementToMarket(date);
   }
 
-  private flow(): void {
-    const A = this.flowShipOrder([
-      {price: 100, shipping: 20},
-    ]).save();
-    this.flowSettlement();
+  flow(date: Date): void {
+    console.log('1', date);
+    const A = this.flowShipOrder(
+      date,
+      [
+        {price: 100, shipping: 20},
+      ]).save();
+    date.setTime(date.getTime() + 60 * 60 * 1000);
+    this.flowSettlement(date);
 
     this.toRefundOrder(A.return());
 
-    this.flowShipOrder([
-      {price: 100, shipping: 20},
-    ]).save();
-    this.flowSettlement();
+    date.setTime(date.getTime() + 60 * 60 * 1000);
+    console.log('2', date);
+    this.flowShipOrder(
+      date,
+      [
+        {price: 100, shipping: 20},
+      ]).save();
+
+    date.setTime(date.getTime() + 60 * 60 * 1000);
+    this.flowSettlement(date);
   }
 }
