@@ -164,7 +164,10 @@ export class ModelService {
 
     if (invoices.count() > 0) {
       const GWFee = this.balanceByHolder(ModelService.NodalGWFee);
-      const settlement = this.marketSettlementCollection.add(new MarketSettlement(date));
+      const settlement = this.marketSettlementCollection.add(new MarketSettlement(
+        GWFee,
+        date,
+      ));
       invoices.walk(entity => settlement.capture(entity));
 
       this.createTransaction(ModelService.NodalGWFee, settlement.id, -GWFee);
@@ -232,7 +235,7 @@ export class ModelService {
 
   gatewayTransfer(settlement: GatewaySettlement): void {
     this.createTransaction(settlement.gateway, settlement.id, -settlement.amount, settlement.createdAt);
-    this.createTransaction(ModelService.NodalBank, settlement.id, settlement.amount, settlement.createdAt);
+    this.createTransaction(ModelService.NodalBank, settlement.id, settlement.total, settlement.createdAt);
     this.createTransaction(ModelService.NodalGWFee, settlement.id, settlement.fee, settlement.createdAt);
   }
 
@@ -466,8 +469,8 @@ export class ModelService {
     return actions;
   }
 
-  createPayment(order: Order, gateway: string, createdAt = new Date()): Payment {
-    return this.paymentCollection.add(new Payment(order, gateway, createdAt));
+  createPayment(order: Order, gateway: string, date: Date): Payment {
+    return this.paymentCollection.add(new Payment(order, gateway, date));
   }
 
   toPay(order: Order, gateway: string, data: Date): void {
@@ -521,7 +524,6 @@ export class ModelService {
       const settlement = this.sellerSettlementCollection.add(new SellerSettlement(name, this.dateService.getDate()));
       invoices.walk(entity => settlement.capture(entity));
       if (settlement.amount !== this.balanceByHolder(name)) {
-        console.log('makeSettlementToSeller:', settlement.amount, this.balanceByHolder(name));
         return; // TODO add alert
       }
       this.transferToSeller(settlement);
@@ -610,6 +612,7 @@ export class ModelService {
   private flowEditNewOrder(
     date: Date,
     items: Array<{ price: number, shipping?: number, qty?: number }>,
+    seller: Seller = this.sellers.first(),
   ): Order {
     items.forEach(value => {
       this.addOrderItem(
@@ -618,12 +621,11 @@ export class ModelService {
         this.items.first().id,
         value.shipping || 0,
         value.qty || 1,
-        this.sellers.first().id,
+        seller.id,
         date,
       );
     });
 
-    console.log(date);
     return this.currentOrder.withDate(date);
   }
 
@@ -639,44 +641,32 @@ export class ModelService {
     // Create invoice for payed Order by item via Seller
     this.toInvoiceOrder(order);
     // Ship invoice;
-    this.invoiceCollection.first().ship();
+    this.invoiceCollection.first().ship(); // FIXME
 
     return order;
   }
 
   flowSettlement(
     date: Date,
-    sellerName: string = this.sellers.first().name,
+    seller: Seller = this.sellers.first(),
     gateway: string = this.paymentMethods[0],
   ) {
-    this.doSellerSettlement(sellerName);
-    date.setTime(date.getTime() + 60 * 60 * 1000);
+    this.doSellerSettlement(seller.name);
     this.doGatewaySettlement(gateway, date);
-    date.setTime(date.getTime() + 60 * 60 * 1000);
     this.doMarketSettlement(date);
   }
 
   flow(date: Date): void {
-    console.log('1', date);
-    const A = this.flowShipOrder(
+    const gateway = this.paymentMethods[0];
+    const seller = this.sellers.first();
+    const O1 = this.flowEditNewOrder(
       date,
       [
         {price: 100, shipping: 20},
-      ]).save();
-    date.setTime(date.getTime() + 60 * 60 * 1000);
-    this.flowSettlement(date);
-
-    this.toRefundOrder(A.return());
-    /*
-        date.setTime(date.getTime() + 60 * 60 * 1000);
-        console.log('2', date);
-        this.flowShipOrder(
-          date,
-          [
-            {price: 100, shipping: 20},
-          ]).save();
-
-        date.setTime(date.getTime() + 60 * 60 * 1000);
-        this.flowSettlement(date);*/
+      ],
+    ).save();
+    this.toPay(O1, gateway, date);
+    this.toInvoiceOrder(O1);
+    this.flowSettlement(date, seller, gateway);
   }
 }

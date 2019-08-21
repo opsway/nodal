@@ -9,13 +9,14 @@ export class MarketSettlement implements Entity {
   references: string[] = [];
 
   constructor(
-    public createdAt: Date = new Date(),
+    public feeGW: number,
+    public createdAt: Date,
   ) {
     this.id = Util.uuid('ST_M');
   }
 
   get total(): number {
-    return this.amountShipping + this.totalFeeMarket;
+    return this.amountShipping + this.totalFeeMarket - this.feeGW;
   }
 
   capture(invoice: Invoice): this {
