@@ -380,7 +380,7 @@ export class ModelService {
 
   export(): string {
     const content = JSON.stringify(this.eventStream);
-    return `${window.location.origin}/#/?model=${btoa(content)}`;
+    return `${window.location.origin}${window.location.pathname}#/?model=${btoa(content)}`;
   }
 
   orderActions(order: Order): Action[] {
