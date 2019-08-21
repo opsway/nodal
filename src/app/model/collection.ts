@@ -34,6 +34,14 @@ export class Collection<T extends Entity> {
     return this.all()[0] || null;
   }
 
+  getRandomInt(max, min = 0) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  getRandom(): T {
+    return this.all()[`${this.getRandomInt(this.all().length)}`];
+  }
+
   filter(predicate: (entity: T) => boolean): Collection<T> {
     const result = new Collection<T>();
     this.elements.forEach((entity: T) => {
