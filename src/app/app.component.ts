@@ -37,11 +37,11 @@ export class AppComponent implements OnInit {
       title: 'Nodal',
       path: '/nodal',
     },
-    /*
     {
-      title: 'Refunds',
-      path: '/refunds',
+      title: 'History',
+      path: '/history',
     },
+    /*
     {
       title: 'Customers',
       path: '/customers',

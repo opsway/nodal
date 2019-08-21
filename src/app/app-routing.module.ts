@@ -8,7 +8,7 @@ import { PaymentsComponent } from './page/payments/payments.component';
 import { ShareComponent } from './page/share/share.component';
 import { NodalComponent } from './page/nodal/nodal.component';
 import { SellersComponent } from './page/sellers/sellers.component';
-import { RefundsComponent } from './page/refunds/refunds.component';
+import { HistoryComponent } from './page/history/history.component';
 import { CustomersComponent } from './page/customers/customers.component';
 
 
@@ -30,8 +30,8 @@ const routes: Routes = [
     component: NodalComponent,
   },
   {
-    path: 'refunds',
-    component: RefundsComponent,
+    path: 'history',
+    component: HistoryComponent,
   },
   {
     path: 'customers',

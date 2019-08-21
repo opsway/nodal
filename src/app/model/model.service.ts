@@ -1,5 +1,6 @@
 import {
   Injectable,
+  isDevMode,
 } from '@angular/core';
 import { OrderItem } from './entity/order/order-item';
 import { Item } from './entity/item';
@@ -16,6 +17,10 @@ import { Transfer } from './entity/transfer';
 import { SellerSettlement } from './entity/seller-settlement';
 import { MarketSettlement } from './entity/market-settlement';
 import { VirtualDateService } from '../util/virtual-date.service';
+import { History } from './entity/history/history';
+import { HistoryEvent } from './entity/history/history-event';
+import { Account } from './aggregate/account';
+import { AccountType } from './aggregate/account-type.enum';
 
 declare interface Action {
   name: string;
@@ -45,16 +50,67 @@ export class ModelService {
   private transferCollection: Collection<Transfer> = new Collection<Transfer>();
   private accountBalance: Map<string, number> = new Map();
   private eventStream = [];
+  readonly history: Collection<History> = new Collection<History>();
   readonly paymentGateways: string[];
+
+  readonly nodalAccounts = [
+    ModelService.NodalBank,
+    ModelService.NodalShipping,
+    ModelService.NodalMFFee,
+    ModelService.NodalGWFee,
+  ];
 
   constructor(
     private dateService: VirtualDateService,
   ) {
     this.paymentGateways = Model.paymentGateways;
     this.load();
-    // if (meta.releaseNumber === 'local') {
-    //  this.flow();
-    // }
+    if (isDevMode()) {
+      this.flow();
+    }
+  }
+
+  get accounts() {
+    return [
+      ...this.sellers.map(entity => entity.name),
+      ...this.paymentGateways,
+      ...this.nodalAccounts,
+    ];
+  }
+
+  get accountBalances(): Account[] {
+    const sellerAccounts = this.sellers.map(entity => entity.name)
+      .map(holder => new Account(holder, AccountType.seller, this.balanceByHolder(holder)));
+    const gatewayAccounts = this.paymentGateways
+      .map(holder => new Account(holder, AccountType.gateway, this.balanceByHolder(holder)));
+    const nodalAccounts = this.nodalAccounts
+      .map(holder => new Account(holder, AccountType.nodal, this.balanceByHolder(holder)));
+
+    sellerAccounts.push(new Account(
+      'Seller Total',
+      AccountType.total,
+      sellerAccounts.reduce((acc, entity) => acc + entity.balance, 0),
+    ));
+    gatewayAccounts.push(new Account(
+      'Gateway Total',
+      AccountType.total,
+      gatewayAccounts.reduce((acc, entity) => acc + entity.balance, 0),
+    ));
+
+    return [
+      ...gatewayAccounts,
+      ...sellerAccounts,
+      ...nodalAccounts,
+    ];
+  }
+
+  private logEvent(action: string, total: number): void {
+    this.history.add(new History(new HistoryEvent(
+      action,
+      total,
+      this.accountBalances,
+      this.dateService.getDate(),
+    )));
   }
 
   load(): void {
@@ -125,6 +181,9 @@ export class ModelService {
       this.createTransaction(ModelService.NodalMFFee, settlement.id, -settlement.totalFeeMarket);
       this.createTransaction(ModelService.NodalShipping, settlement.id, -settlement.amountShipping);
       this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.total);
+
+      const total = settlement.totalFeeMarket + settlement.amountShipping;
+      this.logEvent(`Market settlement: (${invoices.map(e => e.id).join(' ')})`, total);
     }
   }
 
@@ -170,6 +229,7 @@ export class ModelService {
     sellers.forEach((amount, sellerName) => {
       this.createTransaction(sellerName, refund.id, -amount, refund.createdAt);
     });
+    this.logEvent(`Refund: ${refund.id}`, refund.total);
   }
 
   transferSettlement(settlement: Settlement): void {
@@ -180,15 +240,6 @@ export class ModelService {
 
   get paymentMethods(): string[] {
     return this.paymentGateways;
-  }
-
-  get nodalAccounts(): string[] {
-    return [
-      ModelService.NodalBank,
-      ModelService.NodalGWFee,
-      ModelService.NodalShipping,
-      ModelService.NodalMFFee,
-    ];
   }
 
   get currentOrder(): Order {
@@ -239,10 +290,9 @@ export class ModelService {
     if (payments.count() > 0) {
       const settlement = this.createSettlement(gateway, date);
       payments.walk(entity => settlement.capture(entity));
-      console.log('createSettlement', settlement);
       this.transferSettlement(settlement);
+      this.logEvent(`Gateway settlement: (${settlement.references.join(' ')})`, settlement.total);
     }
-    console.log('createSettlement not payments');
   }
 
   get customers() {
@@ -404,6 +454,7 @@ export class ModelService {
     const payment = this.createPayment(order, gateway, this.dateService.getDate());
     this.transferPayment(payment);
     order.attachePayment(payment);
+    this.logEvent(`Pay: ${order.id}`, order.total);
   }
 
   toInvoiceOrderItem(orderItem: OrderItem): void {
@@ -450,6 +501,7 @@ export class ModelService {
         return; // TODO add alert
       }
       this.transferToSeller(settlement);
+      this.logEvent(`Seller settlement: ${settlement.id}`, settlement.total);
     }
   }
 
@@ -464,6 +516,7 @@ export class ModelService {
   saveInvoice(invoice: Invoice): void {
     invoice.save(this.dateService.getDate());
     this.transferInvoice(invoice);
+    this.logEvent(`Invoice: ${invoice.id}`, invoice.total);
   }
 
   toInvoiceOrder(order: Order): Order {
@@ -522,64 +575,65 @@ export class ModelService {
     );
   }
 
-  private flowEditNewOrder(): Order {
-    const order = this.addOrderItem(
-      this.customers.first().id,
-      100,
-      this.items.first().id,
-      20,
-      1,
-      this.sellers.first().id,
-    );
+  private flowEditNewOrder(
+    items: Array<{ price: number, shipping?: number, qty?: number }>,
+    date: Date = new Date(),
+  ): Order {
+    items.forEach(value => {
+      this.addOrderItem(
+        this.customers.first().id,
+        value.price,
+        this.items.first().id,
+        value.shipping || 0,
+        value.qty || 1,
+        this.sellers.first().id,
+      );
+    });
 
-    /*    this.addOrderItem(
-          this.customers.first().id,
-          100,
-          this.items.first().id,
-          20,
-          1,
-          this.sellers.first().id,
-        );*/
+    return this.currentOrder.withDate(date);
+  }
 
-    order.createdAt = new Date();
+  private flowShipOrder(
+    items: Array<{ price: number, shipping?: number, qty?: number }>,
+    gateway: string = this.paymentMethods[0],
+    date: Date = new Date(),
+  ): Order {
+    // Edit new Order and Save order
+    const order: Order = this.flowEditNewOrder(items).withDate(date).save();
+    // Pay Order
+    this.toPay(order, gateway);
+    // Create invoice for payed Order by item via Seller
+    this.toInvoiceOrder(order);
+    // Ship invoice;
+    this.invoiceCollection.first().ship();
+    this.toSettlement(gateway, new Date());
 
     return order;
   }
 
+  private flowSettlement(
+    sellerName: string = this.sellers.first().name,
+    gateway: string = this.paymentMethods[0],
+    date: Date = new Date(),
+  ) {
+    // Seller Settlement;
+    this.toSettlement(gateway, date);
+    // Seller Settlement;
+    this.makeSettlementToSeller(sellerName);
+    // Market Settlement;
+    this.makeSettlementToMarket();
+  }
+
   private flow(): void {
-    // 1. Order flow
-    let order: Order = null;
-    // 1.1. Edit new Order
-    this.flowEditNewOrder();
-    // 1.2. Save order
-    this.saveOrder();
-    // 1.3. Pay Order
-    this.toPay(this.flowEditNewOrder().save(), this.paymentMethods[0]);
-    // 1.4. Create invoice for payed Order by item via Seller
-    order = this.flowEditNewOrder().save();
-    this.toPay(order, this.paymentMethods[0]);
-    this.toInvoiceOrder(order);
-    // 1.5. Ship invoice
-    // TODO add cases for statuses
-    // 1.6. Cancel invoice
-    // TODO add cases for statuses
-    // 1.7. Return item
-    // TODO add cases for statuses
-    // 1.8. Refund item
-    // TODO add cases for statuses
+    const A = this.flowShipOrder([
+      {price: 100, shipping: 20},
+    ]).save();
+    this.flowSettlement();
+    this.toRefundOrder(A.return());
 
-    // 2. Payment flow
-    // TODO add setted cancel (reject)
-    // TODO add setted status ship (reject)
-    // TODO add setted status returned etc
-    // TODO add remay ???
-    // ;
-
-    // TODO add refunds before gateway settlement
-    // 3. Settlement flow
-    // this.paymentService.gatewaySettlement('pytm', (new Date()));
-
-    // TODO add refunds after checkout
-    // this.paymentService.nodalSettlement();
+    this.flowShipOrder([
+      {price: 100, shipping: 20, qty: 2},
+    ]).save();
+    this.flowSettlement();
   }
 }

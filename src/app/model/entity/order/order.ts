@@ -212,4 +212,10 @@ export class Order extends Serializable {
     }, new Map<string, InvoiceItems>()).values())
       .filter((value => value.items.length > 0));
   }
+
+  withDate(date: Date): this {
+    this.createdAt = date;
+
+    return this;
+  }
 }

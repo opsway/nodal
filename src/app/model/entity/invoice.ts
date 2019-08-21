@@ -68,6 +68,10 @@ export class Invoice implements Entity {
     return this.items.reduce((entity, acc) => acc + entity.amountSeller, 0);
   }
 
+  get total(): number {
+    return this.amountShipping + this.totalFeeMarket + this.amountSeller;
+  }
+
   hasOrder(o: Order): boolean {
     return this.items
       .filter(e => e.orderId === o.id)

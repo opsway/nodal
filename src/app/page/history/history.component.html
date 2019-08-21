@@ -1,0 +1,44 @@
+<div class="content">
+  <div class="container-fluid">
+    <div class="row justify-content-between mb-3">
+      <div class="col-sm">
+        <h2>History</h2>
+      </div>
+    </div>
+    <div class="row justify-content-md-center mb-3">
+      <div class="col-sm">
+        <table class="pure-table pure-table-bordered text-center">
+          <thead>
+            <tr>
+                <th [attr.colspan]="historyHeaders.length">Event</th>
+                <th [attr.colspan]="accountHeaders.length">Account balance</th>
+            </tr>
+            <tr>
+                <th *ngFor="let header of headers">{{header}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let history of data; let i = index"
+                [class.pure-table-odd]="i % 2 === 0"
+            >
+                <td>{{history.id}}</td>
+                <td>{{history.createdAt | dateFormat}}</td>
+                <td>{{history.action}}</td>
+                <td>{{history.total | convert}}</td>
+                <td *ngFor="let accountBalance of history.accountBalances">{{accountBalance.balance | convert}}</td>
+            </tr>
+            <tr *ngIf="isEmpty">
+              <td [attr.colspan]="headers.length">empty</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td [attr.colspan]="historyHeaders.length"></td>
+              <td *ngFor="let footer of footers">{{footer | convert}}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

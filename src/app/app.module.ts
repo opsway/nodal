@@ -23,7 +23,7 @@ import { SellersComponent } from './page/sellers/sellers.component';
 import { NodalComponent } from './page/nodal/nodal.component';
 import { OrderCreateComponent } from './ui/dialog/order-create/order-create.component';
 import { OrderItemsTableComponent } from './ui/table/order-items-table/order-items-table.component';
-import { RefundsComponent } from './page/refunds/refunds.component';
+import { HistoryComponent } from './page/history/history.component';
 import { CustomersComponent } from './page/customers/customers.component';
 import { PaymentsTableComponent } from './ui/table/payments-table/payments-table.component';
 import { DateFormatPipe } from './util/date-format.pipe';
@@ -51,7 +51,7 @@ import { InvoiceActionsComponent } from './ui/table/invoice-actions/invoice-acti
     OrderCreateComponent,
     OrderItemsTableComponent,
     AutoFocusDirective,
-    RefundsComponent,
+    HistoryComponent,
     CustomersComponent,
     PaymentsTableComponent,
     DateFormatPipe,
