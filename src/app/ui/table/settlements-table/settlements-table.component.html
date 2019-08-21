@@ -7,7 +7,7 @@
       <th>PAYMENTS (sum/count)</th>
       <th>REFUNDS (sum/counts)</th>
       <th>GW FEE SUM</th>
-      <th>SETTLED AMOUNT</th>
+      <th>SETTLED TOTAL</th>
       <th>REFERENCES</th>
     </tr>
   </thead>
@@ -21,7 +21,7 @@
         <td>{{row.totalPayment | convert}} ({{row.countPayment}})</td>
         <td>{{row.totalRefund | convert}} ({{row.countRefund}})</td>
         <td>{{row.fee | convert}}</td>
-        <td>{{row.amount | convert}}</td>
+        <td>{{row.total | convert}}</td>
         <td>{{row.references.join(', ')}}</td>
     </tr>
     <tr *ngIf="data.length === 0">

@@ -231,9 +231,9 @@ export class ModelService {
     this.logEvent(`Refund: ${refund.id}`, refund.total);
   }
 
-  transferSettlement(settlement: GatewaySettlement): void {
+  gatewayTransfer(settlement: GatewaySettlement): void {
     this.createTransaction(settlement.gateway, settlement.id, -settlement.amount, settlement.createdAt);
-    this.createTransaction(ModelService.NodalBank, settlement.id, settlement.amount, settlement.createdAt);
+    this.createTransaction(ModelService.NodalBank, settlement.id, settlement.total, settlement.createdAt);
     this.createTransaction(ModelService.NodalGWFee, settlement.id, settlement.fee, settlement.createdAt);
   }
 
@@ -291,8 +291,8 @@ export class ModelService {
       const settlement = this.createSettlement(gateway, date)
         .withPayment(payments)
         .withRefund(refunds);
-      this.transferSettlement(settlement);
-      this.logEvent(`Gateway settlement: ${settlement.id} (${settlement.references.join(' ')})`, settlement.amount);
+      this.gatewayTransfer(settlement);
+      this.logEvent(`Gateway settlement: ${settlement.id} (${settlement.references.join(' ')})`, settlement.total);
     }
   }
 
@@ -639,6 +639,13 @@ export class ModelService {
 
   private flow(): void {
     const A = this.flowShipOrder([
+      {price: 100, shipping: 20},
+    ]).save();
+    this.flowSettlement();
+
+    this.toRefundOrder(A.return());
+
+    this.flowShipOrder([
       {price: 100, shipping: 20},
     ]).save();
     this.flowSettlement();

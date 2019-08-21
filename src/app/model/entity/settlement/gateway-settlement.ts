@@ -25,6 +25,10 @@ export class GatewaySettlement implements Entity {
     return this.totalPayment - this.totalRefund;
   }
 
+  get total(): number {
+    return this.amount - this.fee;
+  }
+
   private static calcFee(amoint: number): number {
     return Math.floor((Model.paymentGatewayFee / 100) * amoint);
   }
