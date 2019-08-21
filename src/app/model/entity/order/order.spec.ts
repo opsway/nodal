@@ -52,7 +52,7 @@ describe('OrderItem', () => {
     expect(order.amountShipping).toEqual(5000);
     expect(order.feeMarket).toEqual(826);
     expect(order.total).toEqual(15000);
-    expect(order.id).toEqual('O1');
+    expect(order.id).toEqual('O_1');
     expect(order.customerName).toEqual('Aleksei');
     expect(order.isEmpty).toEqual(false);
     expect(order.isNew).toEqual(true);
@@ -66,7 +66,7 @@ describe('OrderItem', () => {
     expect(order.amountShipping).toEqual(0);
     expect(order.feeMarket).toEqual(0);
     expect(order.total).toEqual(0);
-    expect(order.id).toEqual('O1');
+    expect(order.id).toEqual('O_1');
     expect(order.customerName).toEqual('Aleksei');
     expect(order.isEmpty).toEqual(true);
     expect(order.isNew).toEqual(true);

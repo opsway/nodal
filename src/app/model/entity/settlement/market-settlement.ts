@@ -12,7 +12,7 @@ export class MarketSettlement implements Entity {
   constructor(
     public createdAt: Date = new Date(),
   ) {
-    this.id = Util.uuid('ST_M_');
+    this.id = Util.uuid('ST_M');
   }
 
   get total(): number {

@@ -18,7 +18,7 @@ export class GatewaySettlement implements Entity {
     public gateway: string,
     public createdAt: Date = new Date(),
   ) {
-    this.id = Util.uuid('ST_GW_');
+    this.id = Util.uuid('ST_GW');
   }
 
   get amount(): number {

@@ -8,7 +8,7 @@ export class History implements Entity {
   constructor(
     private event: HistoryEvent,
   ) {
-    this.id = Util.uuid('H_');
+    this.id = Util.uuid('H');
   }
 
   get createdAt() {

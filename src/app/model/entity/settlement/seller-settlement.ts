@@ -12,7 +12,7 @@ export class SellerSettlement implements Entity {
     public sellerName: string,
     public createdAt: Date = new Date(),
   ) {
-    this.id = Util.uuid('ST_SL_');
+    this.id = Util.uuid('ST_SL');
   }
 
   get total(): number {

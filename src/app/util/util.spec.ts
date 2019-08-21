@@ -5,8 +5,8 @@ describe('Util', () => {
     Util.sequenceClear();
   });
   it('uuid: should uniq an sequence', () => {
-    expect(Util.uuid()).toEqual('1');
-    expect(Util.uuid('NC')).toEqual('NC1');
-    expect(Util.uuid('NC')).toEqual('NC2');
+    expect(Util.uuid()).toEqual('_1');
+    expect(Util.uuid('NS')).toEqual('NS_1');
+    expect(Util.uuid('NS')).toEqual('NS_2');
   });
 });

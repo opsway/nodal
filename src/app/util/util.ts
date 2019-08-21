@@ -8,7 +8,7 @@ const uuid = (namespace: string = ''): string => {
   const counter = (sequence.get(namespace) || 0) + 1;
   sequence.set(namespace, counter);
 
-  return `${namespace}${counter}`;
+  return `${namespace}_${counter}`;
 };
 
 export {
