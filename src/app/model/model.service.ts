@@ -594,16 +594,16 @@ export class ModelService {
 
   private flowEditNewOrder(
     items: Array<{ price: number, shipping?: number, qty?: number }>,
-    date: Date = new Date(),
+    date: Date = this.dateService.getDate(),
   ): Order {
     items.forEach(value => {
       this.addOrderItem(
-        this.customers.first().id,
+        this.customers.getRandom().id,
         value.price,
-        this.items.first().id,
+        this.items.getRandom().id,
         value.shipping || 0,
         value.qty || 1,
-        this.sellers.first().id,
+        this.sellers.getRandom().id,
       );
     });
 
@@ -613,7 +613,7 @@ export class ModelService {
   private flowShipOrder(
     items: Array<{ price: number, shipping?: number, qty?: number }>,
     gateway: string = this.paymentMethods[0],
-    date: Date = new Date(),
+    date: Date = this.dateService.getDate(),
   ): Order {
     // Edit new Order and Save order
     const order: Order = this.flowEditNewOrder(items).withDate(date).save();
@@ -628,9 +628,9 @@ export class ModelService {
   }
 
   private flowSettlement(
-    sellerName: string = this.sellers.first().name,
+    sellerName: string = this.sellers.getRandom().name,
     gateway: string = this.paymentMethods[0],
-    date: Date = new Date(),
+    date: Date = this.dateService.getDate(),
   ) {
     this.makeSettlementToSeller(sellerName);
     this.toSettlement(gateway, date);
@@ -639,7 +639,11 @@ export class ModelService {
 
   private flow(): void {
     const A = this.flowShipOrder([
-      {price: 100, shipping: 20},
+      {
+        price: this.items.getRandomInt(1000),
+        shipping: this.items.getRandomInt(100),
+        qty: this.items.getRandomInt(10)
+      },
     ]).save();
     this.flowSettlement();
   }
