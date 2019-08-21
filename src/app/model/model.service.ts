@@ -349,13 +349,14 @@ export class ModelService {
       const action = data[i].name;
       const date = data[i].date;
       const params = data[i].params;
+      let order = null;
       switch (action) {
         case 'createOrder':
           const customer = new Customer('ff');
           customer.deserialize(params.customer);
           this.dateService.getDate();
           // todo date handling
-          const order = this.createOrder(customer);
+          order = this.createOrder(customer);
 
           params.items.slice(1).split('|').forEach(itemData => {
             const orderItem = new OrderItem(100,
@@ -371,7 +372,11 @@ export class ModelService {
 
           order.save();
           break;
-
+        case 'toPay':
+          // todo date handling
+          order = this.orders.find(params.order_id);
+          this.toPay(order, params.gw);
+          break;
       }
     }
 
@@ -451,6 +456,9 @@ export class ModelService {
   }
 
   toPay(order: Order, gateway: string): void {
+    this.eventStream.push({
+      name: 'toPay', date: this.dateService.getValue(), params: {order_id: order.id, gw: gateway}
+    });
     const payment = this.createPayment(order, gateway, this.dateService.getDate());
     this.transferPayment(payment);
     order.attachePayment(payment);
