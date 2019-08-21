@@ -1,7 +1,7 @@
-import * as Util from '../../util/util';
-import { Entity } from './entity';
-import { Collection } from '../collection';
-import { Invoice } from './invoice';
+import * as Util from '../../../util/util';
+import { Entity } from '../entity';
+import { Collection } from '../../collection';
+import { Invoice } from '../invoice';
 
 export class MarketSettlement implements Entity {
   id: string;

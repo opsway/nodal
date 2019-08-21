@@ -3,7 +3,7 @@ import { Order } from './order/order';
 import { Model } from '../model';
 import { Collection } from '../collection';
 import { Refund } from './refund';
-import { Settlement } from './settlement';
+import { GatewaySettlement } from './settlement/gateway-settlement';
 
 export class Payment {
   static STATUS_CAPTURED = 'captured';

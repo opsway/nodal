@@ -9,13 +9,13 @@ import { Collection } from './collection';
 import { Invoice } from './entity/invoice';
 import { Refund } from './entity/refund';
 import { Model } from './model';
-import { Settlement } from './entity/settlement';
+import { GatewaySettlement } from './entity/settlement/gateway-settlement';
 import { Payment } from './entity/payment';
 import { Seller } from './entity/member/seller';
 import { Customer } from './entity/member/customer';
 import { Transfer } from './entity/transfer';
-import { SellerSettlement } from './entity/seller-settlement';
-import { MarketSettlement } from './entity/market-settlement';
+import { SellerSettlement } from './entity/settlement/seller-settlement';
+import { MarketSettlement } from './entity/settlement/market-settlement';
 import { VirtualDateService } from '../util/virtual-date.service';
 import { History } from './entity/history/history';
 import { HistoryEvent } from './entity/history/history-event';
@@ -44,7 +44,7 @@ export class ModelService {
   private invoiceCollection: Collection<Invoice> = new Collection<Invoice>();
   private refundCollection: Collection<Refund> = new Collection<Refund>();
   private paymentCollection: Collection<Payment> = new Collection<Payment>();
-  private settlementCollection: Collection<Settlement> = new Collection<Settlement>();
+  private settlementCollection: Collection<GatewaySettlement> = new Collection<GatewaySettlement>();
   private sellerSettlementCollection: Collection<SellerSettlement> = new Collection<SellerSettlement>();
   private marketSettlementCollection: Collection<MarketSettlement> = new Collection<MarketSettlement>();
   private transferCollection: Collection<Transfer> = new Collection<Transfer>();
@@ -232,7 +232,7 @@ export class ModelService {
     this.logEvent(`Refund: ${refund.id}`, refund.total);
   }
 
-  transferSettlement(settlement: Settlement): void {
+  transferSettlement(settlement: GatewaySettlement): void {
     this.createTransaction(settlement.gateway, settlement.id, -settlement.total, settlement.createdAt);
     this.createTransaction(ModelService.NodalBank, settlement.id, settlement.total, settlement.createdAt);
     this.createTransaction(ModelService.NodalGWFee, settlement.id, settlement.fee, settlement.createdAt);
@@ -280,8 +280,8 @@ export class ModelService {
     return this.settlementCollection;
   }
 
-  createSettlement(paymentMethod: string, date: Date): Settlement {
-    return this.settlementCollection.add(new Settlement(paymentMethod, date));
+  createSettlement(paymentMethod: string, date: Date): GatewaySettlement {
+    return this.settlementCollection.add(new GatewaySettlement(paymentMethod, date));
   }
 
   toSettlement(gateway: string, date: Date): void {
@@ -616,11 +616,11 @@ export class ModelService {
     gateway: string = this.paymentMethods[0],
     date: Date = new Date(),
   ) {
-    // Seller Settlement;
+    // Seller GatewaySettlement;
     this.toSettlement(gateway, date);
-    // Seller Settlement;
+    // Seller GatewaySettlement;
     this.makeSettlementToSeller(sellerName);
-    // Market Settlement;
+    // Market GatewaySettlement;
     this.makeSettlementToMarket();
   }
 

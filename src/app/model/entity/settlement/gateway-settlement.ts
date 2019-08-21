@@ -1,10 +1,10 @@
-import * as Util from '../../util/util';
-import { Entity } from './entity';
-import { Model } from '../model';
-import { Payment } from './payment';
-import { Collection } from '../collection';
+import * as Util from '../../../util/util';
+import { Entity } from '../entity';
+import { Model } from '../../model';
+import { Payment } from '../payment';
+import { Collection } from '../../collection';
 
-export class Settlement implements Entity {
+export class GatewaySettlement implements Entity {
   id: string;
   fee = 0;
   amount = 0;
@@ -26,7 +26,7 @@ export class Settlement implements Entity {
     return this.amount + this.fee;
   }
 
-  capture(payment: Payment): Settlement {
+  capture(payment: Payment): this {
     const feeGateway = Math.floor((Model.paymentGatewayFee / 100) * payment.totalSettlement);
     this.amount += payment.totalSettlement - feeGateway;
     this.fee += feeGateway;
