@@ -591,7 +591,7 @@ export class ModelService {
     priceShipping: number,
     qty: number,
     sellerId: string,
-    createdAt: Date = new Date(),
+    createdAt: Date,
   ): Order {
     const customer = this.customers.find(customerId);
     const item = this.items.find(itemId);

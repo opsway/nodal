@@ -23,18 +23,6 @@
               </select>
             </div>
 
-            <div class="form-group col-sm">
-              <label for="date">Date</label>
-              <input type="datetime-local" id="date" class="form-control"
-                     formControlName="date"
-                     [ngClass]="{'is-invalid': form.get('date').invalid}"
-              >
-              <div class="invalid-feedback">
-                <div *ngIf="form.hasError('required', 'date')">Date is required</div>
-              </div>
-
-            </div>
-
           </div>
 
           <h5>New Item of Order</h5>

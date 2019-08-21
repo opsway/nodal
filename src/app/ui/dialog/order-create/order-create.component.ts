@@ -28,7 +28,6 @@ export class OrderCreateComponent implements OnInit {
     private fb: FormBuilder,
     private modalService: NgbModal,
     public model: ModelService,
-    private datePipe: DatePipe,
     private dateService: VirtualDateService
   ) {
   }
@@ -38,10 +37,6 @@ export class OrderCreateComponent implements OnInit {
     this.form = this.fb.group({
       orderId: [this.model.currentOrder.id, []],
       customerId: [this.model.customers.first().id, Validators.required],
-      date: [this.dateService.getValue(), [
-        Validators.required,
-        // this.validateDate
-      ]],
       orderItem: this.fb.group({
         sellerId: [this.model.sellers.first().id, Validators.required],
         itemId: [this.model.items.first().id, Validators.required],
@@ -59,35 +54,10 @@ export class OrderCreateComponent implements OnInit {
         ]],
       })
     }, {
-      // validator: this.checkDate()
     });
   }
 
-  // checkDate() {
-  //   return (group: FormGroup): {[key: string]: any} => {
-  //     const d = group.controls.date;
-  //     const min = new Date(this.minDate);
-  //     const test = new Date(d.value);
-  //     return (min > test) ? {
-  //       checkDate: `Date should be greater than ${this.datePipe.transform(this.minDate, 'yyyy-MM-dd HH:mm')}`
-  //     } : {};
-  //   };
-  // }
-  // validateDate = (c: FormControl) => {
-  //   const min = new Date(this.minDate);
-  //   const test = new Date(c.value);
-  //   return (min > test) ? {
-  //     checkDate: {
-  //       valid: false
-  //     }
-  //   } : null;
-  // }
-
   open(content) {
-    this.form.patchValue({
-      date: this.dateService.getValue()
-    });
-
     this.modalService.open(content, {
       centered: true,
       size: 'xl',
@@ -115,7 +85,7 @@ export class OrderCreateComponent implements OnInit {
         this.form.value.orderItem.shipping,
         this.form.value.orderItem.qty,
         this.form.value.orderItem.sellerId,
-        new Date(this.form.value.date),
+        this.dateService.getDate(),
       );
     } else {
       for (const inner in this.form.controls) {
