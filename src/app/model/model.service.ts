@@ -158,20 +158,27 @@ export class ModelService {
     this.createTransaction(ModelService.NodalBank, settlement.id, -settlement.amount, settlement.createdAt);
   }
 
-  marketNotCapturedInvoices(date: Date) {
+  byDateInvoices(date: Date) {
     return this.invoiceCollection
-      .filter(entity => !entity.isMarketCaptured)
-      .filter(entity => entity.canMarketCaptured)
       .filter(entity => entity.createdAt.getTime() <= date.getTime());
   }
 
+  marketNotCapturedInvoices(date: Date) {
+    return this.byDateInvoices(date)
+      .filter(entity => !entity.isMarketCaptured)
+      .filter(entity => entity.canMarketCaptured);
+  }
+
+  sellerNotCapturedInvoices(date: Date, sellerName: string = null) {
+    return this.byDateInvoices(date)
+      .filter(entity => !entity.isSellerCaptured)
+      .filter(entity => sellerName === null || entity.seller.name === sellerName)
+      .filter(entity => entity.canMarketCaptured);
+  }
+
   transferToMarket(date: Date): void {
-    const invoices = this.marketNotCapturedInvoices(date);
-    invoices.walk( entity => {
-      console.log(entity);
-      console.log(entity.createdAt.getTime(), date.getTime());
-    });
-    if (invoices.count() > 0) {
+    if (this.canMarketSettlement(date)) {
+      const invoices = this.marketNotCapturedInvoices(date);
       const GWFee = this.balanceByHolder(ModelService.NodalGWFee);
       const settlement = this.marketSettlementCollection.add(new MarketSettlement(
         GWFee,
@@ -533,20 +540,14 @@ export class ModelService {
   }
 
   canSellerSettlement(name: string, date: Date): boolean {
-    // TODO add filter by date
-    return this.balanceByHolder(name) > 0;
+    return this.sellerNotCapturedInvoices(date, name).count() > 0;
   }
 
   doSellerSettlement(name: string, date: Date): void {
-    const invoices = this.invoiceCollection
-      .filter(entity => entity.seller.name === name && !entity.isSellerCaptured);
-
-    if (invoices.count() > 0) {
+    if (this.canSellerSettlement(name, date)) {
+      const invoices = this.sellerNotCapturedInvoices(date, name);
       const settlement = this.sellerSettlementCollection.add(new SellerSettlement(name, date));
       invoices.walk(entity => settlement.capture(entity));
-      if (settlement.amount !== this.balanceByHolder(name)) {
-        return; // TODO add alert
-      }
       this.transferToSeller(settlement);
       this.logEvent(
         settlement.createdAt,
