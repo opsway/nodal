@@ -1,0 +1,56 @@
+{
+  "nodal": {
+    "market": 0,
+    "sellers": [
+      {
+        "id": "S_1",
+        "total": 0
+      },
+      {
+        "id": "S_2",
+        "total": 0
+      }
+    ]
+  },
+  "marketSettlements": [
+    {
+      "id": "MP_ST_1",
+      "total": 100,
+      "captured": false,
+      "sellerSettlements": [
+        "SL_ST_1"
+      ]
+    }
+  ],
+  "sellerSettlements": [
+    {
+      "id": "SL_ST_1",
+      "gatewaySettlementsId": "GT_ST_1",
+      "orderItemId": "OI_1",
+      "seller": "foo",
+      "total": 100,
+      "captured": false
+    }
+  ],
+  "gatewaySettlements": [
+    {
+      "id": "GW_ST_1",
+      "total": 50,
+      "fee": 1,
+      "captured": true,
+      "payments": [
+        {
+          "id": "P_1",
+          "total": 100,
+          "fee": 1,
+          "refunds": [
+            {
+              "id": "R_1",
+              "total": 50
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

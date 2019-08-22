@@ -1,0 +1,18 @@
+@startmindmap
+
+skinparam shadowing false
+
+* Nodal
+** MarketSettlements
+*** SellerSettlements
+**** GatewaySettlements
+***** Payment
+****** GatewayFee
+***** Refund
+**** OrderItem
+***** MarketFeePercent
+***** Price
+***** PriceShipping
+***** Seller
+
+@endmindmap
