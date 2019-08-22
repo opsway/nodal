@@ -15,8 +15,16 @@ const random = (max: number, min: number): number => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
+const dateToString = (date: Date): string => {
+  return (date.getFullYear().toString() + '-'
+    + ('0' + (date.getMonth() + 1)).slice(-2) + '-'
+    + ('0' + (date.getDate())).slice(-2))
+    + 'T' + date.toTimeString().slice(0, 8);
+};
+
 export {
   uuid,
   sequenceClear,
   random,
+  dateToString,
 };

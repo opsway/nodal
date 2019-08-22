@@ -20,6 +20,7 @@ import { History } from './entity/history/history';
 import { HistoryEvent } from './entity/history/history-event';
 import { Account } from './aggregate/account';
 import { AccountType } from './aggregate/account-type.enum';
+import * as Util from '../util/util';
 
 declare interface Action {
   name: string;
@@ -494,7 +495,7 @@ export class ModelService {
     this.transferPayment(payment);
     this.eventStream.push({
       name: 'toPay',
-      date: payment.createdAt.toISOString(),
+      date: Util.dateToString(payment.createdAt),
       params: {
         order_id: order.id,
         gw: gateway,
