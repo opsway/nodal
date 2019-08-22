@@ -11,7 +11,12 @@ const uuid = (namespace: string = ''): string => {
   return `${namespace}_${counter}`;
 };
 
+const random = (max: number, min: number): number => {
+  return Math.floor(Math.random() * (max - min)) + min;
+};
+
 export {
   uuid,
   sequenceClear,
+  random,
 };

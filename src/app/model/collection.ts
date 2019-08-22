@@ -1,3 +1,4 @@
+import * as Util from '../util/util';
 import { Entity } from './entity/entity';
 
 export class Collection<T extends Entity> {
@@ -34,12 +35,8 @@ export class Collection<T extends Entity> {
     return this.all()[0] || null;
   }
 
-  getRandomInt(max, min = 0) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
-
-  getRandom(): T {
-    return this.all()[`${this.getRandomInt(this.all().length)}`];
+  firstRandom(): T | null {
+    return this.all()[Util.random(this.all().length, 0)] || null;
   }
 
   filter(predicate: (entity: T) => boolean): Collection<T> {
