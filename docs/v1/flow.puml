@@ -1,0 +1,39 @@
+@startuml
+
+title <b>Model v1 (flow)</b>
+skinparam shadowing false
+
+state Gateway {
+  Gateway -> Customer: Refund
+  Gateway -> Nodal: Settlement
+
+}
+
+state Nodal {
+  Nodal -> Seller: Settlement
+  Nodal -> Market: Settlement
+}
+
+state Seller {
+}
+
+state Market {
+}
+
+state Order {
+  Order --> OrderItem: Add OrderItem
+}
+
+state OrderItem {
+  ordered --> paid: Pay
+  paid --> invoiced: Create Invoice
+  paid --> cancelled: Cancel OrderItem
+  invoiced --> cancelled: Cancel Invoice
+  invoiced --> shipped: Shipping
+  shipped --> returned: Return OrderItem
+  returned --> refunded: Refund Payment
+  refunded --> Gateway
+  cancelled --> returned
+  paid --> Gateway
+}
+@enduml

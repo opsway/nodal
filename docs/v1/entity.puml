@@ -1,6 +1,6 @@
 @startuml
 
-title <b>Model v1</b>
+title <b>Model v1 (entity)</b>
 left to right direction
 skinparam shadowing false
 
