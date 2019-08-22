@@ -32,7 +32,7 @@ export class OrdersComponent {
     if (order.createdAt.getTime() > now.getTime()) {
       let actionType = '';
       if (order.isNoPaid) {
-        actionType = 'pay';
+        actionType = 'payment';
       } else if (order.canInvoice) {
         actionType = 'invoice';
       } else if (order.canCanceled) {
