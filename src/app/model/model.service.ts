@@ -601,20 +601,15 @@ export class ModelService {
   }
 
   addOrderItem(
-    customerId: string,
     price: number,
     itemId: string,
     priceShipping: number,
     qty: number,
     sellerId: string,
-    createdAt: Date,
   ): Order {
-    const customer = this.customers.find(customerId);
     const item = this.items.find(itemId);
     const seller = this.sellers.find(sellerId);
     const cart = this.currentOrder;
-    cart.customer = customer;
-    cart.createdAt = createdAt;
 
     return cart.addItem(
       price,
@@ -632,17 +627,17 @@ export class ModelService {
   ): Order {
     items.forEach(value => {
       this.addOrderItem(
-        this.customers.first().id,
         value.price,
         this.items.first().id,
         value.shipping || 0,
         value.qty || 1,
         seller.id,
-        date,
       );
     });
 
-    return this.currentOrder.withDate(date);
+    return this.currentOrder
+      .withCustomer(this.customers.first())
+      .withDate(date);
   }
 
   private flowShipOrder(

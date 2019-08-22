@@ -73,19 +73,21 @@ export class OrderCreateComponent implements OnInit {
       orderId: this.model.currentOrder.id,
     });
 
+    this.model.currentOrder
+      .withDate(this.dateService.getDate())
+      .withCustomer(this.model.customers.find(this.form.value.customerId));
+
     return this.model.saveOrder();
   }
 
   addOrderItem(): boolean {
     if (this.form.valid) {
       this.model.addOrderItem(
-        this.form.value.customerId,
         this.form.value.orderItem.price,
         this.form.value.orderItem.itemId,
         this.form.value.orderItem.shipping,
         this.form.value.orderItem.qty,
         this.form.value.orderItem.sellerId,
-        this.dateService.getDate(),
       );
     } else {
       for (const inner in this.form.controls) {

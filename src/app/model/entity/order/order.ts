@@ -224,4 +224,10 @@ export class Order extends Serializable implements Entity, OrderByDate {
 
     return this;
   }
+
+  withCustomer(customer: Customer): this {
+    this.customer = customer;
+
+    return this;
+  }
 }
