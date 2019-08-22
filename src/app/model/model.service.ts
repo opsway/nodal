@@ -21,6 +21,7 @@ import { HistoryEvent } from './entity/history/history-event';
 import { Account } from './aggregate/account';
 import { AccountType } from './aggregate/account-type.enum';
 import * as Util from '../util/util';
+import { TransferBalance } from './aggregate/transfer-balance';
 
 declare interface Action {
   name: string;
@@ -49,7 +50,6 @@ export class ModelService {
   private sellerSettlementCollection: Collection<SellerSettlement> = new Collection<SellerSettlement>();
   private marketSettlementCollection: Collection<MarketSettlement> = new Collection<MarketSettlement>();
   private transferCollection: Collection<Transfer> = new Collection<Transfer>();
-  private accountBalance: Map<string, number> = new Map();
   private eventStream = [];
   readonly history: Collection<History> = new Collection<History>();
   readonly paymentGateways: string[];
@@ -70,12 +70,13 @@ export class ModelService {
   }
 
   get accountBalances(): Account[] {
+    const date: Date = this.dateService.getDate(); // FIXME move into signature
     const sellerAccounts = this.sellers.map(entity => entity.name)
-      .map(holder => new Account(holder, AccountType.seller, this.balanceByHolder(holder)));
+      .map(holder => new Account(holder, AccountType.seller, this.calcBalance(date, holder)));
     const gatewayAccounts = this.paymentGateways
-      .map(holder => new Account(holder, AccountType.gateway, this.balanceByHolder(holder)));
+      .map(holder => new Account(holder, AccountType.gateway, this.calcBalance(date, holder)));
     const nodalAccounts = this.nodalAccounts
-      .map(holder => new Account(holder, AccountType.nodal, this.balanceByHolder(holder)));
+      .map(holder => new Account(holder, AccountType.nodal, this.calcBalance(date, holder)));
 
     sellerAccounts.push(new Account(
       'Seller Total',
@@ -129,22 +130,30 @@ export class ModelService {
     ]);
   }
 
-  get transfers() {
-    return this.transferCollection;
+  transfersWithBalanceByHolder(date: Date, holder: string) {
+    const list = this.findTransfers(date, holder)
+      .map(entity => new TransferBalance(entity, this.calcBalance(entity.createdAt, holder)));
+
+    return new Collection<TransferBalance>().load(list);
   }
 
-  balanceByHolder(holder: string): number {
-    return this.accountBalance.get(holder) || 0;
+  findTransfers(date: Date, holder: string = null) {
+    return this.transferCollection
+      .filter(entity => holder === null || entity.holder === holder)
+      .filter(entity => entity.createdAt.getTime() <= date.getTime());
+  }
+
+  calcBalance(date: Date, holder: string): number {
+    return this.findTransfers(date, holder)
+      .reduce((entity, acc) => acc + entity.amount, 0);
   }
 
   createTransaction(holder: string, ref: string, amount: number, date: Date = this.dateService.getDate()) {
     if (Math.abs(amount) === 0) {
       return;
     }
-    const balance = this.balanceByHolder(holder) + amount;
-    this.accountBalance.set(holder, balance);
 
-    return this.transferCollection.add(new Transfer(holder, ref, amount, balance, date));
+    return this.transferCollection.add(new Transfer(holder, ref, amount, date));
   }
 
   transferInvoice(invoice: Invoice): void {
@@ -179,7 +188,7 @@ export class ModelService {
   transferToMarket(date: Date): void {
     if (this.canMarketSettlement(date)) {
       const invoices = this.marketNotCapturedInvoices(date);
-      const GWFee = this.balanceByHolder(ModelService.NodalGWFee);
+      const GWFee = this.calcBalance(date, ModelService.NodalGWFee);
       const settlement = this.marketSettlementCollection.add(new MarketSettlement(
         GWFee,
         date,
@@ -674,16 +683,16 @@ export class ModelService {
   }
 
   flow(date: Date): void {
-    const gateway = this.paymentMethods[0];
-    const seller = this.sellers.first();
-    const O1 = this.flowEditNewOrder(
-      date,
-      [
-        {price: 100, shipping: 20},
-      ],
-    ).save();
-    this.toPay(O1, gateway, date);
-    this.toInvoiceOrder(O1, date);
-    this.flowSettlement(date, seller, gateway);
+    // const gateway = this.paymentMethods[0];
+    // const seller = this.sellers.first();
+    // const O1 = this.flowEditNewOrder(
+    //   date,
+    //   [
+    //     {price: 100, shipping: 20},
+    //   ],
+    // ).save();
+    // this.toPay(O1, gateway, date);
+    // this.toInvoiceOrder(O1, date);
+    // this.flowSettlement(date, seller, gateway);
   }
 }

@@ -8,6 +8,7 @@ import { DateFormatPipe } from '../../../util/date-format.pipe';
 import { ConvertPipe } from '../../../util/convert.pipe';
 import { ModelService } from '../../../model/model.service';
 import { VirtualDateService } from '../../../util/virtual-date.service';
+import { TransferBalance } from '../../../model/aggregate/transfer-balance';
 
 @Component({
   selector: 'app-account-balances-table',
@@ -42,17 +43,17 @@ export class AccountBalancesTableComponent {
   }
 
   get balance() {
-    return this.model.balanceByHolder(this.holder);
+    return this.model.calcBalance(this.dateService.getDate(), this.holder);
   }
 
   get data() {
-    return this.model.transfers.filter(entity => entity.holder === this.holder);
+    return this.model.transfersWithBalanceByHolder(this.dateService.getDate(), this.holder);
   }
 
-  get provider(): TableProvider<Transfer> {
+  get provider(): TableProvider<TransferBalance> {
     const columns = this.defaultColumns;
 
-    return new TableProvider<Transfer>(
+    return new TableProvider<TransferBalance>(
       this.data.all(),
       columns,
     );

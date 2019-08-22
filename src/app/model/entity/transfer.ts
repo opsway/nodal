@@ -9,8 +9,7 @@ export class Transfer implements Entity, OrderByDate {
     public holder: string,
     public ref: string,
     public amount: number,
-    public balance: number,
-    public createdAt = new Date(),
+    public createdAt: Date,
   ) {
     this.id = Util.uuid('T');
   }
