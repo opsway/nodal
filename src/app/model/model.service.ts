@@ -381,7 +381,7 @@ export class ModelService {
         continue;
       }
       const action = data[i].name;
-      const date = data[i].date;
+      const date = new Date(data[i].date);
       const params = data[i].params;
       let order = null;
       switch (action) {
@@ -491,7 +491,7 @@ export class ModelService {
 
   toPay(order: Order, gateway: string, data: Date): void {
     this.eventStream.push({
-      name: 'toPay', date: this.dateService.getValue(), params: {order_id: order.id, gw: gateway}
+      name: 'toPay', date: data.toISOString(), params: {order_id: order.id, gw: gateway}
     });
     const payment = this.createPayment(order, gateway, data);
     this.transferPayment(payment);
