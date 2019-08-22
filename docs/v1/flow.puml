@@ -1,6 +1,5 @@
 @startuml
 
-title <b>Model v1 (flow)</b>
 skinparam shadowing false
 
 state Gateway {
