@@ -34,5 +34,8 @@ state OrderItem {
   refunded --> Gateway
   cancelled --> returned
   paid --> Gateway
+  shipped --> [*]
+  returned --> [*]
+  refunded --> [*]
 }
 @enduml
