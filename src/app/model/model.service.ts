@@ -490,12 +490,16 @@ export class ModelService {
   }
 
   toPay(order: Order, gateway: string, data: Date): void {
-    this.eventStream.push({
-      name: 'toPay', date: data.toISOString(), params: {order_id: order.id, gw: gateway}
-    });
     const payment = this.createPayment(order, gateway, data);
     this.transferPayment(payment);
-    order.attachePayment(payment);
+    this.eventStream.push({
+      name: 'toPay',
+      date: payment.createdAt.toISOString(),
+      params: {
+        order_id: order.id,
+        gw: gateway,
+      },
+    });
     this.logEvent(
       order.createdAt,
       `Pay: ${payment.id} (${order.id}: ${order.references.join(' ')})`,

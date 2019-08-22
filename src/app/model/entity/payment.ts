@@ -24,6 +24,11 @@ export class Payment implements Entity, OrderByDate {
     this.settledAt = null;
     this.status = Payment.STATUS_CREATED;
     this.amount = this.order.amountPayable;
+
+    if (this.createdAt.getTime() < order.createdAt.getTime()) {
+      this.createdAt = order.createdAt;
+    }
+    order.attachePayment(this);
   }
 
   get isRefundable(): boolean {
