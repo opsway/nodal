@@ -16,7 +16,7 @@ export class NodalComponent {
   }
 
   get nodalAccounts() {
-    return this.model.nodalAccounts;
+    return this.model.nodalAccounts.filter(value => value !== ModelService.NodalMarket);
   }
 
   get sellers() {

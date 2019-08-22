@@ -38,7 +38,7 @@ export class ModelService {
   private static NodalGWFee = 'GW Fee';
   private static NodalShipping = 'Shipping';
   private static NodalMFFee = 'MF Fee';
-  private static NodalMarket = 'Market';
+  static NodalMarket = 'Market';
   private customerCollection: Collection<Customer> = new Collection<Customer>();
   private sellerCollection: Collection<Seller> = new Collection<Seller>();
   private orderCollection: Collection<Order> = new Collection<Order>();
