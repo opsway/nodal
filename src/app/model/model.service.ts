@@ -332,7 +332,7 @@ export class ModelService {
   }
 
   get payments() {
-    return this.paymentCollection;
+    return this.paymentCollection.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
   }
 
   get notCapturedPayments() {

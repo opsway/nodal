@@ -67,7 +67,7 @@ export class Collection<T extends Entity> {
   }
 
   sort(compare: (a: T, b: T) => number): Collection<T> {
-    return this.load(this.all().sort(compare));
+    return new Collection<T>().load(this.all().sort(compare));
   }
 
   map<U>(mapper: (entity: T) => U): U[] {
