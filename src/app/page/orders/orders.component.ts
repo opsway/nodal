@@ -30,20 +30,19 @@ export class OrdersComponent {
   processAction(order: Order, action) {
     const now = this.dateService.getDate();
     if (order.createdAt.getTime() > now.getTime()) {
-      let _action = '';
+      let actionType = '';
       if (order.isNoPaid) {
-        _action = 'pay';
+        actionType = 'pay';
       } else if (order.canInvoice) {
-        _action = 'invoice';
+        actionType = 'invoice';
       } else if (order.canCanceled) {
-        _action = 'cancel';
+        actionType = 'cancel';
       } else if (order.canReturned) {
-        _action = 'return';
+        actionType = 'return';
       } else if (order.canRefund) {
-        _action = 'refund';
+        actionType = 'refund';
       }
-      // return alert(`You can\'t make ${_action}`);
-      this.toastService.show(`You can\'t make ${_action}`, {
+      this.toastService.show(`You can\'t make ${actionType}`, {
         classname: 'bg-danger text-light toast-top-center text-center',
       });
       return;

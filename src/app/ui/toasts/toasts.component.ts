@@ -1,4 +1,4 @@
-import {Component, TemplateRef} from '@angular/core';
+import { Component, HostBinding, TemplateRef } from '@angular/core';
 import { ToastsService } from './toasts.service';
 
 @Component({
@@ -19,6 +19,7 @@ import { ToastsService } from './toasts.service';
       <ng-template #text>{{ toast.textOrTpl }}</ng-template>
     </ngb-toast>
   `,
+  // tslint:disable-next-line:no-host-metadata-property
   host: {'[class.ngb-toasts]': 'true'}
 })
 export class ToastsComponent {
