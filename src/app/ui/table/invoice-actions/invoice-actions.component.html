@@ -15,7 +15,7 @@
   >CA</button>
   <button type="button"
           *ngIf="invoice?.isDraft"
-          (click)="model.saveInvoice(invoice)"
+          (click)="model.saveInvoice(invoice, dateService.getDate())"
           class="btn btn-sm btn-success"
           title="add to invoice"
   >save</button>

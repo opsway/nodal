@@ -4,7 +4,6 @@ import { OrderItem } from './order-item';
 import * as Util from '../../../util/util';
 import { Order } from './order';
 import { Payment } from '../payment';
-import { Invoice } from '../invoice';
 import { Refund } from '../refund';
 import { Customer } from '../member/customer';
 
@@ -21,22 +20,19 @@ const orderFabric = (numItems, isCustomer = true) => {
   }
   return order;
 };
-const paymentFabrica = (order) => {
+
+const paymentFabric = (order: Order) => {
   return new Payment(
     order,
     'foo',
+    order.createdAt,
   );
 };
-const invoiceFabrica = (order) => {
-  return new Invoice(
-    order.seller,
-    order.itemCollection,
-  );
-};
-const refundFabrica = (order) => {
+
+const refundFabric = (payment: Payment) => {
   return new Refund(
-    order.seller,
-    order.itemCollection,
+    payment,
+    payment.createdAt,
   );
 };
 
@@ -86,14 +82,11 @@ describe('OrderItem', () => {
     expect(order.isSaved).toEqual(true);
 
     expect(order.isNoPaid).toEqual(true);
-    const payment = paymentFabrica(order);
+    const payment = paymentFabric(order);
     order.attachePayment(payment);
     expect(orderItem4.status).toEqual('paid');
     expect(order.isNoPaid).toEqual(false);
 
-    const invoice1 = invoiceFabrica(order);
-    orderItem1.attacheInvoice(invoice1);
-    expect(orderItem1.status).toEqual('invoiced');
 
     expect(orderItem2.canCanceled).toEqual(true);
     orderItem2.cancel();
@@ -102,41 +95,18 @@ describe('OrderItem', () => {
     expect(orderItem3.status).toEqual('canceled');
     expect(orderItem2.canCanceled).toEqual(false);
 
-    orderItem2.refund(refundFabrica(payment));
+    orderItem2.refund(refundFabric(payment));
     expect(orderItem2.status).toEqual('refunded');
 
     expect(order.canRefund).toEqual(true);
-    order.refund(refundFabrica(payment));
+    order.refund(refundFabric(payment));
     expect(orderItem3.status).toEqual('refunded');
 
-    invoice1.save();
-    invoice1.ship();
-    expect(orderItem1.status).toEqual('shipped');
-
-    expect(orderItem1.canReturned).toEqual(true);
-    orderItem1.return();
-    expect(orderItem1.status).toEqual('returned');
-    expect(orderItem1.canReturned).toEqual(false);
-
-    orderItem1.refund(refundFabrica(payment));
-    expect(orderItem1.status).toEqual('refunded');
-
-    expect(order.canInvoice).toEqual(true);
-    const invoice2 = invoiceFabrica(order);
-    orderItem4.attacheInvoice(invoice2);
-    expect(orderItem4.status).toEqual('invoiced');
-    expect(order.canInvoice).toEqual(false);
-
-    invoice2.save();
-    invoice2.cancel();
-    expect(orderItem4.status).toEqual('canceled');
-
-    expect(order.canRefund).toEqual(true);
-    orderItem4.refund(refundFabrica(payment));
+    orderItem4.refund(refundFabric(payment));
     expect(orderItem4.status).toEqual('refunded');
     expect(order.canRefund).toEqual(false);
 
-    expect(order.total).toEqual(0);
+    expect(order.total).toEqual(15000);
   });
 
   it('should group items by Invoice', () => {

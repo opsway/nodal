@@ -18,7 +18,7 @@ export class Payment implements Entity, OrderByDate {
   constructor(
     public order: Order,
     public gateway: string,
-    public createdAt = new Date()
+    public createdAt: Date,
   ) {
     this.id = Util.uuid('P');
     this.settledAt = null;
@@ -60,7 +60,7 @@ export class Payment implements Entity, OrderByDate {
     return this;
   }
 
-  capture(feeGateway: number, settlementDate: Date = new Date()): Payment {
+  capture(feeGateway: number, settlementDate: Date): Payment {
     this.feeGateway = feeGateway;
     this.settledAt = settlementDate;
     this.status = Payment.STATUS_CAPTURED;

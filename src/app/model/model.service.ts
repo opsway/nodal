@@ -141,7 +141,6 @@ export class ModelService {
     if (Math.abs(amount) === 0) {
       return;
     }
-    console.log('createTransaction', holder, amount);
     const balance = this.balanceByHolder(holder) + amount;
     this.accountBalance.set(holder, balance);
 
@@ -340,7 +339,7 @@ export class ModelService {
     return this.payments.filter(entity => !entity.isCaptured);
   }
 
-  notCapturedPaymentsByGateway(gateway: string, date: Date = new Date()) {
+  notCapturedPaymentsByGateway(gateway: string, date: Date) {
     return this.notCapturedPayments
       .filter(entity => entity.gateway === gateway
         && entity.createdAt.getTime() <= date.getTime());
@@ -354,7 +353,7 @@ export class ModelService {
     return this.refunds.filter(entity => !entity.isCaptured);
   }
 
-  notCapturedRefundsByGateway(gateway: string, date: Date = new Date()) {
+  notCapturedRefundsByGateway(gateway: string, date: Date) {
     return this.notCapturedRefunds
       .filter(entity => entity.gateway === gateway
         && entity.createdAt.getTime() <= date.getTime());
@@ -445,7 +444,7 @@ export class ModelService {
         title: 'crate invoice for all Seller in order',
         color: 'success',
         handler: () => {
-          this.toInvoiceOrder(order);
+          this.toInvoiceOrder(order, data);
         },
       });
     }
@@ -533,16 +532,17 @@ export class ModelService {
     this.transferRefund(refund);
   }
 
-  canSellerSettlement(name: string): boolean {
+  canSellerSettlement(name: string, date: Date): boolean {
+    // TODO add filter by date
     return this.balanceByHolder(name) > 0;
   }
 
-  doSellerSettlement(name: string): void {
+  doSellerSettlement(name: string, date: Date): void {
     const invoices = this.invoiceCollection
       .filter(entity => entity.seller.name === name && !entity.isSellerCaptured);
 
     if (invoices.count() > 0) {
-      const settlement = this.sellerSettlementCollection.add(new SellerSettlement(name, this.dateService.getDate()));
+      const settlement = this.sellerSettlementCollection.add(new SellerSettlement(name, date));
       invoices.walk(entity => settlement.capture(entity));
       if (settlement.amount !== this.balanceByHolder(name)) {
         return; // TODO add alert
@@ -564,8 +564,8 @@ export class ModelService {
     return this.marketNotCapturedInvoices(date).count() > 0;
   }
 
-  saveInvoice(invoice: Invoice): void {
-    invoice.save(this.dateService.getDate());
+  saveInvoice(invoice: Invoice, date: Date): void {
+    invoice.save(date);
     this.transferInvoice(invoice);
     this.logEvent(
       invoice.createdAt,
@@ -574,14 +574,14 @@ export class ModelService {
     );
   }
 
-  toInvoiceOrder(order: Order): Order {
+  toInvoiceOrder(order: Order, date: Date): Order {
     order.items.forEach(item => {
       this.toInvoiceOrderItem(item);
     });
     this.invoiceCollection
       .filter(invoice => invoice.isDraft)
       .walk(invoice => {
-        this.saveInvoice(invoice);
+        this.saveInvoice(invoice, date);
       });
 
     return order;
@@ -655,7 +655,7 @@ export class ModelService {
     // Pay Order
     this.toPay(order, gateway, date);
     // Create invoice for payed Order by item via Seller
-    this.toInvoiceOrder(order);
+    this.toInvoiceOrder(order, date);
     // Ship invoice;
     this.invoiceCollection.first().ship(); // FIXME
 
@@ -667,7 +667,7 @@ export class ModelService {
     seller: Seller = this.sellers.first(),
     gateway: string = this.paymentMethods[0],
   ) {
-    this.doSellerSettlement(seller.name);
+    this.doSellerSettlement(seller.name, date);
     this.doGatewaySettlement(gateway, date);
     this.doMarketSettlement(date);
   }
@@ -682,7 +682,7 @@ export class ModelService {
       ],
     ).save();
     this.toPay(O1, gateway, date);
-    this.toInvoiceOrder(O1);
+    this.toInvoiceOrder(O1, date);
     this.flowSettlement(date, seller, gateway);
   }
 }

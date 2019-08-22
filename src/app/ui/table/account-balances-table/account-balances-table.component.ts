@@ -7,6 +7,7 @@ import { TableProvider } from '../table-provider';
 import { DateFormatPipe } from '../../../util/date-format.pipe';
 import { ConvertPipe } from '../../../util/convert.pipe';
 import { ModelService } from '../../../model/model.service';
+import { VirtualDateService } from '../../../util/virtual-date.service';
 
 @Component({
   selector: 'app-account-balances-table',
@@ -18,6 +19,7 @@ export class AccountBalancesTableComponent {
 
   constructor(
     public model: ModelService,
+    public dateService: VirtualDateService,
   ) {
   }
 

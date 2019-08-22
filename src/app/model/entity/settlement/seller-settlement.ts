@@ -10,7 +10,7 @@ export class SellerSettlement implements Entity {
 
   constructor(
     public sellerName: string,
-    public createdAt: Date = new Date(),
+    public createdAt: Date,
   ) {
     this.id = Util.uuid('ST_SL');
   }
