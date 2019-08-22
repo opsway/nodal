@@ -35,6 +35,7 @@ import { TimeAndDateComponent } from './ui/menu/time-and-date/time-and-date.comp
 import { OrderModule } from 'ngx-order-pipe';
 import { ItemStatusActionsComponent } from './ui/table/item-status-actions/item-status-actions.component';
 import { InvoiceActionsComponent } from './ui/table/invoice-actions/invoice-actions.component';
+import { ToastsComponent } from './ui/toasts/toasts.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { InvoiceActionsComponent } from './ui/table/invoice-actions/invoice-acti
     TimeAndDateComponent,
     ItemStatusActionsComponent,
     InvoiceActionsComponent,
+    ToastsComponent,
   ],
   imports: [
     BrowserModule,

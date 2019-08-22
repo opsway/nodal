@@ -46,7 +46,7 @@
                 <button class="btn btn-sm btn-{{action.color}}"
                         [title]="action.title"
                         *ngFor="let action of orderActions(order)"
-                        (click)="action.handler()"
+                        (click)="processAction(order, action)"
                         type="button"
 
                 >{{action.name}}</button>

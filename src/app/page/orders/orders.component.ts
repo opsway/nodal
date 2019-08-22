@@ -6,6 +6,7 @@ import { Order } from '../../model/entity/order/order';
 import { InvoiceItems } from '../../model/aggregate/invoice-items';
 import { VirtualDateService } from '../../util/virtual-date.service';
 import { ORDER_BY_PARAMS } from '../../util/constant';
+import { ToastsService } from '../../ui/toasts/toasts.service';
 
 @Component({
   selector: 'app-orders',
@@ -17,12 +18,38 @@ export class OrdersComponent {
 
   constructor(
     public model: ModelService,
+    public toastService: ToastsService,
     private dateService: VirtualDateService,
   ) {
   }
 
   orderActions(order: Order) {
     return this.model.orderActions(order, this.dateService.getDate());
+  }
+
+  processAction(order: Order, action) {
+    const now = this.dateService.getDate();
+    if (order.createdAt.getTime() > now.getTime()) {
+      let _action = '';
+      if (order.isNoPaid) {
+        _action = 'pay';
+      } else if (order.canInvoice) {
+        _action = 'invoice';
+      } else if (order.canCanceled) {
+        _action = 'cancel';
+      } else if (order.canReturned) {
+        _action = 'return';
+      } else if (order.canRefund) {
+        _action = 'refund';
+      }
+      // return alert(`You can\'t make ${_action}`);
+      this.toastService.show(`You can\'t make ${_action}`, {
+        classname: 'bg-danger text-light toast-top-center text-center',
+      });
+      return;
+    } else {
+      action.handler();
+    }
   }
 
   getSortedGroup(order: Order): InvoiceItems[] {
