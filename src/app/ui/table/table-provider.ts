@@ -1,8 +1,12 @@
 import { TableCellDef } from './table-cell-def';
 import { PipeTransform } from '@angular/core';
 import { TableCellValue } from './table-cell-value';
+import { OrderByDate } from '../../model/entity/order-by-date';
+import { ORDER_BY_PARAMS } from '../../util/constant';
 
-export class TableProvider<T> {
+export class TableProvider<T extends OrderByDate> {
+  orderType = ORDER_BY_PARAMS.type;
+  orderReverse = ORDER_BY_PARAMS.reverse;
   constructor(
     private data: Array<T>,
     private columns: TableCellDef[],
@@ -40,7 +44,17 @@ export class TableProvider<T> {
   }
 
   get rows(): any[] {
-    return this.data
+    return this.data.sort((a, b) => {
+      if (a && a[this.orderType] && b && b[this.orderType]) {
+        return this.orderReverse ? b[this.orderType].getTime() - a[this.orderType].getTime() :
+          a[this.orderType].getTime() - b[this.orderType].getTime();
+      } else {
+        if ((a && !a[this.orderType] && b && !b[this.orderType]) || (!a && !b)) {
+          return 0;
+        }
+        return this.orderReverse && b && b[this.orderType] ? -1 : 1;
+      }
+    })
       .map((item: T) =>
         this.fields
           .reduce((cells: any[], field: string, fieldIndex: number) => {

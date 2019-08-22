@@ -12,9 +12,11 @@ import {
   SerializeProperty,
   Serializable,
 } from '@delete21/ts-serializer';
+import { Entity } from '../entity';
+import { OrderByDate } from '../order-by-date';
 
 @Serialize({})
-export class Order extends Serializable {
+export class Order extends Serializable implements Entity, OrderByDate {
   @SerializeProperty({})
   public id: string;
   @SerializeProperty({})

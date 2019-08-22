@@ -11,9 +11,10 @@ import {
   SerializeProperty,
   Serializable,
 } from '@delete21/ts-serializer';
+import { OrderByDate } from '../order-by-date';
 
 @Serialize({})
-export class OrderItem extends Serializable implements Entity {
+export class OrderItem extends Serializable implements Entity, OrderByDate {
   static STATUS_ORDERED = 'ordered';
   static STATUS_PAID = 'paid';
   static STATUS_INVOICED = 'invoiced';
@@ -42,6 +43,7 @@ export class OrderItem extends Serializable implements Entity {
   isCanceled: boolean;
   status: string;
   invoice: Invoice = null;
+  createdAt: Date; // FIXME
   private payment: Payment;
 
   constructor(

@@ -42,7 +42,7 @@
     <div class="row justify-content-between mb-3">
       <div class="col-sm">
         <app-settlements-table
-          [data]="model.settlements.all()"
+          [data]="model.settlements.all() | orderBy:orderType:orderReverse"
         ></app-settlements-table>
       </div>
     </div>

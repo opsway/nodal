@@ -5,14 +5,15 @@ import { ModelService } from '../../model/model.service';
 import { Order } from '../../model/entity/order/order';
 import { InvoiceItems } from '../../model/aggregate/invoice-items';
 import { VirtualDateService } from '../../util/virtual-date.service';
+import { ORDER_BY_PARAMS } from '../../util/constant';
 
 @Component({
   selector: 'app-orders',
   templateUrl: 'orders.component.html',
 })
 export class OrdersComponent {
-  orderType = 'createdAt';
-  orderReverse = false;
+  orderType = ORDER_BY_PARAMS.type;
+  orderReverse = ORDER_BY_PARAMS.reverse;
 
   constructor(
     public model: ModelService,

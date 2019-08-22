@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let row of data; let i = index"
+    <tr *ngFor="let row of data | orderBy:orderType:orderReverse let i = index"
         [class.pure-table-odd]="i % 2 === 0"
     >
         <td>{{row.id}}</td>

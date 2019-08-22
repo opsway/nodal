@@ -1,8 +1,10 @@
 import * as Util from '../../util/util';
 import { Order } from './order/order';
 import { Refund } from './refund';
+import { Entity } from './entity';
+import { OrderByDate } from './order-by-date';
 
-export class Payment {
+export class Payment implements Entity, OrderByDate {
   static STATUS_CAPTURED = 'captured';
   static STATUS_CREATED = 'created';
 

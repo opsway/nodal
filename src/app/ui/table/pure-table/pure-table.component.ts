@@ -3,7 +3,6 @@ import {
   Input,
 } from '@angular/core';
 import { TableProvider } from '../table-provider';
-import { OrderItem } from '../../../model/entity/order/order-item';
 
 @Component({
   selector: 'app-pure-table',

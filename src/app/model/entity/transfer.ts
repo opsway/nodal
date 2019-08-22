@@ -1,7 +1,8 @@
 import * as Util from '../../util/util';
 import { Entity } from './entity';
+import { OrderByDate } from './order-by-date';
 
-export class Transfer implements Entity {
+export class Transfer implements Entity, OrderByDate {
   id: string;
 
   constructor(

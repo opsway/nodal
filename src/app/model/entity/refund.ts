@@ -3,8 +3,9 @@ import { Entity } from './entity';
 import { Payment } from './payment';
 import { Collection } from '../collection';
 import { OrderItem } from './order/order-item';
+import { OrderByDate } from './order-by-date';
 
-export class Refund implements Entity {
+export class Refund implements Entity, OrderByDate {
   id: string;
   settledAt: Date = null;
   status: string;
