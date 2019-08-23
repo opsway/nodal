@@ -69,8 +69,7 @@ export class ModelService {
     this.load();
   }
 
-  get accountBalances(): Account[] {
-    const date: Date = this.dateService.getDate(); // FIXME move into signature
+  accountBalances(date: Date): Account[] {
     const sellerAccounts = this.sellers.map(entity => entity.name)
       .map(holder => new Account(holder, AccountType.seller, this.calcBalance(date, holder)));
     const gatewayAccounts = this.paymentGateways
@@ -100,7 +99,7 @@ export class ModelService {
     this.history.add(new History(new HistoryEvent(
       action,
       total,
-      this.accountBalances,
+      this.accountBalances(date),
       date,
     )));
   }

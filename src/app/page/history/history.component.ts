@@ -2,6 +2,7 @@ import {
   Component
 } from '@angular/core';
 import { ModelService } from '../../model/model.service';
+import { VirtualDateService } from '../../util/virtual-date.service';
 
 @Component({
   templateUrl: 'history.component.html',
@@ -9,6 +10,7 @@ import { ModelService } from '../../model/model.service';
 export class HistoryComponent {
   constructor(
     public model: ModelService,
+    private dateService: VirtualDateService,
   ) {
   }
 
@@ -20,7 +22,7 @@ export class HistoryComponent {
   ];
 
   get accountHeaders() {
-    return this.model.accountBalances.map(value => value.name);
+    return this.model.accountBalances(this.dateService.getDate()).map(value => value.name);
   }
 
   get headers() {
@@ -31,7 +33,7 @@ export class HistoryComponent {
   }
 
   get footers() {
-    return [].concat(...this.model.accountBalances.map(value => value.balance));
+    return [].concat(...this.model.accountBalances(this.dateService.getDate()).map(value => value.balance));
   }
 
   get data() {

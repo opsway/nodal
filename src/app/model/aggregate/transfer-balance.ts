@@ -28,6 +28,6 @@ export class TransferBalance {
   }
 
   get balance() {
-    return this.balanceCurrent + this.transfer.amount;
+    return this.balanceCurrent;
   }
 }
