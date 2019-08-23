@@ -1,0 +1,27 @@
+@startuml
+
+skinparam shadowing false
+skinparam rectangleRoundCorner 5
+skinparam rectangleBorderThickness 0.5
+
+rectangle "Customer"
+
+rectangle "Market" {
+	rectangle "Item 1" <<Seller **SA**>>
+	rectangle "Item 2" <<Seller **SB**>>
+}
+
+rectangle "Seller" <<**A**>> as SA
+rectangle "Seller" <<**B**>> as SB
+rectangle "Payment Gateway" <<**PGA**>> as PGA
+rectangle "Payment Gateway" <<**PGB**>> as PGB
+rectangle "**Nodal Account**" as Nodal
+
+Customer -- Market
+Market -- PGA
+Market -- PGB
+PGA -- Nodal
+PGB -- Nodal
+Nodal -- SA
+Nodal -- SB
+@enduml

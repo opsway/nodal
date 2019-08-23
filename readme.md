@@ -1,7 +1,7 @@
 # Nodal Account
 
 <p align="center">
-    <img src="https://github.com/opsway/nodal/raw/master/docs/Nodal.png"/>
+    <img src="http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/opsway/nodal/master/docs/nodal.puml"/>
 </p>
 
 ## Development server

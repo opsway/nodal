@@ -1,5 +1,8 @@
 # Docs
 
+## Flow
+![flow](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/opsway/nodal/master/docs/v1/flow.puml)
+
 # Model `v2`
 
     npm install -g json-server
@@ -15,10 +18,6 @@
 
 TODO
 
-## Flow
-
-see v1
-
 # Model `v1`
 
 ## Entity
@@ -27,6 +26,4 @@ see v1
 
 ![model v1 entity](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/opsway/nodal/master/docs/v1/entity.puml)
 
-## Flow
-![model v1 flow](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/opsway/nodal/master/docs/v1/flow.puml)
 
