@@ -1,7 +1,7 @@
 # Docs
 
 ## Flow
-![flow](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/opsway/nodal/master/docs/v1/flow.puml)
+![flow](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/opsway/nodal/master/docs/flow.puml)
 
 # Model `v2`
 

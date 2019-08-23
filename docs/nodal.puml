@@ -11,8 +11,8 @@ rectangle "Market" {
 	rectangle "Item 2" <<Seller **SB**>>
 }
 
-rectangle "Seller" <<**A**>> as SA
-rectangle "Seller" <<**B**>> as SB
+rectangle "Seller" <<**SA**>> as SA
+rectangle "Seller" <<**SB**>> as SB
 rectangle "Payment Gateway" <<**PGA**>> as PGA
 rectangle "Payment Gateway" <<**PGB**>> as PGB
 rectangle "**Nodal Account**" as Nodal
